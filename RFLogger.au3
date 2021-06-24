@@ -24,6 +24,8 @@ Update History:
 14 - change output (swap with title) and remove double output
 15 - output time format change yyymmddhhmmss -> hh:mm:ss & filename w/o time + timestamp
 16 - add version
+23/6/21
+17 - get riktig MsgType, MsgTime from RF
 ================================
 #ce
 
@@ -161,19 +163,6 @@ GUICtrlSetData($idLabel, "Getting messages..." )
 
 	GUICtrlSetData($idLabel, "5. Found messages: " & $nMsgCount )
 
-#cs
-	; Get times and Msgs from table
-	For $i = 1 To $nMsgCount
-            $txt = ""
-			$txt &=  $aTableData[$i][1]
-			$txt &=  " " & $aTableData[$i][2]
-			$txt &=  " " & $aTableData[$i][3]
-			$txt &=  " " & $aTableData[$i][4]
-			$txt &=  @CRLF
-			GUICtrlSetData($idLabel, $i & "/" & $nMsgCount & " messages done")
-			GUICtrlSetData($idEdit, $txt, 0)
-    Next
-#ce
 ;
 ; Get link to Hent message
 ; Link# is equal to Array#
@@ -193,16 +182,38 @@ GUICtrlSetData($idLabel, "Getting messages..." )
 		If StringInStr($oLink.href , "loggeview.rfa?" ) Then
 			; process link
 
-			$txt =  $aTableData[$i][1]
-			$txt &=  " " & $aTableData[$i][2]
-			$txt &=  " " & $aTableData[$i][3]
-			$txt &=  " " & $aTableData[$i][4]
+						; 12.07.2019 18:15:04.275
+			Local $msgId = $aTableData[$i][1]
+			Local $msgTime = $aTableData[$i][2]
+			Local $msgType = $aTableData[$i][4]
+
+			$txt =  $msgTime
+			$txt &=  " " & $msgType
+			$txt &=  " " & $msgId
+
 			GUICtrlSetData($idLabel, $i & "/" & $nMsgCount & " " & $txt)
 
-			Local $ret = Get_line_from_link( $oLink.href ) & @CRLF
+			Local $html = Get_line_from_link( $oLink.href ) & @CRLF
+
+			$html = _ER_GetBody($html)
+
+			Local $fname = $msgType & "_" & $msgId & ".xml"
+
+			if _save_xml( $fname, $html ) then
+
+				;12.07.2019 18:15:04.275
+				Local $t = StringRegExpReplace( $msgTime, "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d)", "$3$2$1$4$5$6")
+				If FileSetTime( $fname, $t, 0) = 0 then
+					Dbg("error filesettime " & $fname )
+				EndIf
+			EndIf
 
 			$i += 1
-			GUICtrlSetData($idEdit, $ret, 0)
+
+			;Local $ret = $msgTime & " " & $msgType & " " & $msgId
+
+			GUICtrlSetData($idEdit, StringMid( $msgTime, 12, 8) & " " & $msgType & " " & $msgId & @CRLF, 0)
+
 
 		EndIf
 	Next
@@ -216,22 +227,11 @@ EndFunc
 
 ;#include "_ER_msg.au3"
 
-; Returns one line with msg
+; Returns web page text
 Func	Get_line_from_link( $sLink )
 
 	Local $oMain = _IEAttach( "", "instance", 1 )
 	Local $o = _IEEx_TabCreate( $oMain, $sLink )
-#cs
-	Local $o = _IECreate( $sLink ) ;, 0, 1, 1 )
-	if not isObj($o) then
-		Dbg( "*** Error: _IECreate: " & @error & @CRLF & $sLink )
-		return 0
-	EndIf
-	$o = _IEAttach( $sLink, "url" )
-#ce
-	;MsgBox( 0, "Created", @error & @CRLF & _IEPropertyGet( $o, "locationurl") )
-
-;Dbg("IE created -- " & @error )
 
 	Local $oWindow = $o.document.parentWindow
 	_IEAction($oWindow, "blur")
@@ -247,34 +247,25 @@ Func	Get_line_from_link( $sLink )
 	_IEQuit($o)
 	;Dbg("IE closed --"  )
 
+	return $html
 
-	$html = _ER_GetBody($html)
-;MsgBox( 0, "Get from clip", StringLeft( $html, 200 ))
+EndFunc
 
-;MsgBox( 0, "Strip <Msg>", StringLeft( StringStripWS($html,7), 300 ))
-
-	Local $msgId = _ER_GetMsgId( $html)
-;MsgBox( 0, "Get MsgId", $msgId )
-	Local $msgType = _ER_GetMsgType( $html)
-;Dbg( $msgType & " " & $msgId & @CRLF )
-
-	Local $msgTime = StringRegExpReplace( _ER_GetMsgTime( $html), "(\d{8})(\d\d)(\d\d)(\d\d)", "$2:$3:$4")
-;Dbg($msgType & " " & $msgId )
+Func	_save_xml( $fname, $html )
 
 	; get msgid fra link
 	;Local $sec=_DateDiff ( "s", "2021/1/1 00:00:00", _NowCalc() )
-	Local $fname = _ER_GetMsgType( $html) & "_" & $msgId&".xml"
+	;Local $fname = _ER_GetMsgType( $html) & "_" & $msgId&".xml"
 	Local $h = FileOpen( $fname, 2)
 	if FileWrite( $h, $html ) = 0 then
 		Dbg("error write file " & $fname )
+		return 0
 	ElseIf FileClose( $h) = 0 then
 		Dbg("error close file " & $fname )
-	ElseIf FileSetTime( $fname, _ER_GetMsgTime($html), 0) = 0 then
-		Dbg("error filesettime " & $fname )
+		Return 0
 	EndIf
 
-	Return  $msgTime & " " & $msgType & " " & $msgId  ;_IESaveMessage( $html )
-
+	Return 1
 EndFunc
 
 
