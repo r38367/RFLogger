@@ -26,6 +26,8 @@ Update History:
 16 - add version
 23/6/21
 17 - get riktig MsgType, MsgTime from RF
+24/6/21
+18 - replace ClipGet with GetBodyText
 ================================
 #ce
 
@@ -114,7 +116,7 @@ Func	Gui_update_list()
 GUICtrlSetData($idEdit, "" )
 GUICtrlSetData($idLabel, "Getting messages..." )
 
-;Get_line_from_link( "C:\Users\ang_\Documents\github\Msgdump\ex.html" )
+;Get_line_from_link( "https://rfadmin.test2.reseptformidleren.net/RFAdmin/loggeview.rfa?loggeId=c7d0d0b6-4014-4ef0-be60-d9522d39045a&filename=/nfstest2/sharedFiles/log/2021/175/21/13/c7d0d0b6-4014-4ef0-be60-d9522d39045a" )
 ;return
 
 	; get Activ IE window
@@ -226,26 +228,22 @@ GUICtrlSetData($idLabel, "Getting messages..." )
 EndFunc
 
 ;#include "_ER_msg.au3"
+#include "inet.au3"
 
 ; Returns web page text
 Func	Get_line_from_link( $sLink )
 
 	Local $oMain = _IEAttach( "", "instance", 1 )
 	Local $o = _IEEx_TabCreate( $oMain, $sLink )
+Dbg("Tab create -- " & @error & " " & isobj($o) )
 
-	Local $oWindow = $o.document.parentWindow
-	_IEAction($oWindow, "blur")
+	Local $html = _IEBodyReadText( $o )
+Dbg( "Get body " & @error & " " & isobj($o) )
+;MsgBox( 0, "_IEBody Text", $html )
+;	FileWrite( "_IEBodyReadText.txt", $html )
 
-;Dbg("Blur-- " & @error )
-	_IEAction( $o, "selectall" )
-;Dbg("Selectall-- " )
-	_IEAction( $o, "copy")
-;Dbg("Copy " & @error )
-	Local $html = ClipGet() ; _IEBodyReadText($o)
-;Dbg("ClipGet" & @error )
 
-	_IEQuit($o)
-	;Dbg("IE closed --"  )
+Dbg( "Quit " & _IEQuit($o) & " " & @error & " " & isobj($o) )
 
 	return $html
 
