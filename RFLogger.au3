@@ -28,8 +28,31 @@ Update History:
 17 - get riktig MsgType, MsgTime from RF
 24/6/21
 18 - replace ClipGet with GetBodyText
+25/6/21
+19 - move Msg and _IE function in own files: lib_ie.au3 lib_msg.au3
+
 ================================
 #ce
+
+; #INCLUDES# ===================================================================================================================
+#Region Global Include files
+#include <Date.au3>
+#include <Array.au3>
+#include <IE.au3>
+
+#include <GUIConstantsEx.au3>
+#include <WindowsConstants.au3>
+#include <EditConstants.au3>
+#include <FontConstants.au3>
+#EndRegion Global Include files
+
+; #LIB# ===================================================================================================================
+#Region Lib files
+;OnAutoItExitRegister("MyExitFunc")
+#include "lib_msg.au3"
+#include "lib_ie.au3"
+#EndRegion LIB files
+
 
 ; #VARIABLES# ===================================================================================================================
 #Region Global Variables
@@ -43,37 +66,34 @@ Global $nLine = 0
 
 
 ;OnAutoItExitRegister("MyExitFunc")
-#include <Date.au3>
-#include <GUIConstantsEx.au3>
-#include <WindowsConstants.au3>
-#include <EditConstants.au3>
-#include <IE.au3>
-#include <IEEx.au3>
-#include <Array.au3>
-#include <FontConstants.au3>
-#include <GUIConstantsEx.au3>
-
 Opt('MustDeclareVars', 1)
 
-; Timestamp
+Main()
 
-Local $msg
+;===============================================================================
+; Function Name:  Main
+;===============================================================================
+Func	Main()
 
-GUI_Create()
+	Local $msg
 
-Do
+	GUI_Create()
 
-	$msg = GUIGetMsg()
+	Do
 
-	if $msg = $idButton then
-		Gui_update_list()
-	EndIf
+		$msg = GUIGetMsg()
 
-Until $msg = $GUI_EVENT_CLOSE
+		if $msg = $idButton then
+			;Gui_update_list()
+			Hent_Button_pressed()
+		EndIf
 
-GUIDelete()
+	Until $msg = $GUI_EVENT_CLOSE
 
-Exit
+	GUIDelete()
+
+	Exit
+EndFunc
 
 ;===============================================================================
 ;
@@ -82,9 +102,6 @@ Exit
 ; Parameter(s):     None
 ; Returns:          None
 ;===============================================================================
-#include <EditConstants.au3>
-#include <GUIConstantsEx.au3>
-#include <WindowsConstants.au3>
 
 Func GUI_Create()
 
@@ -107,14 +124,16 @@ Func GUI_Create()
 
 EndFunc
 
-#include "_ER_ie.au3"
+;===============================================================================
+; Function Name:    Hent_Button_pressed()
+;===============================================================================
 
-Func	Gui_update_list()
+Func	Hent_Button_pressed()
 
 	Local $oTab
 
-GUICtrlSetData($idEdit, "" )
-GUICtrlSetData($idLabel, "Getting messages..." )
+;GUICtrlSetData($idEdit, "" )
+GUICtrlSetData($idLabel, "Get Active IE" )
 
 ;Get_line_from_link( "https://rfadmin.test2.reseptformidleren.net/RFAdmin/loggeview.rfa?loggeId=c7d0d0b6-4014-4ef0-be60-d9522d39045a&filename=/nfstest2/sharedFiles/log/2021/175/21/13/c7d0d0b6-4014-4ef0-be60-d9522d39045a" )
 ;return
@@ -124,7 +143,7 @@ GUICtrlSetData($idLabel, "Getting messages..." )
 	if not IsObj($oTab) then
 		; start IE
 		;_IECreate( "https://rfadmin.test1.reseptformidleren.net/RFAdmin/loglist.rfa" )
-		Dbg("*** Error: No active IE window " & $oTab )
+		Dbg("*** Error: No active IE tab " & $oTab )
 		return 0
 	EndIf
 	GUICtrlSetData($idLabel,"1. IE found..." )
@@ -195,7 +214,7 @@ GUICtrlSetData($idLabel, "Getting messages..." )
 
 			GUICtrlSetData($idLabel, $i & "/" & $nMsgCount & " " & $txt)
 
-			Local $html = Get_line_from_link( $oLink.href ) & @CRLF
+			Local $html = _IEGetPage( $oLink.href )
 
 			$html = _ER_GetBody($html)
 
@@ -227,27 +246,8 @@ GUICtrlSetData($idLabel, "Getting messages..." )
 
 EndFunc
 
-;#include "_ER_msg.au3"
-#include "inet.au3"
-
-; Returns web page text
-Func	Get_line_from_link( $sLink )
-
-	Local $oMain = _IEAttach( "", "instance", 1 )
-	Local $o = _IEEx_TabCreate( $oMain, $sLink )
-Dbg("Tab create -- " & @error & " " & isobj($o) )
-
-	Local $html = _IEBodyReadText( $o )
-Dbg( "Get body " & @error & " " & isobj($o) )
-;MsgBox( 0, "_IEBody Text", $html )
-;	FileWrite( "_IEBodyReadText.txt", $html )
 
 
-Dbg( "Quit " & _IEQuit($o) & " " & @error & " " & isobj($o) )
-
-	return $html
-
-EndFunc
 
 Func	_save_xml( $fname, $html )
 
@@ -272,47 +272,6 @@ Func	Dbg( $txt )
 
 EndFunc
 
-Func	_ER_GetMsgId( $html)
-
-	Local $a = StringRegExp( $html, 'MsgId>([0-9a-fA-F\-]+?)</', 1)
-	if @error then return 0
-	return $a[0]
-
-EndFunc
-
-Func	_ER_GetMsgType( $html)
-
-	Local $a = StringRegExp( $html, '(?s)MsgInfo>.*?<.*?Type.*?V="(.*?)"', 1)
-	if @error then return 0
-	return $a[0]
-
-EndFunc
-
-Func	_ER_GetBody( $html)
-
-	Local $a = StringRegExp( $html, '(?s)(<.*>)', 1)
-	if @error then return 0
-
-	; strip signatur value
-	;Local $s = StringRegExpReplace( $a[0], '(?s)(SignatureValue>.{5}).*?(</)', '$1...$2')
-	;if @error then return $a[0]
-
-	; strip X509 certificate
-	;$s = StringRegExpReplace( $s, '(?s)(X509Certificate>.{5}).*?(</)', '$1...$2')
-	;if @error then return $s
-
-	return $a[0]
-
-EndFunc
-
-Func	_ER_GetMsgTime( $html)
-
-	Local $a
-	$a = StringRegExp( $html, 'GenDate>(\d+).(\d+).(\d+).(\d+):(\d+):(\d+).*?</', 1)
-	if @error then return 0
-	Return $a[0] & $a[1] &  $a[2] & $a[3] & $a[4] & $a[5]
-
-EndFunc
 
 ; -----------------------------------------------------------------------------
 ; Function: GetVersion
