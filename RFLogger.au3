@@ -30,6 +30,7 @@ Update History:
 18 - replace ClipGet with GetBodyText
 25/6/21
 19 - move Msg and _IE function in own files: lib_ie.au3 lib_msg.au3
+20 - add specific GetMsgXXX functions
 
 ================================
 #ce
@@ -206,6 +207,7 @@ GUICtrlSetData($idLabel, "Get Active IE" )
 						; 12.07.2019 18:15:04.275
 			Local $msgId = $aTableData[$i][1]
 			Local $msgTime = $aTableData[$i][2]
+			Local $msgSystem = $aTableData[$i][3]
 			Local $msgType = $aTableData[$i][4]
 
 			$txt =  $msgTime
@@ -218,7 +220,8 @@ GUICtrlSetData($idLabel, "Get Active IE" )
 
 			$html = _ER_GetBody($html)
 
-			Local $fname = $msgType & "_" & $msgId & ".xml"
+			Local $sParam = _ER_GetExtraParam( $msgType, $html )
+			Local $fname = $msgType & StringReplace( $sParam, " ", "_" ) & "_" & $msgId & ".xml"
 
 			if _save_xml( $fname, $html ) then
 
@@ -229,11 +232,12 @@ GUICtrlSetData($idLabel, "Get Active IE" )
 				EndIf
 			EndIf
 
+
 			$i += 1
 
 			;Local $ret = $msgTime & " " & $msgType & " " & $msgId
 
-			GUICtrlSetData($idEdit, StringMid( $msgTime, 12, 8) & " " & $msgType & " " & $msgId & @CRLF, 0)
+			GUICtrlSetData($idEdit, StringMid( $msgTime, 12, 8) & " " & $msgType & $sParam & " " & StringLeft( $msgId, 9) & "..." & @CRLF, 0)
 
 
 		EndIf

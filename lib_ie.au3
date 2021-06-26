@@ -7,7 +7,6 @@
 
 
 #cs ----------------------------------------------------------------------------
-
 Function to work with IE
 	_IEGetActibTab() - Retrieve the Window Object of the currently active IE (on top)
 	_IEGetActibWindow() -
@@ -97,4 +96,3 @@ Dbg( "Quit " & _IEQuit($o) & " " & @error & " " & isobj($o) )
 	return $html
 
 EndFunc
-
