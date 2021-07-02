@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MsgHead xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.kith.no/xmlstds/msghead/2006-05-24" xsi:schemaLocation="http://www.kith.no/xmlstds/msghead/2006-05-24 MsgHead-v1_2.xsd">
+  <MsgInfo>
+    <Type V="ERM10" DN="Utleveringsrapport reseptbanken"/>
+    <MIGversion>v1.2 2006-05-24</MIGversion>
+    <GenDate>2021-01-29T10:29:29.1512732+01:00</GenDate>
+    <MsgId>a2eaf59c-6108-4585-b84b-951146bd8448</MsgId>
+    <ConversationRef>
+      <RefToParent>0323b640-4663-4ab4-8a9a-fa32c506bf56</RefToParent>
+      <RefToConversation>54cf1662-9294-4a1f-9ba1-2493cf851394</RefToConversation>
+    </ConversationRef>
+    <Sender>
+      <Organisation>
+        <OrganisationName>Apoteket Vågen</OrganisationName>
+        <Ident>
+          <Id>983044778</Id>
+          <TypeId V="ENH" S="2.16.578.1.12.4.1.1.9051" DN="Organisasjonsnummeret i Enhetsregister (Brønnøysund)"/>
+        </Ident>
+        <Ident>
+          <Id>991557407</Id>
+          <TypeId V="LOK" S="2.16.578.1.12.4.1.1.9051" DN="Lokal identifikator uten nærmere angivelse"/>
+        </Ident>
+        <Ident>
+          <Id>8043</Id>
+          <TypeId V="AKO" S="2.16.578.1.12.4.1.1.9051" DN="Apotekets konsesjonsnummer"/>
+        </Ident>
+        <Ident>
+          <Id>8090732</Id>
+          <TypeId V="HER" S="2.16.578.1.12.4.1.1.9051" DN="HER-id"/>
+        </Ident>
+        <TeleCom>
+          <TypeTelecom V="HP" DN="Hovedtelefon"/>
+          <TeleAddress V="tel:23 20 41 00"/>
+        </TeleCom>
+      </Organisation>
+    </Sender>
+    <Receiver>
+      <Organisation>
+        <OrganisationName>Reseptformidleren</OrganisationName>
+        <Ident>
+          <Id>982528011</Id>
+          <TypeId V="ENH" S="2.16.578.1.12.4.1.1.9051" DN="Organisasjonsnummeret i Enhetsregister (Brønnøysund)"/>
+        </Ident>
+        <Ident>
+          <Id>2397.1</Id>
+          <TypeId V="HER" S="2.16.578.1.12.4.1.1.9051" DN="HER-id"/>
+        </Ident>
+      </Organisation>
+    </Receiver>
+    <Patient>
+      <FamilyName>Tøllefsen</FamilyName>
+      <GivenName>Jo</GivenName>
+      <Ident>
+        <Id>03020271700</Id>
+        <TypeId V="FNR" S="2.16.578.1.12.4.1.1.8116" DN="Fødselsnummer"/>
+      </Ident>
+    </Patient>
+  </MsgInfo>
+  <Document>
+    <DocumentConnection V="H" DN="Hoveddokument"/>
+    <RefDoc>
+      <MsgType V="XML" DN="XML-instans"/>
+      <Content>
+        <Utleveringsrapport xmlns="http://www.kith.no/xmlstds/eresept/m10/2013-10-08" xsi:schemaLocation="http://www.kith.no/xmlstds/eresept/m10/2013-10-08 ER-M10-2013-10-08.xsd">
+          <Utlevering xmlns="http://www.kith.no/xmlstds/eresept/utlevering/2013-10-08">
+            <ReseptId>9ad72a18-0545-4cf6-8528-1af85523dacc</ReseptId>
+            <Utleveringsdato>2021-01-29</Utleveringsdato>
+            <Annullering>false</Annullering>
+            <Avsluttet V="2" DN="Nei"/>
+            <ByttereservasjonKunde>false</ByttereservasjonKunde>
+            <ReseptDokHandelsvare xmlns="http://www.kith.no/xmlstds/eresept/m1/2013-10-08">
+              <Varegruppekode V="A" DN="Annet"/>
+              <Antall>1.000</Antall>
+              <RefHjemmel V="603" S="2.16.578.1.12.4.1.1.7427" DN="§5-14 §6.3"/>
+              <Bruksveiledning>Ikke oppgitt</Bruksveiledning>
+              <ProdGruppe V="6030101" S="2.16.578.1.12.4.1.1.7403" DN="Næringsmidler ved Fenylketonuri (Føllings sykdom)"/>
+              <Naringsmiddel xmlns="http://www.kith.no/xmlstds/eresept/forskrivning/2013-10-08">
+                <Nr>875724</Nr>
+                <Navn>Flavour modjul system appelsin</Navn>
+                <ProduktInfoVare>
+                  <ProduktNr>875724</ProduktNr>
+                  <EnhetStorrelse V="G" S="2.16.578.1.12.4.1.1.7484" DN="G"/>
+                  <AntPerPakning>100</AntPerPakning>
+                  <TillattMerMakspris>false</TillattMerMakspris>
+                </ProduktInfoVare>
+              </Naringsmiddel>
+            </ReseptDokHandelsvare>
+            <Utleverer>
+              <HerId>
+                <Id xmlns="http://www.kith.no/xmlstds/felleskomponent1">8090732</Id>
+                <TypeId xmlns="http://www.kith.no/xmlstds/felleskomponent1" V="HER" S="2.16.578.1.12.4.1.1.9051" DN="HER-id"/>
+              </HerId>
+              <Navn>Apoteket Vågen</Navn>
+            </Utleverer>
+          </Utlevering>
+          <ReservasjonRapportFastlege>false</ReservasjonRapportFastlege>
+          <AnsattId>9876543</AnsattId>
+          <Egenandel>
+            <StartEgenandelsperiode>2021-01-29</StartEgenandelsperiode>
+            <BetaltEgenandel V="159.75" U="NOK"/>
+          </Egenandel>
+          <Egenandel>
+            <StartEgenandelsperiode>2021-04-29</StartEgenandelsperiode>
+            <BetaltEgenandel V="0" U="NOK"/>
+          </Egenandel>
+          <Egenandel>
+            <StartEgenandelsperiode>2021-07-29</StartEgenandelsperiode>
+            <BetaltEgenandel V="0" U="NOK"/>
+          </Egenandel>
+          <Egenandel>
+            <StartEgenandelsperiode>2021-10-29</StartEgenandelsperiode>
+            <BetaltEgenandel V="0" U="NOK"/>
+          </Egenandel>
+        </Utleveringsrapport>
+      </Content>
+    </RefDoc>
+  </Document>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+      <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+      <Reference URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+        <DigestValue>y5pdgSPzE31ImsjVMcQlG3OsH7Y=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>mWBUIK8MvoT09n285zKl9SaUZD5h7qZITDH2s1eT+DAdslT/7RB6JXahnpSBiyGxaacYYdtAt5JNOBgaCeROMv06aYEQ4RFJ+c++005R57BKtdgHc3fQ6fkVLgnu1pkApYvrxeEGUP1j1xjUzQiRwD1HvjBRn30A9Fx9Saj1TCVfhmw7FSXMpTdXTSS7BpVeldEfHAR9aV9S8BVWyOWpx58E+EpGqZ75fbd66u1KV356Q6NEZmhlHLdbqGUxVKgv1NC3E9nY5dPW3a+j+jU8aNJqgdbcUtdk4ZGZSL/INkr6Vw60GIZKkvJNYS8ljhRf64+yEE14Vfs69ZPM/CL1bA==</SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509Certificate>MIIFOzCCBCOgAwIBAgILAn6xKcv1tjsYWDUwDQYJKoZIhvcNAQELBQAwUTELMAkGA1UEBhMCTk8xHTAbBgNVBAoMFEJ1eXBhc3MgQVMtOTgzMTYzMzI3MSMwIQYDVQQDDBpCdXlwYXNzIENsYXNzIDMgVGVzdDQgQ0EgMzAeFw0yMDEwMjYxMTM1MjFaFw0yMzEwMjYyMTU5MDBaMIGBMQswCQYDVQQGEwJOTzEcMBoGA1UECgwTQVBPVEVLIDEgR1JVUFBFTiBBUzEiMCAGA1UECwwZQVBPVEVLIDEgVsOFR0VOLTk5MTU1NzQwNzEcMBoGA1UEAwwTQVBPVEVLIDEgR1JVUFBFTiBBUzESMBAGA1UEBRMJOTgzMDQ0Nzc4MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyd8LtIDw/eav5GDcGkocdCg5mdLMaKm118704LuWfSwktGuwgrJI/K9lxHgF0/jRzE+EVpUV33zjrL0eieryHB5hGksKIzIN/eqfG56sH9AlfxpHMsdx+QbxhEILMqjDdk8Sg3O7j0Gj8OCD8MOAusruTrOitCx8L1DEPwH2TzYuCSQIPtUZgWxd6syd5Y4QXv2XBi7eXPa5oP9MJGHSZSf3JIQrVQKAgKHwqDRkuFB5pL00h9l9pe7U0awuk22JIMaN2NFq04r918s2r6BRThFprXD+AH5zANCqshZYBuUYyhlNIaHBusoPf3MRENINpXOkrMnJaYvOE7L+0ZinHwIDAQABo4IB4TCCAd0wCQYDVR0TBAIwADAfBgNVHSMEGDAWgBQ/rvV4C5KjcCA1X1r69ySgUgHwQTAdBgNVHQ4EFgQUcO5Lch/cgu14xT8P1MJog3wugiUwDgYDVR0PAQH/BAQDAgZAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDAWBgNVHSAEDzANMAsGCWCEQgEaAQADAjCBuwYDVR0fBIGzMIGwMDegNaAzhjFodHRwOi8vY3JsLnRlc3Q0LmJ1eXBhc3Mubm8vY3JsL0JQQ2xhc3MzVDRDQTMuY3JsMHWgc6Bxhm9sZGFwOi8vbGRhcC50ZXN0NC5idXlwYXNzLm5vL2RjPUJ1eXBhc3MsZGM9Tk8sQ049QnV5cGFzcyUyMENsYXNzJTIwMyUyMFRlc3Q0JTIwQ0ElMjAzP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3QwgYoGCCsGAQUFBwEBBH4wfDA7BggrBgEFBQcwAYYvaHR0cDovL29jc3AudGVzdDQuYnV5cGFzcy5uby9vY3NwL0JQQ2xhc3MzVDRDQTMwPQYIKwYBBQUHMAKGMWh0dHA6Ly9jcnQudGVzdDQuYnV5cGFzcy5uby9jcnQvQlBDbGFzczNUNENBMy5jZXIwDQYJKoZIhvcNAQELBQADggEBAJddK761lwjYr8lwG6FW+CMr2T4G5RyUmqgyRsLbIaNKzmK1ECT+cPJx/SWvK0l5lKH2lOt+lo8lHLZoK/jnN57JhIeoHr3WnyHolzX6NMKRS6+R6X8ksfFCMAIJv8kgByG8OqCz7zONLWVO6Y9YstLausdz5oUw1sURu+p6Kpiz1W98PdWvh39gK1SuOQQMjEzXG8gJDwlGId5XYBtVZ1+j8EhANYrOfbBHfEYuj0FszglizoaA0ODWmRQkxRQGnvou3z5vAXdDoeAEyCh9YSpjtGT5VivMX3AjrVDILrr/QIejbyrRl8uacBiVzYZAAq9ESJ0ShJtUp/d0gHqQyuc=</X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+</MsgHead>

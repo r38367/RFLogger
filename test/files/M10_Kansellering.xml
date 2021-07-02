@@ -1,0 +1,96 @@
+<h:MsgHead xmlns:h="http://www.kith.no/xmlstds/msghead/2006-05-24">
+  <h:MsgInfo>
+    <h:Type DN="Utleveringsrapport reseptbanken" V="ERM10" />
+    <h:MIGversion>v1.2 2006-05-24</h:MIGversion>
+    <h:GenDate>2021-07-01T10:31:12.788Z</h:GenDate>
+    <h:MsgId>a1d8a2a4-0300-404b-b8c0-53f07bafe016</h:MsgId>
+    <h:ConversationRef>
+      <h:RefToParent>92ff8faf-293e-4c9f-bd96-c1641f077d1f</h:RefToParent>
+      <h:RefToConversation>0bf94e85-39aa-4de9-84da-8118632f6ed0</h:RefToConversation>
+    </h:ConversationRef>
+    <h:Sender>
+      <h:Organisation>
+        <h:OrganisationName>TEST A1 Skovveien</h:OrganisationName>
+        <h:Ident>
+          <h:Id>983044778</h:Id>
+          <h:TypeId DN="Organisasjonsnummeret i Enhetsregister" V="ENH" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:Ident>
+          <h:Id>8138277</h:Id>
+          <h:TypeId DN="HER-id" V="HER" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:Ident>
+          <h:Id>8139</h:Id>
+          <h:TypeId DN="Apotekets konsesjonsnummer" V="AKO" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:TeleCom>
+          <h:TypeTelecom DN="Hjemme eller ukjent" V="H" />
+          <h:TeleAddress V="tel:Ukjent" />
+        </h:TeleCom>
+      </h:Organisation>
+    </h:Sender>
+    <h:Receiver>
+      <h:Organisation>
+        <h:OrganisationName>Reseptformidleren</h:OrganisationName>
+        <h:Ident>
+          <h:Id>983544622</h:Id>
+          <h:TypeId DN="Organisasjonsnummeret i Enhetsregister" V="ENH" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:Ident>
+          <h:Id>80624</h:Id>
+          <h:TypeId DN="Identifikator fra Helsetjenesteenhetsregisteret" V="HER" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+      </h:Organisation>
+    </h:Receiver>
+    <h:Patient>
+      <h:Ident>
+        <h:Id>17094393213</h:Id>
+        <h:TypeId DN="Fødselsnummer" V="FNR" S="2.16.578.1.12.4.1.1.8116" />
+      </h:Ident>
+    </h:Patient>
+  </h:MsgInfo>
+  <h:Document>
+    <h:DocumentConnection DN="Hoveddokument" V="H" />
+    <h:RefDoc>
+      <h:MsgType DN="XML-instans" V="XML" />
+      <h:Content>
+        <Utleveringsrapport xmlns="http://www.kith.no/xmlstds/eresept/m10/2013-10-08">
+          <Utlevering xmlns="http://www.kith.no/xmlstds/eresept/utlevering/2013-10-08">
+            <ReseptId>e4738aa3-f451-4b23-ac22-206fb5413bbf</ReseptId>
+            <Utleveringsdato>2021-07-01</Utleveringsdato>
+            <Annullering>false</Annullering>
+            <Utleverer>
+              <HerId>
+                <Id xmlns="http://www.kith.no/xmlstds/felleskomponent1">8138277</Id>
+                <TypeId xmlns="http://www.kith.no/xmlstds/felleskomponent1" DN="HER-id" V="HER" S="2.16.578.1.12.4.1.1.9051" />
+              </HerId>
+              <Navn>TEST A1 Skovveien</Navn>
+            </Utleverer>
+          </Utlevering>
+          <Kanselleringskode DN="Uavhentet vare" V="3" />
+          <ReservasjonRapportFastlege>false</ReservasjonRapportFastlege>
+          <AnsattId>12056001881</AnsattId>
+        </Utleveringsrapport>
+      </h:Content>
+    </h:RefDoc>
+  </h:Document>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+      <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+      <Reference URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <DigestValue>P6UhI9LtRr3v0jFBqaStc8EdKk0=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>WFvTAmqB/3fA9vgvBEVhHlHBOLDc9+eM70adp+IOw30joobui9d8S3Y7EYr5ELH2yVF5JSxusNI778rqZB0hUAMIuP3sulT8E5qOBcAQHr5Op9DeXi1Y39PDIC90+dghSnmsosihy9VNHDOL0evs7fJMoCboB1r6d7EXJh3YdXRGZkrLDaA1OLo+VofWyL7QZ9Yp3I9AM6xuKYG9xRhkFXr7N3A5V8j3FXU+/GrRj406/h9Ex2kFPBePQlYkJo+oztxzW0n6/lf9GP7fjVfxz1Qoph+XAQKY2FpqrAJbtVuIg/khIBiK330/kAvNDBx42MenxmoC7EzpWeJVaARq/A==</SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509Certificate>MIIFOzCCBCOgAwIBAgILAkkY00360Zqt4MgwDQYJKoZIhvcNAQELBQAwUTELMAkGA1UEBhMCTk8xHTAbBgNVBAoMFEJ1eXBhc3MgQVMtOTgzMTYzMzI3MSMwIQYDVQQDDBpCdXlwYXNzIENsYXNzIDMgVGVzdDQgQ0EgMzAeFw0yMDA0MjQxNDUxNDhaFw0yMzA0MjQyMTU5MDBaMIGBMQswCQYDVQQGEwJOTzEcMBoGA1UECgwTQVBPVEVLIDEgR1JVUFBFTiBBUzEkMCIGA1UECwwbVEVTVCBBMSBTa292dmVpZW4tOTk4ODU4OTY4MRowGAYDVQQDDBFURVNUIEExIFNrb3Z2ZWllbjESMBAGA1UEBRMJOTgzMDQ0Nzc4MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnw+ungGEoWfzOGD8jezufvyrCnXjlsCD90SRm9GGG3NurvhzSBdJPpX6tLuh1j8QG3Se6U8A1S2Cdo5k6yUVdfrF7XVehD8AvLq3QgFEmqGmzBNRXTXbGO8kf/clkVNes0vN5eKhhfKDQktTdlwEIvFJ6t5bLkRb4cBJlhDjRR+RoHylbYdiCrItTaH4Q8FE20dlX1DRqram8FxgKkTRLgHgNqGTDY8uMtCmnquKrxRNkRLPRPE1xts3O94ZC7PX0sFsGzTt4SW6P8YP/7ofXicjjN5SEX2SPbmjPYupgTiJZUfPEq8xQ4avm9Pl7qbUGCSvFtGBZl3d565GcCb4jQIDAQABo4IB4TCCAd0wCQYDVR0TBAIwADAfBgNVHSMEGDAWgBQ/rvV4C5KjcCA1X1r69ySgUgHwQTAdBgNVHQ4EFgQU2pTYOM4xkm5p2EfRkZ2+uVZc53gwDgYDVR0PAQH/BAQDAgZAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDAWBgNVHSAEDzANMAsGCWCEQgEaAQADAjCBuwYDVR0fBIGzMIGwMDegNaAzhjFodHRwOi8vY3JsLnRlc3Q0LmJ1eXBhc3Mubm8vY3JsL0JQQ2xhc3MzVDRDQTMuY3JsMHWgc6Bxhm9sZGFwOi8vbGRhcC50ZXN0NC5idXlwYXNzLm5vL2RjPUJ1eXBhc3MsZGM9Tk8sQ049QnV5cGFzcyUyMENsYXNzJTIwMyUyMFRlc3Q0JTIwQ0ElMjAzP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3QwgYoGCCsGAQUFBwEBBH4wfDA7BggrBgEFBQcwAYYvaHR0cDovL29jc3AudGVzdDQuYnV5cGFzcy5uby9vY3NwL0JQQ2xhc3MzVDRDQTMwPQYIKwYBBQUHMAKGMWh0dHA6Ly9jcnQudGVzdDQuYnV5cGFzcy5uby9jcnQvQlBDbGFzczNUNENBMy5jZXIwDQYJKoZIhvcNAQELBQADggEBAKj7ZLByZtoFaR07zTy+bKoSbo/MjQdwu6ZUQtyfGi/vQ1huIdP420C3bfAxEd+cJVnGSHlo6GpeZu5eHGFF0JrGNB3cwfOehazfiESUGg0xQb5GYAdH6PHj8sBWt6Iy8/VbqCDAbT5UbZ2tGg5HfOAd3WKXn4M4k3bb1mKylJ0Q9rwy+xwDNQWYhmQ/ZuFqCHKa+0zdEFGYPPtioEoo95EL9K9isGfd36/NN/R1ibIvsp8A2dWDw4RFKUfYUmkbznh1nNkS0WPGMWUbjSHd9VDqbcSB2UW2NfmYfKT9iO40G61vVrSnrHktiOUet/0aex2pu68LeDkMag5eCjE5rkM=</X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+</h:MsgHead>

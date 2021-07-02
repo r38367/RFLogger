@@ -1,0 +1,127 @@
+<h:MsgHead xmlns:h="http://www.kith.no/xmlstds/msghead/2006-05-24">
+  <h:MsgInfo>
+    <h:Type DN="Utleveringsrapport reseptbanken" V="ERM10" />
+    <h:MIGversion>v1.2 2006-05-24</h:MIGversion>
+    <h:GenDate>2021-06-12T09:20:32.087Z</h:GenDate>
+    <h:MsgId>5e11ac3a-c6db-4a95-93ec-0cabb97e7b2b</h:MsgId>
+    <h:ConversationRef>
+      <h:RefToParent>7330a6db-7c45-4cc9-80fb-4817fa748c11</h:RefToParent>
+      <h:RefToConversation>fc1e29a5-d5ea-4ef7-b538-ff0ad227bf2a</h:RefToConversation>
+    </h:ConversationRef>
+    <h:Sender>
+      <h:Organisation>
+        <h:OrganisationName>Apotek 1 Amanda</h:OrganisationName>
+        <h:Ident>
+          <h:Id>983044778</h:Id>
+          <h:TypeId DN="Organisasjonsnummeret i Enhetsregister" V="ENH" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:Ident>
+          <h:Id>88689</h:Id>
+          <h:TypeId DN="HER-id" V="HER" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:Ident>
+          <h:Id>9994</h:Id>
+          <h:TypeId DN="Apotekets konsesjonsnummer" V="AKO" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:TeleCom>
+          <h:TypeTelecom DN="Hovedtelefon" V="HP" />
+          <h:TeleAddress V="tel:99999999" />
+        </h:TeleCom>
+      </h:Organisation>
+    </h:Sender>
+    <h:Receiver>
+      <h:Organisation>
+        <h:OrganisationName>Reseptformidleren</h:OrganisationName>
+        <h:Ident>
+          <h:Id>983544622</h:Id>
+          <h:TypeId DN="Organisasjonsnummeret i Enhetsregister" V="ENH" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:Ident>
+          <h:Id>80624</h:Id>
+          <h:TypeId DN="Identifikator fra Helsetjenesteenhetsregisteret" V="HER" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+      </h:Organisation>
+    </h:Receiver>
+    <h:Patient>
+      <h:FamilyName>Sortland</h:FamilyName>
+      <h:GivenName>Herman</h:GivenName>
+      <h:Sex DN="Kvinne" V="2" />
+      <h:Ident>
+        <h:Id>22109345931</h:Id>
+        <h:TypeId DN="Fødselsnummer" V="FNR" S="2.16.578.1.12.4.1.1.8116" OT="Norsk fødselsnummer" />
+      </h:Ident>
+    </h:Patient>
+  </h:MsgInfo>
+  <h:Document>
+    <h:DocumentConnection DN="Hoveddokument" V="H" />
+    <h:RefDoc>
+      <h:MsgType DN="XML-instans" V="XML" />
+      <h:Content>
+        <Utleveringsrapport xmlns="http://www.kith.no/xmlstds/eresept/m10/2013-10-08">
+          <Utlevering xmlns="http://www.kith.no/xmlstds/eresept/utlevering/2013-10-08">
+            <ReseptId>ef82e120-5c7f-4a98-ac44-5df30190dc46</ReseptId>
+            <Utleveringsdato>2021-06-12</Utleveringsdato>
+            <Annullering>false</Annullering>
+            <Avsluttet DN="Nei" V="2" />
+            <ReseptDokLegemiddel xmlns="http://www.kith.no/xmlstds/eresept/m1/2013-10-08">
+              <Varegruppekode DN="Legemiddel" V="L" />
+              <Antall>1</Antall>
+              <RefHjemmel DN="§5-14 §2" V="200" S="2.16.578.1.12.4.1.1.7427" OT="Helseforetak har finansieringsansvaret for legemiddelbehandlingen" />
+              <RefKode DN="Betydelig forhøyet risiko for å utvikle aterosklerotisk sykdom (primærprevensjon)" V="-27" S="2.16.578.1.12.4.1.1.7434" OT="dette er en tekst" />
+              <Reiterasjon>8</Reiterasjon>
+              <Forskrivning xmlns="http://www.kith.no/xmlstds/eresept/forskrivning/2013-10-08">
+                <Legemiddelpakning>
+                  <NavnFormStyrke>Zocor Tab 40 mg</NavnFormStyrke>
+                  <Reseptgruppe DN="Reseptgruppe C" V="C" />
+                  <Varenr>003805</Varenr>
+                  <PakningsinfoResept>
+                    <Varenavn>Zocor</Varenavn>
+                    <Pakningsstr>98</Pakningsstr>
+                    <EnhetPakning DN="sett" V="SETT" S="2.16.578.1.12.4.1.1.7484" OT="dette er en tekst" />
+                  </PakningsinfoResept>
+                </Legemiddelpakning>
+              </Forskrivning>
+            </ReseptDokLegemiddel>
+            <Utleverer>
+              <HerId>
+                <Id xmlns="http://www.kith.no/xmlstds/felleskomponent1">88689</Id>
+                <TypeId xmlns="http://www.kith.no/xmlstds/felleskomponent1" DN="HER-id" V="HER" S="2.16.578.1.12.4.1.1.9051" />
+              </HerId>
+              <Navn>Apotek 1 Amanda</Navn>
+            </Utleverer>
+          </Utlevering>
+          <ReservasjonRapportFastlege>true</ReservasjonRapportFastlege>
+          <PrisLegemiddelUtenMt V="200" U="NOK" />
+          <AnsattId>gvnlbihcqz</AnsattId>
+          <Papirresept>true</Papirresept>
+          <RekvirentPapir xmlns="http://www.kith.no/xmlstds/eresept/utlevering/2013-10-08">
+            <Ident>
+              <Id xmlns="http://www.kith.no/xmlstds/felleskomponent1">565465066</Id>
+              <TypeId xmlns="http://www.kith.no/xmlstds/felleskomponent1" DN="HPR-nummer" V="HPR" S="2.16.578.1.12.4.1.1.8116" OT="Lege" />
+            </Ident>
+            <RekvirentNordisk>false</RekvirentNordisk>
+          </RekvirentPapir>
+        </Utleveringsrapport>
+      </h:Content>
+    </h:RefDoc>
+  </h:Document>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+      <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+      <Reference URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <DigestValue>taDFBNyM5uhrHCG7lA3bOfyhWp8=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>fYzsdXqGWI+Yx2l7zicZdh+o8m/JXumrsAgsUQIww9DQvGBw4bmKpqm572Pme8KNG89IJYw6DGVG3CjHV559fwbhI/ni8dr8vdaThn4JEuKyx7LNQ7px/s5ErvRrNqLEaRr9XeozYg0ySX/Sd5WXVKv7pISKJqvvYjHHfuUo9eOqIokWqTptW29ioRBfVzILNuf9rYethgbFC4xWmvUo1ijzk/A1WHNMaym9FS34WHTF1RTAqjMUJnIMrqa6Oh0JKdDsTyyAFwlw/SJU8bTQkx6hefzKx5Kciizbbg8E5BkwqT9Y1ciNmAMFQYaO+qcS2AKVYfH/ZFWagxuhSpemfQ==</SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509Certificate>MIIFNjCCBB6gAwIBAgILAj17Yn+mqjad+0kwDQYJKoZIhvcNAQELBQAwUTELMAkGA1UEBhMCTk8xHTAbBgNVBAoMFEJ1eXBhc3MgQVMtOTgzMTYzMzI3MSMwIQYDVQQDDBpCdXlwYXNzIENsYXNzIDMgVGVzdDQgQ0EgMzAeFw0yMDAzMDIxMDM0MDFaFw0yMzAzMDIyMjU5MDBaMH0xCzAJBgNVBAYTAk5PMRwwGgYDVQQKDBNBUE9URUsgMSBHUlVQUEVOIEFTMSIwIAYDVQQLDBlBUE9URUsgMSBBTUFOREEtOTgzNTU4NDM3MRgwFgYDVQQDDA9BUE9URUsgMSBBTUFOREExEjAQBgNVBAUTCTk4MzA0NDc3ODCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKskASqk/st/UmjKk1l4Du6pFK/vJnigr075TsBuehxjO6OI2OauU0IIT2ZpYBIl57IVAUkrkaPGRefwv4yrxY1Sb1+f2MOtopxGhTvxGuwbQ9imJOC8KfHqLdIJ3gsbGfZgXRk8suG5WMFAnD/1heIdTp9bgx0dwOV63gm4wj2QAYkUXnFOKt4ptL7aIz7IV0qgf/ydBumUPRp70LZhDsweR40cdKam2mLCfpXRwSS7CPB1I5U5qFEq1yrzPFjy0Ubn0W+76tgAHedcuj42GN4xY+UkBKD4QzRM68QL9nF2SZ7BObl7ivxWnXDH/Feyv0TX0O4fai1UwYFeoxWA4W8CAwEAAaOCAeEwggHdMAkGA1UdEwQCMAAwHwYDVR0jBBgwFoAUP671eAuSo3AgNV9a+vckoFIB8EEwHQYDVR0OBBYEFEu20X0UvdZXQuOnLcy7S5hUVsamMA4GA1UdDwEB/wQEAwIGQDAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwFgYDVR0gBA8wDTALBglghEIBGgEAAwIwgbsGA1UdHwSBszCBsDA3oDWgM4YxaHR0cDovL2NybC50ZXN0NC5idXlwYXNzLm5vL2NybC9CUENsYXNzM1Q0Q0EzLmNybDB1oHOgcYZvbGRhcDovL2xkYXAudGVzdDQuYnV5cGFzcy5uby9kYz1CdXlwYXNzLGRjPU5PLENOPUJ1eXBhc3MlMjBDbGFzcyUyMDMlMjBUZXN0NCUyMENBJTIwMz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0MIGKBggrBgEFBQcBAQR+MHwwOwYIKwYBBQUHMAGGL2h0dHA6Ly9vY3NwLnRlc3Q0LmJ1eXBhc3Mubm8vb2NzcC9CUENsYXNzM1Q0Q0EzMD0GCCsGAQUFBzAChjFodHRwOi8vY3J0LnRlc3Q0LmJ1eXBhc3Mubm8vY3J0L0JQQ2xhc3MzVDRDQTMuY2VyMA0GCSqGSIb3DQEBCwUAA4IBAQCrSZLLp8cr9fB+VRLM+1+0xblLcCe8FUvBaIibnZM/o/ZVnBMM7DHpLbOy7qHyAbalTzpUdI39k6Ai2t6r/AHg0/9cC+S7bRp3nTxdgEsRe2VcU6x7H+sQpDfV4Dn243fzlbdxsEQYGy6R0cKpfWN7Ax5aZ4XgGChjooUeTwGJX5teY7BtFZQ7/lgm7dSpw8kKv2nM9MTkwL9hy3gxSm1yj685rFKqXMze3vgl7fEE/g5469HzOzBIZIdYWzFBU/ejYP+wkaPfUVT1CgcqXIxf/f/T9/nujZPGQ/feQqlN7/1i8x6ccZO/IeeJa4kuTLsuJ3vos2rpexk9OP0L4oLm</X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+</h:MsgHead>

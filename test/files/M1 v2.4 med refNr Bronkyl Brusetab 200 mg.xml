@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MsgHead xmlns="http://www.kith.no/xmlstds/msghead/2006-05-24">
+  <MsgInfo>
+    <Type DN="Resept" V="ERM1"/>
+    <MIGversion>v1.2 2006-05-24</MIGversion>
+    <GenDate>2019-03-19T10:10:38.9788174+01:00</GenDate>
+    <MsgId>95daaa63-5769-467c-bef4-158d1d43fb22</MsgId>
+    <Sender>
+      <Organisation>
+        <OrganisationName>Flexicom legekontor</OrganisationName>
+        <Ident>
+          <Id>500000001</Id>
+          <TypeId DN="Organisasjonsnummeret i Enhetsregister (Brønnøysund)" V="ENH" S="2.16.578.1.12.4.1.1.9051"/>
+        </Ident>
+        <Ident>
+          <Id>8093226</Id>
+          <TypeId DN="HER-id" V="HER" S="2.16.578.1.12.4.1.1.9051"/>
+        </Ident>
+        <Ident>
+          <Id>0</Id>
+          <TypeId DN="Nasjonalt register over enheter i spesialisthelsetjenesten (RESH-ID)" V="RSH" S="2.16.578.1.12.4.1.1.9051"/>
+        </Ident>
+        <Address>
+          <Type DN="Besøksadresse" V="RES"/>
+          <StreetAdr>Verkstedveien 1</StreetAdr>
+          <PostalCode>0102</PostalCode>
+          <City>Oslo</City>
+        </Address>
+        <TeleCom>
+          <TypeTelecom DN="Hovedtelefon" V="HP"/>
+          <TeleAddress V="tel:22222222"/>
+        </TeleCom>
+        <HealthcareProfessional>
+          <TypeHealthcareProfessional DN="Lege" V="LE"/>
+          <FamilyName>Ulven</FamilyName>
+          <GivenName>Vivi Psa</GivenName>
+          <Sex DN="Ikke spesifisert" V="9"/>
+          <Ident>
+            <Id>222200082</Id>
+            <TypeId V="HPR" S="2.16.578.1.12.4.1.1.8116" DN="HPR-nummer"/>
+          </Ident>
+          <Address>
+            <Type V="WP" DN="Arbeidsadresse"/>
+            <StreetAdr>Flexicom Legekontor
+Testeveien</StreetAdr>
+            <PostalCode>0102</PostalCode>
+            <City>OSLO</City>
+          </Address>
+        </HealthcareProfessional>
+      </Organisation>
+    </Sender>
+    <Receiver>
+      <Organisation>
+        <OrganisationName>Reseptformidleren</OrganisationName>
+        <Ident>
+          <Id>915933149</Id>
+          <TypeId DN="Organisasjonsnummeret i Enhetsregister (Brønnøysund)" V="ENH" S="2.16.578.1.12.4.1.1.9051"/>
+        </Ident>
+        <Ident>
+          <Id>80624</Id>
+          <TypeId DN="HER-id" V="HER" S="2.16.578.1.12.4.1.1.9051"/>
+        </Ident>
+      </Organisation>
+    </Receiver>
+    <Patient>
+      <FamilyName>STORLIEN</FamilyName>
+      <GivenName>ÅSE</GivenName>
+      <Sex V="2" DN="Kvinne"/>
+      <Ident>
+        <Id>13090571421</Id>
+        <TypeId V="FNR" S="2.16.578.1.12.4.1.1.8116" DN="Fødselsnummer"/>
+      </Ident>
+      <Address>
+        <Type V="H" DN="Bostedsadresse"/>
+        <StreetAdr>TESTVEIEN</StreetAdr>
+        <PostalCode>0588</PostalCode>
+        <City>OSLO</City>
+        <County DN="Oslo" V="0301"/>
+      </Address>
+    </Patient>
+  </MsgInfo>
+  <Document>
+    <RefDoc>
+      <MsgType V="XML" DN="XML-instans"/>
+      <Content>
+        <Resept xmlns="http://www.kith.no/xmlstds/eresept/m1/2010-05-01">
+          <Forskrivningsdato>2019-03-19+01:00</Forskrivningsdato>
+          <Utloper>2020-03-18+01:00</Utloper>
+          <RefNr>6774730870</RefNr>
+          <ReseptDokLegemiddel>
+            <Varegruppekode DN="Legemiddel" V="L"/>
+            <Antall>1</Antall>
+            <Reiterasjon>0</Reiterasjon>
+            <Forskrivning xmlns="http://www.kith.no/xmlstds/eresept/forskrivning/2010-04-01">
+              <Bruksomrade>SLIMLØSENDE</Bruksomrade>
+              <DosVeiledEnkel>1 tablett inntil 3 ganger daglig</DosVeiledEnkel>
+              <Bruk DN="Fast" V="1"/>
+              <Legemiddelpakning>
+                <Atc V="R05CB01" S="2.16.578.1.12.4.1.1.7180" DN="Acetylcystein"/>
+                <NavnFormStyrke>Bronkyl Brusetab 200 mg</NavnFormStyrke>
+                <Reseptgruppe V="F" DN="Reseptgruppe F"/>
+                <LegemiddelformKort V="16" S="2.16.578.1.12.4.1.1.7448" DN="Brusetablett"/>
+                <Varenr>437472</Varenr>
+                <PakningsinfoResept>
+                  <Varenavn>Bronkyl</Varenavn>
+                  <Pakningsstr>10</Pakningsstr>
+                  <EnhetPakning V="stk" S="2.16.578.1.12.4.1.1.7452" DN="stykk"/>
+                </PakningsinfoResept>
+              </Legemiddelpakning>
+            </Forskrivning>
+          </ReseptDokLegemiddel>
+          <OppdatertFest>2019-03-07T12:33:49</OppdatertFest>
+        </Resept>
+      </Content>
+    </RefDoc>
+  </Document>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+      <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <Reference URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <DigestValue>dYnjnUWZeLAfjjkXybmH0o8xP7wAXbDFKeHYI5lYCBI=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>BSHxQQhAnBH//P/M0bmUt7NbEBMkHawXtt0/i5QV78BpccT2cNASOz9IR4Ur3eHbcmr5IL8LdUADs8HV5OeXbjbcKWW7d9Bavm00EXl6A/MidZDA5bhBUaZgx6dzo6GcIAlOG3r6NbhRXTpSIKqE5zYVYe14JGFK621jCmBs1FNStFCBy2ZWZsi9RyghczGy21Z/0vAMyptWqkIeik9CPq/L+AriOKNg17MIpVe8mHb/IF4QXOHCpZbEL1bV7jUKGcuO24lNuwhMxnk8OD75aMM1Umxh5PBzG4u514W3tijGmoisPlzLK28xne1HmjaPagWCUEttLeT0I/QA6QI=</SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509Certificate>MIIE2DCCA8CgAwIBAgILAQkjMWfURUYzr0gwDQYJKoZIhvcNAQELBQAwUTELMAkGA1UEBhMCTk8xHTAbBgNVBAoMFEJ1eXBhc3MgQVMtOTgzMTYzMzI3MSMwIQYDVQQDDBpCdXlwYXNzIENsYXNzIDMgVGVzdDQgQ0EgMzAeFw0xNjA0MjAxMjE4MjBaFw0xOTA0MjAyMTU5MDBaMEMxCzAJBgNVBAYTAk5PMRcwFQYDVQQDDA5WSVZJIFBTQSBVTFZFTjEbMBkGA1UEBRMSOTU3OC00MDUwLTEwMDExNDgwMIIBHzANBgkqhkiG9w0BAQEFAAOCAQwAMIIBBwKB/wChp2Z9pQsqm1oCQEG8c18y9PkiybFixAdK4hKTr4GPZewmrn7pqCseSSB6kmhveH/zidSEGMcHO/gIOZ7UnApOcQ0Uny9ikqA3ilYeHww6qy+zHnPyBGIY6Jgpz3pYp/8y1YtUjidTjD0kHZeCxw8XHs/7sNWZ/pLou26cyyUoHvheklWU8ZO06jYkOryHy6JSNvX41pvs3w/bxsE1Lyqy/8NdAuOeS/JDmGugPkhNcxR+0we7AlJ+wa7fj7Z7e8KJ6/w39Op6ljkcvPNTt6cka5LqHfdHVMVotuOwG6zCJKBKJRIHkWqT/ukqHSl+fSHNZnfOJ9qzHuv59Cw98wIDAQABo4IBwDCCAbwwCQYDVR0TBAIwADAfBgNVHSMEGDAWgBQ/rvV4C5KjcCA1X1r69ySgUgHwQTAdBgNVHQ4EFgQUcZULgyvZooOhHJkr1tUM9BrIqP0wDgYDVR0PAQH/BAQDAgZAMBQGA1UdIAQNMAswCQYHYIRCARoBADCBuwYDVR0fBIGzMIGwMDegNaAzhjFodHRwOi8vY3JsLnRlc3Q0LmJ1eXBhc3Mubm8vY3JsL0JQQ2xhc3MzVDRDQTMuY3JsMHWgc6Bxhm9sZGFwOi8vbGRhcC50ZXN0NC5idXlwYXNzLm5vL2RjPUJ1eXBhc3MsZGM9Tk8sQ049QnV5cGFzcyUyMENsYXNzJTIwMyUyMFRlc3Q0JTIwQ0ElMjAzP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3QwgYoGCCsGAQUFBwEBBH4wfDA7BggrBgEFBQcwAYYvaHR0cDovL29jc3AudGVzdDQuYnV5cGFzcy5uby9vY3NwL0JQQ2xhc3MzVDRDQTMwPQYIKwYBBQUHMAKGMWh0dHA6Ly9jcnQudGVzdDQuYnV5cGFzcy5uby9jcnQvQlBDbGFzczNUNENBMy5jZXIwDQYJKoZIhvcNAQELBQADggEBAFijEbVkiJdRzKJmyEIiqmChkWX1alG1puky9cqtafupvlpWX+S0ak+8+Y3NczvqthQK/TUNR+9N3CPAQfvf1Rh7OgXQjv6ZOZsE/ZxlayEfDt/ToLROiO3WMvGohWWOIo9jAAMrmJk/G+P0dmr23jnRyCPg1n+ssjxuTV2+Q9OzfjVj726kaPfpG2vRumG5/N6WKuu38MOUxnuwEkM2XPckaXQUaOFSHYOgstHNMKR2S9x1i0YScQN8v9of+VCPZEPKeGDVPvjPTBUI9dr9gKCvHThNH+9CnuDzeLpLJuQnNL5IJwYkZEt7/LJkyX18va8SJuqB73ajprFEPQ1NRC0=</X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+</MsgHead>

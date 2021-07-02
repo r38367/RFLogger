@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AppRec xmlns="http://www.kith.no/xmlstds/apprec/2004-11-21" xmlns:xsd="http://www.w3.org/2001/XMLSchema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kith.no/xmlstds/apprec/2004-11-21 AppRec-v1-2004-11-21.xsd">
+  <MsgType V="APPREC"/>
+  <MIGversion>1.0 2004-11-21</MIGversion>
+  <GenDate>2021-06-28T17:30:02.650+02:00</GenDate>
+  <Id>8e5c35e6-905b-42df-a154-866cccd307b5</Id>
+  <Sender>
+    <HCP>
+      <Inst>
+        <Name>Reseptformidleren</Name>
+        <Id>994598759</Id>
+        <TypeId V="ENH" DN="Organisasjonsnummeret i Enhetsregister"/>
+      </Inst>
+      <Address>
+        <Type V="PST"/>
+        <TeleAddress V="mailto:reseptformidleren@evry.com"/>
+      </Address>
+    </HCP>
+  </Sender>
+  <Receiver>
+    <HCP>
+      <Inst>
+        <Name>Vitusapotek Test Turing</Name>
+      </Inst>
+      <Address>
+        <Type V="Besøksadresse" DN="RES"/>
+        <StreetAdr/>
+        <City/>
+        <Country V="Norge" DN="NO"/>
+      </Address>
+    </HCP>
+  </Receiver>
+  <Status V="2" DN="Avvist"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="360" DN="Din organisasjon er ikke godkjent av Direktoratet for e-helse til å benytte e-reseptløsningen."/>
+  <OriginalMsgId>
+    <MsgType V="ERM921" DN="M9_21"/>
+    <IssueDate>2021-06-28T17:30:00.102+02:00</IssueDate>
+    <Id>cf40b26d-eee9-4c40-8bcb-fec1d9de3598</Id>
+  </OriginalMsgId>
+</AppRec>

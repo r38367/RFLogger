@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AppRec xmlns="http://www.kith.no/xmlstds/apprec/2004-11-21" xmlns:xsd="http://www.w3.org/2001/XMLSchema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kith.no/xmlstds/apprec/2004-11-21 AppRec-v1-2004-11-21.xsd">
+  <MsgType V="APPREC"/>
+  <MIGversion>1.0 2004-11-21</MIGversion>
+  <GenDate>2021-06-28T17:17:19.195+02:00</GenDate>
+  <Id>dda1f0f4-ef85-4bc3-8b34-9fb77ba40aea</Id>
+  <Sender>
+    <HCP>
+      <Inst>
+        <Name>Reseptformidleren</Name>
+        <Id>994598759</Id>
+        <TypeId V="ENH" DN="Organisasjonsnummeret i Enhetsregister"/>
+      </Inst>
+      <Address>
+        <Type V="PST"/>
+        <TeleAddress V="mailto:reseptformidleren@evry.com"/>
+      </Address>
+    </HCP>
+  </Sender>
+  <Receiver>
+    <HCP>
+      <Inst>
+        <Name>Vitec HK Data as</Name>
+      </Inst>
+      <Address>
+        <Type V="RES" DN="Besøksadresse"/>
+        <StreetAdr>Gate 1234</StreetAdr>
+        <PostalCode>2353</PostalCode>
+        <City>Stavsjø</City>
+      </Address>
+    </HCP>
+  </Receiver>
+  <Status V="2" DN="Avvist"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="49" DN="Maksimalt antall referansenummer som kan etterspørres er 100."/>
+  <OriginalMsgId>
+    <MsgType V="ERM41" DN="Forespørsel om referansenummere"/>
+    <IssueDate>2021-06-28T17:17:01.459+02:00</IssueDate>
+    <Id>a2b71b1f-d523-4df3-935a-1c2a049bfe28</Id>
+  </OriginalMsgId>
+</AppRec>

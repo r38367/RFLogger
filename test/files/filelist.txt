@@ -1,0 +1,18 @@
+M1 v2.4
+M1 v2.5
+M1 legemiddel
+M1 forbruks
+M1 narings
+M1 Fnr
+M1 Dnr
+M1 f.dato
+M1 $4
+M1 $Y
+M1 $H
+M1 $3
+M1 $2
+
+M10 
+M10 intervensjon 
+
+Apprec

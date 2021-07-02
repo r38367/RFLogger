@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AppRec xmlns="http://www.kith.no/xmlstds/apprec/2004-11-21" xmlns:xsd="http://www.w3.org/2001/XMLSchema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kith.no/xmlstds/apprec/2004-11-21 AppRec-v1-2004-11-21.xsd">
+  <MsgType V="APPREC"/>
+  <MIGversion>1.0 2004-11-21</MIGversion>
+  <GenDate>2021-06-28T17:46:36.670+02:00</GenDate>
+  <Id>02df916a-cba2-4ca7-9720-e3d3446070f1</Id>
+  <Sender>
+    <HCP>
+      <Inst>
+        <Name>Reseptformidleren</Name>
+        <Id>994598759</Id>
+        <TypeId V="ENH" DN="Organisasjonsnummeret i Enhetsregister"/>
+      </Inst>
+      <Address>
+        <Type V="PST"/>
+        <TeleAddress V="mailto:reseptformidleren@evry.com"/>
+      </Address>
+    </HCP>
+  </Sender>
+  <Receiver>
+    <HCP>
+      <Inst>
+        <Name>Solstua legekontor</Name>
+      </Inst>
+      <Address>
+        <Type V="WP" DN="Arbeidsadresse"/>
+        <StreetAdr>Verksedveien 1</StreetAdr>
+        <PostalCode>277</PostalCode>
+        <City>Oslo</City>
+      </Address>
+    </HCP>
+  </Receiver>
+  <Status V="3" DN="OK, feil i delmelding"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="320" DN="Feil eller manglende verdi i meldingen." OT="Gjelder Mailadresse for Organisasjon i Sender. Lovlig verdi er kode WC/Arbeidsplass, sentralbord + mailto:nnnnn."/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="327" DN="Oppgitt systemkode er ikke godkjent for bruk i reseptformidleren." OT="SystemCode:'testSystemCode-Solstua'"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="351" DN="Feltlengde overskredet." OT="Gjelder SystemCode i mottatt melding.'"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="367" DN="Din organisasjon er feilkonfigurert i RFAdmin." OT="HERid:8134032. Mangler info om epost."/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="379" DN="Din organisasjon er ikke registrert med korrekt tjenestetype i RFAdmin."/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="300" DN="Organisasjonsnummeret på virksomhetssertifikatet er ikke gyldig ifølge Enhetsregisteret." OT="OrgNr på virksomhetssertifikatet:100117606"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="6" DN="HPR nummer for rekvirent mangler."/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="394" DN="Hpr i token er ikke det samme som hpr i melding og hpr i hpr-registeret"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="214" DN="Rekvirentens fornavn mangler."/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="213" DN="Rekvirentens etternavn mangler."/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="384" DN="Denne CPAid'n har ikke brukt siste utgave av RF sertifikatet." OT="CPAid:80624_8134032_1"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="383" DN="Feilkonfigurert partnership (CPA)." OT="CPAid:80624_8134032_1. Avvik på 'SignCertOrgnr'"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="383" DN="Feilkonfigurert partnership (CPA)." OT="CPAid:80624_8134032_1. Avvik på 'SignCertCn'"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="383" DN="Feilkonfigurert partnership (CPA)." OT="CPAid:80624_8134032_1. Avvik på 'CryptCertOrgnr'"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="383" DN="Feilkonfigurert partnership (CPA)." OT="CPAid:80624_8134032_1. Avvik på 'CryptCertCn'"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="383" DN="Feilkonfigurert partnership (CPA)." OT="CPAid:80624_8134032_1. Avvik på organisasjonsnummer mellom signeringssertifikat og krypteringssertifikat i CPA."/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="383" DN="Feilkonfigurert partnership (CPA)." OT="CPAid:80624_8134032_1. Avvik på 'CryptCertNotAfter' og 'GyldigTil'"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="383" DN="Feilkonfigurert partnership (CPA)." OT="CPAid:80624_8134032_1. Avvik på 'CryptCertNotAfter' og 'SignCertNotAfter'"/>
+  <Error S="2.16.578.1.12.4.1.1.7419" V="361" DN="Feil eller mangler i meldingen gjør at den ikke kan lagres og info i meldingen er derfor ikke tatt vare på i RF."/>
+  <OriginalMsgId>
+    <MsgType V="ERMV" DN="Verify"/>
+    <IssueDate>2021-06-28T17:46:32.619+02:00</IssueDate>
+    <Id>01ac8eae-b41f-46c9-ba98-1c2a0f489a5b</Id>
+  </OriginalMsgId>
+</AppRec>
