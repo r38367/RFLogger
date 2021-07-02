@@ -30,8 +30,11 @@ Update History:
 18 - replace ClipGet with GetBodyText
 25/6/21
 19 - move Msg and _IE function in own files: lib_ie.au3 lib_msg.au3
+26/6/21
 20 - add specific GetMsgXXX functions
-
+21 - remove debug output to edit control
+2/7/2021
+22 - do not overwrite file if it exists. To protect from messages with the same ID which first failed
 ================================
 #ce
 
@@ -216,11 +219,16 @@ GUICtrlSetData($idLabel, "Get Active IE" )
 
 			GUICtrlSetData($idLabel, $i & "/" & $nMsgCount & " " & $txt)
 
+			Local $sParam
+
 			Local $html = _IEGetPage( $oLink.href )
+			if @error then return 0
 
 			$html = _ER_GetBody($html)
 
-			Local $sParam = _ER_GetExtraParam( $msgType, $html )
+			$sParam = _ER_GetExtraParam( $html )
+
+
 			Local $fname = $msgType & StringReplace( $sParam, " ", "_" ) & "_" & $msgId & ".xml"
 
 			if _save_xml( $fname, $html ) then
@@ -230,15 +238,15 @@ GUICtrlSetData($idLabel, "Get Active IE" )
 				If FileSetTime( $fname, $t, 0) = 0 then
 					Dbg("error filesettime " & $fname )
 				EndIf
+			Else
+				$sParam = "not saved ***"
 			EndIf
-
 
 			$i += 1
 
 			;Local $ret = $msgTime & " " & $msgType & " " & $msgId
 
-			GUICtrlSetData($idEdit, StringMid( $msgTime, 12, 8) & " " & $msgType & $sParam & " " & StringLeft( $msgId, 9) & "..." & @CRLF, 0)
-
+			GUICtrlSetData($idEdit, StringMid( $msgTime, 12, 8) & " " & $msgType & " " & StringLeft( $msgId, 9) & " " & $sParam  & @CRLF, 0)
 
 		EndIf
 	Next
@@ -255,16 +263,13 @@ EndFunc
 
 Func	_save_xml( $fname, $html )
 
-	; get msgid fra link
-	;Local $sec=_DateDiff ( "s", "2021/1/1 00:00:00", _NowCalc() )
-	;Local $fname = _ER_GetMsgType( $html) & "_" & $msgId&".xml"
-	Local $h = FileOpen( $fname, 2)
-	if FileWrite( $h, $html ) = 0 then
+	if FileExists( $fname ) then
+		return 0 ; do not overwrite
+	endif
+
+	if FileWrite( $fname, $html ) = 0 then
 		Dbg("error write file " & $fname )
 		return 0
-	ElseIf FileClose( $h) = 0 then
-		Dbg("error close file " & $fname )
-		Return 0
 	EndIf
 
 	Return 1
