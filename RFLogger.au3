@@ -34,7 +34,8 @@ Update History:
 20 - add specific GetMsgXXX functions
 21 - remove debug output to edit control
 2/7/2021
-22 - do not overwrite file if it exists. To protect from messages with the same ID which first failed
+22 - do not overwrite file if it exists. To protect from messages with the same ID which first failed (#11)
+23 - #6 add button Clear and Rename Hent to Get
 ================================
 #ce
 
@@ -60,14 +61,14 @@ Update History:
 
 ; #VARIABLES# ===================================================================================================================
 #Region Global Variables
-Global $idButton
+Global $idButtonGet
+Global $idButtonClear
 Global $idEdit
 Global $idLabel
 Global $nLine = 0
 #EndRegion Global Variables
 
 ; #CONSTANTS# ===================================================================================================================
-
 
 ;OnAutoItExitRegister("MyExitFunc")
 Opt('MustDeclareVars', 1)
@@ -87,9 +88,12 @@ Func	Main()
 
 		$msg = GUIGetMsg()
 
-		if $msg = $idButton then
+		if $msg = $idButtonGet then
 			;Gui_update_list()
-			Hent_Button_pressed()
+			Get_Button_pressed()
+		ElseIf $msg = $idButtonClear then
+			;Gui_update_list()
+			Clear_Button_pressed()
 		EndIf
 
 	Until $msg = $GUI_EVENT_CLOSE
@@ -111,14 +115,19 @@ Func GUI_Create()
 
 	; Create input
 
-	GUICreate( "Get all active messages - " & GetVersion(), 600,200,-1,-1,$WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
+	GUICreate( "Get all active messages - " & GetVersion(), 660, 200, -1, -1, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
 
 
-	$idButton = GUICtrlCreateButton("Hent", 540, 10, 50, 30)
+	$idButtonGet = GUICtrlCreateButton("Get", 600, 5, 50, 30)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
-	$idEdit = GUICtrlCreateEdit("", 10, 50, 580, 120, $ES_READONLY + $ES_AUTOVSCROLL + $WS_VSCROLL)
+
+	$idButtonClear = GUICtrlCreateButton("Clear", 540, 5, 50, 30)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
-	$idLabel = GUICtrlCreateLabel(	"", 10, 20, 500, 30)
+
+	$idEdit = GUICtrlCreateEdit("", 10, 40, 640, 120, $ES_READONLY + $ES_AUTOVSCROLL + $WS_VSCROLL)
+	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
+
+	$idLabel = GUICtrlCreateLabel(	"", 10, 10, 520, 30)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 
     GUISetState(@SW_SHOW)
@@ -132,7 +141,18 @@ EndFunc
 ; Function Name:    Hent_Button_pressed()
 ;===============================================================================
 
-Func	Hent_Button_pressed()
+Func Clear_Button_pressed()
+
+	GUICtrlSetData($idLabel,"" )
+	GUICtrlSetData($idEdit, "" )
+
+EndFunc
+
+;===============================================================================
+; Function Name:    Hent_Button_pressed()
+;===============================================================================
+
+Func	Get_Button_pressed()
 
 	Local $oTab
 
