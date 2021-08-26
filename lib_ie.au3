@@ -40,20 +40,62 @@ EndFunc
 ; Parameter(s):     None
 ; Requirement(s):   AutoIt3 V3.2 or higher
 ;                   On Success  - Returns an object variable pointing to the IE Window Object
-;                   On Failure  - Returns 0 and sets @ERROR
-;                   @ERROR      - 0 ($_IEStatus_Success) = No Error
-;                               - 7 ($_IEStatus_NoMatch) = No Match
+;                   On Failure  - Returns  0 if no active IE windows 
+;				- Returns -1 if no IE instance found  
 ; Author(s):        Dan Pollak
 ;===============================================================================
 ;
 Func _IEGetActiveTab()
-Local $hwnd, $oW
+Local $aWinList, $oTab
+	; get all IE windows start from top. Top window is first.
+	$aWinList = WinList("[REGEXPTITLE:(?i)(.*Internet Explorer.*)]")
 
-	$hwnd = _IEGetActiveWindow()	; get top IE window
-	If $hwnd = 0 Then Return -1
-	$oW = _IEAttach($hwnd,"embedded")	; get active tab in window
-	if @error then return @error
-	Return $oW
+	if $aWinList[0][0] = 0 then
+		return 0
+	EndIf
+
+#cs -------
+	to avoid problem that there can be empty window on top which does not have IE instance
+	we check if window handle exists in the list of IE instances
+
+	windows list :
+	1. 0x1404   <- skip window not linked to IE on top
+	2. 0x4566   <- real top IE window as it matched IE instance window
+	3. 0x3444
+
+	IE instaces window handles
+	1. 0x3444   <- IE tab in window #1
+	2. 0x4566   <- IE tab in window #2
+	2. 0x4566   <- IE tab in window #2
+
+	To select the tab from top window:
+	oTab = _IEAttach( "0x4566", "embedded" )
+
+#ce ---------
+
+	for $i=1 to UBound($aWinList, 1)-1
+
+		Local $n=1
+		while $n
+			$oTab = _IEAttach( "", "instance", $n )
+			If @error > 0 then ;= $_IESTATUS_NoMatch Then
+				ExitLoop
+			EndIf
+
+			; if IE instance has same window handle (hwnd) then it is the right tab
+			if _IEPropertyGet( $oTab, "hwnd" ) = $aWinList[$i][1] then
+
+				Return _IEAttach($aWinList[$i][1],"embedded")	; get active tab in window
+
+			EndIf
+
+			$n += 1
+
+		WEnd
+
+	Next
+
+	Return -1
 
 EndFunc
 
