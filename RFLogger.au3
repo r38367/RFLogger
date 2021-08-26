@@ -36,6 +36,8 @@ Update History:
 2/7/2021
 22 - do not overwrite file if it exists. To protect from messages with the same ID which first failed (#11)
 23 - #6 add button Clear and Rename Hent to Get
+26/8/2021
+24 - #8 fixed _IEGetActiveTab - return top tab now
 ================================
 #ce
 
