@@ -38,6 +38,8 @@ Update History:
 23 - #6 add button Clear and Rename Hent to Get
 26/8/2021
 24 - #8 fixed _IEGetActiveTab - return top tab now
+27/8/2021
+25 - always add logging t0 the end of text
 ================================
 #ce
 
@@ -158,12 +160,12 @@ Func	Get_Button_pressed()
 
 	Local $oTab
 
-;GUICtrlSetData($idEdit, "" )
-GUICtrlSetData($idLabel, "Get Active IE" )
+	GUICtrlSetData($idLabel, "Get Active IE" )
 
-;Get_line_from_link( "https://rfadmin.test2.reseptformidleren.net/RFAdmin/loggeview.rfa?loggeId=c7d0d0b6-4014-4ef0-be60-d9522d39045a&filename=/nfstest2/sharedFiles/log/2021/175/21/13/c7d0d0b6-4014-4ef0-be60-d9522d39045a" )
-;return
-
+	; move to the end of text
+	Local $cEnd = StringLen( GUICtrlRead($idEdit) )
+	GuiCtrlSendMsg($idEdit, $EM_SETSEL, $cEnd, $cEnd )
+	
 	; get Activ IE window
 	$oTab = _IEGetActiveTab()
 	if not IsObj($oTab) then
