@@ -11,7 +11,10 @@ EndFunc
 Func	_ER_GetMsgType( $html)
 
 	Local $a = StringRegExp( $html, '(?s)MsgInfo>.*?<.*?Type.*?V="(.*?)"', 1)
-	if @error then return 0
+	if @error then
+		$a = StringRegExp( $html, '(?s)MsgType.*?V="(.*?)"', 1)
+		if @error then return 0
+	EndIf
 	return $a[0]
 
 EndFunc
@@ -67,7 +70,7 @@ Func	_ER_GetApprec( $html)
 	if _ER_GetApprecType( $html) then $text = " " & _ER_GetApprecType( $html)
 	if _ER_GetApprecStatus($html) then $text &= " " & _ER_GetApprecStatus($html)
 	if _ER_GetApprecError($html) then $text &= " " & _ER_GetApprecError($html)
-	if _ER_GetApprecRef($html) then $text &= " " & _ER_GetApprecRef($html)
+	if _ER_GetApprecRef($html) then $text &= " " & StringLeft( _ER_GetApprecRef($html), 9)
 	return $text
 
 EndFunc

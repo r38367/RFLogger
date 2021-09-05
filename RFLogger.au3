@@ -35,11 +35,14 @@ Update History:
 21 - remove debug output to edit control
 2/7/2021
 22 - do not overwrite file if it exists. To protect from messages with the same ID which first failed (#11)
-23 - #6 add button Clear and Rename Hent to Get
-26/8/2021
-24 - #8 fixed _IEGetActiveTab - return top tab now
-27/8/2021
-25 - always add logging t0 the end of text
+23 - fixed #6 add button Clear and Rename Hent to Get
+26/8/21
+24 - fixed #8 Can't find active tab
+27/8/21
+25 - Always add logg to the end of text
+5/9/21
+26 - fixed #5 Apprec doesn't work -> diff msg format for apprec
+   - when file exists - return 2
 ================================
 #ce
 
@@ -59,7 +62,7 @@ Update History:
 #Region Lib files
 ;OnAutoItExitRegister("MyExitFunc")
 #include "lib_msg.au3"
-#include "lib_ie.au3"
+#include "lib_ie24.au3"
 #EndRegion LIB files
 
 
@@ -160,12 +163,17 @@ Func	Get_Button_pressed()
 
 	Local $oTab
 
-	GUICtrlSetData($idLabel, "Get Active IE" )
+;GUICtrlSetData($idEdit, "" )
+GUICtrlSetData($idLabel, "Get Active IE" )
+
+;Get_line_from_link( "https://rfadmin.test2.reseptformidleren.net/RFAdmin/loggeview.rfa?loggeId=c7d0d0b6-4014-4ef0-be60-d9522d39045a&filename=/nfstest2/sharedFiles/log/2021/175/21/13/c7d0d0b6-4014-4ef0-be60-d9522d39045a" )
+;return
 
 	; move to the end of text
 	Local $cEnd = StringLen( GUICtrlRead($idEdit) )
 	GuiCtrlSendMsg($idEdit, $EM_SETSEL, $cEnd, $cEnd )
-	
+	;GUICtrlSetData($idEdit, _NowTime(), 0)
+
 	; get Activ IE window
 	$oTab = _IEGetActiveTab()
 	if not IsObj($oTab) then
@@ -224,7 +232,6 @@ Func	Get_Button_pressed()
 	GUICtrlSetData($idLabel, "6. Got links..." )
 
 	;Local $iNumLinks = @extended
-
 	$txt = ""
 	Local $i = 1
 	For $oLink In $oLinks
@@ -252,19 +259,20 @@ Func	Get_Button_pressed()
 
 			$sParam = _ER_GetExtraParam( $html )
 
-
 			Local $fname = $msgType & StringReplace( $sParam, " ", "_" ) & "_" & $msgId & ".xml"
 
-			if _save_xml( $fname, $html ) then
-
+			switch _save_xml( $fname, $html )
+			Case 1 ; ok
 				;12.07.2019 18:15:04.275
 				Local $t = StringRegExpReplace( $msgTime, "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d)", "$3$2$1$4$5$6")
 				If FileSetTime( $fname, $t, 0) = 0 then
 					Dbg("error filesettime " & $fname )
 				EndIf
-			Else
-				$sParam = "not saved ***"
-			EndIf
+			Case 2 ; file exists
+				$sParam = "*** file exists " & $sParam
+			Case 0 ; error saving file
+				$sParam = $sParam & "*** not saved " & $sParam
+			EndSwitch
 
 			$i += 1
 
@@ -288,7 +296,7 @@ EndFunc
 Func	_save_xml( $fname, $html )
 
 	if FileExists( $fname ) then
-		return 0 ; do not overwrite
+		return 2 ; do not overwrite
 	endif
 
 	if FileWrite( $fname, $html ) = 0 then
