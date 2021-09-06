@@ -62,7 +62,7 @@ Update History:
 #Region Lib files
 ;OnAutoItExitRegister("MyExitFunc")
 #include "lib_msg.au3"
-#include "lib_ie24.au3"
+#include "lib_ie.au3"
 #EndRegion LIB files
 
 

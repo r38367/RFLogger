@@ -45,11 +45,11 @@ Func	_ER_GetMsgTime( $html)
 
 EndFunc
 
-Func _ER_GetExtraParam( $msgType, $html )
+Func _ER_GetExtraParam( $html )
 
 	Local $ret = ""
 
-	Switch $msgType
+	Switch _ER_GetMsgType( $html)
 		case "ERM1"
 			$ret = _ER_GetM1($html)
 		case "ERM10"
@@ -69,7 +69,6 @@ Func	_ER_GetApprec( $html)
 
 	if _ER_GetApprecType( $html) then $text = " " & _ER_GetApprecType( $html)
 	if _ER_GetApprecStatus($html) then $text &= " " & _ER_GetApprecStatus($html)
-	if _ER_GetApprecError($html) then $text &= " " & _ER_GetApprecError($html)
 	if _ER_GetApprecRef($html) then $text &= " " & StringLeft( _ER_GetApprecRef($html), 9)
 	return $text
 
@@ -94,13 +93,13 @@ EndFunc
 Func	_ER_GetApprecStatus( $html)
 	return _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
 	;<Status V="2" DN="Avvist" />
-
 EndFunc
 
 Func	_ER_GetApprecError( $html)
-	return _ER_GetParam( $html, '(?s)Error>.*?V="(.*?)".*?>' )
+	return _ER_GetParam( $html, '(?s)Error.*?V="(.*?)".*?>' ) & ")"
 	; <Error V="360"
 EndFunc
+
 
 Func _ER_GetM1($html)
 
@@ -128,6 +127,7 @@ Local $text = ""
 	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
+	if _ER_GetReseptId( $html) then $text &= " " & _ER_GetReseptId($html)
 
 	Return	$text
 
@@ -145,13 +145,14 @@ EndFunc
 Func _ER_GetReseptId( $html)
 ;<Utlevering xmlns="http://www.kith.no/xmlstds/eresept/utlevering/2013-10-08">
 ;<ReseptId>
-	return _ER_GetParam( $html, '(?s)ReseptId>(.*?)<' )
+	return StringLeft(_ER_GetParam( $html, '(?s)ReseptId>(.*?)<' ),9)
 EndFunc
 
 Func _ER_GetKansellering( $html)
 
 ;<Kanselleringskode V="1" DN="Ikke ønsket vare"/>
-	return _ER_GetParam( $html, '(?s)Kanselleringskode>.*?DN="(.*?)"' ) = 0 ? 0: "Kansellering"
+	Local $ret = _ER_GetParam( $html, '(?s)Kanselleringskode.*?DN="(.*?)"' );
+	return $ret ? "Kansellering " & $ret: 0
 EndFunc
 
 
