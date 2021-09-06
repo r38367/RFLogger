@@ -45,6 +45,7 @@ Update History:
    - when file exists - return 2
 6/9/21
 27 - fixed #24 - Resize controls when resize window
+28 - added #25 - Add M9.5
 ================================
 #ce
 
@@ -184,8 +185,8 @@ GUICtrlSetData($idLabel, "Get Active IE" )
 	$oTab = _IEGetActiveTab()
 	if not IsObj($oTab) then
 		; start IE
-		;_IECreate( "https://rfadmin.test1.reseptformidleren.net/RFAdmin/loglist.rfa" )
-		Dbg("*** Error: No active IE tab " & $oTab )
+		_IECreate( "https://rfadmin.test1.reseptformidleren.net/RFAdmin/loglist.rfa" )
+		;Dbg("*** Error: No active IE tab " & $oTab )
 		return 0
 	EndIf
 	GUICtrlSetData($idLabel,"1. IE found..." )

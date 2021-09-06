@@ -10,6 +10,11 @@
 Function to work with IE
 	_IEGetActibTab() - Retrieve the Window Object of the currently active IE (on top)
 	_IEGetActibWindow() -
+
+
+
+26/6/21
+21 - remove debug output to edit control
 #ce ----------------------------------------------------------------------------
 
 ;===============================================================================
@@ -40,8 +45,9 @@ EndFunc
 ; Parameter(s):     None
 ; Requirement(s):   AutoIt3 V3.2 or higher
 ;                   On Success  - Returns an object variable pointing to the IE Window Object
-;                   On Failure  - Returns  0 if no active IE windows 
-;				- Returns -1 if no IE instance found  
+;                   On Failure  - Returns 0 and sets @ERROR
+;                   @ERROR      - 0 ($_IEStatus_Success) = No Error
+;                               - 7 ($_IEStatus_NoMatch) = No Match
 ; Author(s):        Dan Pollak
 ;===============================================================================
 ;
@@ -98,7 +104,6 @@ Local $aWinList, $oTab
 	Return -1
 
 EndFunc
-
 ;===============================================================================
 ;
 ; Function Name:    _IEGetBodyText( $sLink )
@@ -106,34 +111,36 @@ EndFunc
 ; Parameter(s):     $sLink - link to web page
 ; Returns:
 ;			Text string with page contents
-;           On Failure  - Returns 0 and sets @ERROR
-;           @ERROR      - 0 ($_IEStatus_Success) = No Error
-;                       - 7 ($_IEStatus_NoMatch) = No Match
-;===============================================================================
-; Returns web page text
+;           On Failure  - Returns 0 and sets @error
+;				1 - TabCreate error sets @extended to Tabcreate @ERROR
+;				2 - webadress not opened, likely passowrd required, @extended = actual address
+;				3 - _IEBodyReadText error and sets @extended to _IERead @error
+;				4 - Quit error and @extended = Quit @error
+; =========================================================
 Func	_IEGetPage( $sLink )
 
+	Local $err = 0
 	Local $oMain = _IEAttach( "", "instance", 1 )
 
 	Local $o = _IEEx_TabCreate( $oMain, $sLink )
-Dbg("Tab create -- " & @error & " " & isobj($o) )
+;Dbg("Tab create -- " & @error & " " & isobj($o) )
+	if @error then return SetError(1, @error, 0)
 
 	; check that the link is right
 if _IEPropertyGet( $o, "locationurl" ) <> $sLink then
 	; we are not on that page: password?
 	; wait until you enter password or enter selv?
-Dbg("Fail page  -- " & _IEPropertyGet( $o, "locationurl" )  )
-	SetError( 2 )
-	return 0
+;Dbg("Fail page  -- " & _IEPropertyGet( $o, "locationurl" )  )
+	 Return SetError(2, 0,_IEPropertyGet( $o, "locationurl" ) )
 EndIf
 
 	Local $html = _IEBodyReadText( $o )
-Dbg( "Get body " & @error & " " & isobj($o) )
-;MsgBox( 0, "_IEBody Text", $html )
-;	FileWrite( "_IEBodyReadText.txt", $html )
+	;Dbg( "Get body " & @error & " " & isobj($o) )
+	if @error then Return SetError(3, @error, 0 )
 
-
-Dbg( "Quit " & _IEQuit($o) & " " & @error & " " & isobj($o) )
+	_IEQuit($o)
+;Dbg( "Quit " & _IEQuit($o) & " " & @error & " " & isobj($o) )
+	if @error then return SetError(4, @error, 0 )
 
 	return $html
 
