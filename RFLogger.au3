@@ -43,6 +43,8 @@ Update History:
 5/9/21
 26 - fixed #5 Apprec doesn't work -> diff msg format for apprec
    - when file exists - return 2
+6/9/21
+27 - fixed #24 - Resize controls when resize window
 ================================
 #ce
 
@@ -127,15 +129,19 @@ Func GUI_Create()
 
 	$idButtonGet = GUICtrlCreateButton("Get", 600, 5, 50, 30)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
+	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
 
 	$idButtonClear = GUICtrlCreateButton("Clear", 540, 5, 50, 30)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
+	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
 
 	$idEdit = GUICtrlCreateEdit("", 10, 40, 640, 120, $ES_READONLY + $ES_AUTOVSCROLL + $WS_VSCROLL)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
+	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS )
 
 	$idLabel = GUICtrlCreateLabel(	"", 10, 10, 520, 30)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
+	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKHEIGHT )
 
     GUISetState(@SW_SHOW)
 
