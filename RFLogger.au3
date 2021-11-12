@@ -64,7 +64,7 @@ Update History:
 #EndRegion Global Include files
 
 Global $gIEhwnd = -1
-Global $sLogfileName
+Global $gLogfile = "x.x"
 
 ; #LIB# ===================================================================================================================
 #Region Lib files
@@ -174,12 +174,14 @@ EndFunc
 Func	Get_Button_pressed()
 
 	Local $oTab
-	Local $sLogfileName = @YEAR & @MON & @MDAY & "_" & @HOUR & @MIN & @SEC & ".log"
+	$gLogfile = @YEAR & @MON & @MDAY & "_" & @HOUR & @MIN & @SEC & ".txt"
 
 ;GUICtrlSetData($idEdit, "" )
 GUICtrlSetData($idLabel, "Get Active IE" )
 
 DbgFile( "start " & _Now()  )
+DbgFile( $gLogfile )
+LogFile( "start " & _Now()  )
 
 _IELoadWaitTimeout( 3000 )
 
@@ -338,7 +340,8 @@ Func	DbgFile( $txt )
 EndFunc
 
 Func	LogFile( $txt )
-	FileWriteLine( $sLogfileName, $txt )
+	FileWriteLine( $gLogfile, $txt )
+
 EndFunc
 
 ; -----------------------------------------------------------------------------
