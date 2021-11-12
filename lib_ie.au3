@@ -91,6 +91,7 @@ Local $aWinList, $oTab
 			; if IE instance has same window handle (hwnd) then it is the right tab
 			if _IEPropertyGet( $oTab, "hwnd" ) = $aWinList[$i][1] then
 
+				$gIEhwnd = $aWinList[$i][1]
 				Return _IEAttach($aWinList[$i][1],"embedded")	; get active tab in window
 
 			EndIf
@@ -119,28 +120,44 @@ EndFunc
 ; =========================================================
 Func	_IEGetPage( $sLink )
 
+	DbgFile( "-->_IEGetPage " & $sLink )
+
 	Local $err = 0
-	Local $oMain = _IEAttach( "", "instance", 1 )
+	Local $oMain = _IEAttach( $gIEhwnd, "hwnd" ) ;_IEAttach( "", "instance", 1 )
+
+	DbgFile( "   _IEAttach" )
 
 	Local $o = _IEEx_TabCreate( $oMain, $sLink )
 ;Dbg("Tab create -- " & @error & " " & isobj($o) )
-	if @error then return SetError(1, @error, 0)
+	if @error then
+		return "Error _TabCreate " & @error & " " & @extended ;SetError(1, @error, 0)
+	EndIf
+	DbgFile( "   _IEEX_TabCreate" )
 
 	; check that the link is right
 if _IEPropertyGet( $o, "locationurl" ) <> $sLink then
 	; we are not on that page: password?
 	; wait until you enter password or enter selv?
 ;Dbg("Fail page  -- " & _IEPropertyGet( $o, "locationurl" )  )
-	 Return SetError(2, 0,_IEPropertyGet( $o, "locationurl" ) )
+	 Return "Error opened link failed: " & @CRLF & $sLink & @CR & _IEPropertyGet( $o, "locationurl" ) ;SetError(1, @error, 0) ;SetError(2, 0,_IEPropertyGet( $o, "locationurl" ) )
 EndIf
+DbgFile( "   _IEPropertyGet" )
 
 	Local $html = _IEBodyReadText( $o )
 	;Dbg( "Get body " & @error & " " & isobj($o) )
-	if @error then Return SetError(3, @error, 0 )
+	if @error then
+		Return "Error _IEBodyReadText " & @error & " " & @extended
+		;Return SetError(3, @error, 0 )
+	endif
+DbgFile( "   _IEBodyReadText" )
 
 	_IEQuit($o)
 ;Dbg( "Quit " & _IEQuit($o) & " " & @error & " " & isobj($o) )
-	if @error then return SetError(4, @error, 0 )
+	if @error then
+		Return "Error _IEQuit" & @error & " " & @extended
+		;return SetError(4, @error, 0 )
+	endif
+DbgFile( "<--_IEQuit" )
 
 	return $html
 

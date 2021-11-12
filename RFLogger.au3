@@ -46,6 +46,8 @@ Update History:
 6/9/21
 27 - fixed #24 - Resize controls when resize window
 28 - added #25 - Add M9.5
+29 - added global hwnd to fix _IEAttach
+   - added global logfileName
 ================================
 #ce
 
@@ -60,6 +62,9 @@ Update History:
 #include <EditConstants.au3>
 #include <FontConstants.au3>
 #EndRegion Global Include files
+
+Global $gIEhwnd = -1
+Global $sLogfileName
 
 ; #LIB# ===================================================================================================================
 #Region Lib files
@@ -169,9 +174,14 @@ EndFunc
 Func	Get_Button_pressed()
 
 	Local $oTab
+	Local $sLogfileName = @YEAR & @MON & @MDAY & "_" & @HOUR & @MIN & @SEC & ".log"
 
 ;GUICtrlSetData($idEdit, "" )
 GUICtrlSetData($idLabel, "Get Active IE" )
+
+DbgFile( "start " & _Now()  )
+
+_IELoadWaitTimeout( 3000 )
 
 ;Get_line_from_link( "https://rfadmin.test2.reseptformidleren.net/RFAdmin/loggeview.rfa?loggeId=c7d0d0b6-4014-4ef0-be60-d9522d39045a&filename=/nfstest2/sharedFiles/log/2021/175/21/13/c7d0d0b6-4014-4ef0-be60-d9522d39045a" )
 ;return
@@ -260,8 +270,11 @@ GUICtrlSetData($idLabel, "Get Active IE" )
 			Local $sParam
 
 			Local $html = _IEGetPage( $oLink.href )
-			if @error then return 0
-
+			if @error then
+				DbgFile( $html)
+				$sParam = $html
+				;return 0
+Else
 			$html = _ER_GetBody($html)
 
 			$sParam = _ER_GetExtraParam( $html )
@@ -280,12 +293,13 @@ GUICtrlSetData($idLabel, "Get Active IE" )
 			Case 0 ; error saving file
 				$sParam = $sParam & "*** not saved " & $sParam
 			EndSwitch
-
+EndIf
 			$i += 1
 
-			;Local $ret = $msgTime & " " & $msgType & " " & $msgId
+			Local $retText = StringMid( $msgTime, 12, 8) & " " & $msgType & " " & StringLeft( $msgId, 9) & " " & $sParam
 
-			GUICtrlSetData($idEdit, StringMid( $msgTime, 12, 8) & " " & $msgType & " " & StringLeft( $msgId, 9) & " " & $sParam  & @CRLF, 0)
+			GUICtrlSetData($idEdit, $retText & @CRLF, 0)
+			LogFile( $retText )
 
 		EndIf
 	Next
@@ -317,9 +331,15 @@ EndFunc
 
 Func	Dbg( $txt )
 	GUICtrlSetData($idEdit, $txt & @CRLF, 0)
-
 EndFunc
 
+Func	DbgFile( $txt )
+	FileWriteLine( "log.txt", $txt )
+EndFunc
+
+Func	LogFile( $txt )
+	FileWriteLine( $sLogfileName, $txt )
+EndFunc
 
 ; -----------------------------------------------------------------------------
 ; Function: GetVersion
