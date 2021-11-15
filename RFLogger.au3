@@ -262,6 +262,7 @@ _IELoadWaitTimeout( 3000 )
 			Local $msgTime = $aTableData[$i][2]
 			Local $msgSystem = $aTableData[$i][3]
 			Local $msgType = $aTableData[$i][4]
+			Local $msgHerId = $aTableData[$i][10]
 
 			$txt =  $msgTime
 			$txt &=  " " & $msgType
@@ -282,7 +283,9 @@ Else
 
 			$sParam = _ER_GetExtraParam( $html )
 
-			Local $fname = $msgType & StringReplace( $sParam, " ", "_" ) & "_" & $msgId & ".xml"
+			Local $fname = $msgType & StringReplace( $sParam, " ", "_" ) & "_" & StringLeft( $msgId, 9) & ".xml"
+
+			$sParam = $sParam & " " & $msgHerId
 
 			switch _save_xml( $fname, $html )
 			Case 1 ; ok
@@ -292,9 +295,9 @@ Else
 					Dbg("error filesettime " & $fname )
 				EndIf
 			Case 2 ; file exists
-				$sParam = "*** file exists " & $sParam
+				$sParam = $sParam & " *** file exists"
 			Case 0 ; error saving file
-				$sParam = $sParam & "*** not saved " & $sParam
+				$sParam = $sParam & " *** not saved"
 			EndSwitch
 EndIf
 			$i += 1
