@@ -135,7 +135,7 @@ Func	_IEGetPage( $sLink )
 	DbgFile( "   _IEEX_TabCreate" )
 
 	; Wait until all code loaded! otherwise window.onLoad is not completed?
-	Sleep( 500 )
+	Sleep( 250 )
 
 	; check that the link is right
 if _IEPropertyGet( $o, "locationurl" ) <> $sLink then
@@ -152,7 +152,7 @@ DbgFile( "   _IEPropertyGet" )
 		Return SetError(3, 0, "*** Error _IEBodyReadText " & @error & " " & @extended )
 	endif
 DbgFile( "   _IEBodyReadText " & StringLen( $html) & " " & StringLeft( StringStripWS( $html, 8), 15  ))
-FileWrite( _ER_GetParam( $sLink, '(?s)loggeId=(.*?)-' ) & ".txt", $html)
+;FileWrite( _ER_GetParam( $sLink, '(?s)loggeId=(.*?)-' ) & ".txt", $html)
 
 	_IEQuit($o)
 ;Dbg( "Quit " & _IEQuit($o) & " " & @error & " " & isobj($o) )
