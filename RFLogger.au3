@@ -64,7 +64,8 @@ Update History:
 #EndRegion Global Include files
 
 Global $gIEhwnd = -1
-Global $gLogfile = "x.x"
+Global $gLogfile = "log"
+Global $gDebugFile = "_debug.txt"
 
 ; #LIB# ===================================================================================================================
 #Region Lib files
@@ -174,13 +175,12 @@ EndFunc
 Func	Get_Button_pressed()
 
 	Local $oTab
-	$gLogfile = @YEAR & @MON & @MDAY & "_" & @HOUR & @MIN & @SEC & ".txt"
+	$gLogfile = @YEAR & @MON & @MDAY & "_" & @HOUR & @MIN & @SEC & "_log.txt"
 
 ;GUICtrlSetData($idEdit, "" )
 GUICtrlSetData($idLabel, "Get Active IE" )
 
 DbgFile( "start " & _Now()  )
-DbgFile( $gLogfile )
 LogFile( "start " & _Now()  )
 
 _IELoadWaitTimeout( 3000 )
@@ -270,12 +270,13 @@ _IELoadWaitTimeout( 3000 )
 			GUICtrlSetData($idLabel, $i & "/" & $nMsgCount & " " & $txt)
 
 			Local $sParam
-
+DbgFileClear()
+DbgFile( $txt )
 			Local $html = _IEGetPage( $oLink.href )
 			if @error then
 				DbgFile( $html)
 				$sParam = $html
-				;return 0
+				;return 0 ;
 Else
 			$html = _ER_GetBody($html)
 
@@ -335,8 +336,12 @@ Func	Dbg( $txt )
 	GUICtrlSetData($idEdit, $txt & @CRLF, 0)
 EndFunc
 
+func DbgFileClear()
+	FileDelete( $gDebugFile )
+EndFunc
+
 Func	DbgFile( $txt )
-	FileWriteLine( "log.txt", $txt )
+	FileWriteLine( $gDebugFile, $txt )
 EndFunc
 
 Func	LogFile( $txt )

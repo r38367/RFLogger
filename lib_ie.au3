@@ -130,32 +130,34 @@ Func	_IEGetPage( $sLink )
 	Local $o = _IEEx_TabCreate( $oMain, $sLink )
 ;Dbg("Tab create -- " & @error & " " & isobj($o) )
 	if @error then
-		return "Error _TabCreate " & @error & " " & @extended ;SetError(1, @error, 0)
+		return SetError(1, 0, "*** Error _TabCreate " & @error & " " & @extended )
 	EndIf
 	DbgFile( "   _IEEX_TabCreate" )
+
+	; Wait until all code loaded! otherwise window.onLoad is not completed?
+	Sleep( 500 )
 
 	; check that the link is right
 if _IEPropertyGet( $o, "locationurl" ) <> $sLink then
 	; we are not on that page: password?
 	; wait until you enter password or enter selv?
 ;Dbg("Fail page  -- " & _IEPropertyGet( $o, "locationurl" )  )
-	 Return "Error opened link failed: " & @CRLF & $sLink & @CR & _IEPropertyGet( $o, "locationurl" ) ;SetError(1, @error, 0) ;SetError(2, 0,_IEPropertyGet( $o, "locationurl" ) )
+	 Return SetError(2, 0,"*** Error opened link failed: " & @CRLF & $sLink & @CR & _IEPropertyGet( $o, "locationurl" ) )
 EndIf
 DbgFile( "   _IEPropertyGet" )
 
 	Local $html = _IEBodyReadText( $o )
 	;Dbg( "Get body " & @error & " " & isobj($o) )
 	if @error then
-		Return "Error _IEBodyReadText " & @error & " " & @extended
-		;Return SetError(3, @error, 0 )
+		Return SetError(3, 0, "*** Error _IEBodyReadText " & @error & " " & @extended )
 	endif
-DbgFile( "   _IEBodyReadText" )
+DbgFile( "   _IEBodyReadText " & StringLen( $html) & " " & StringLeft( StringStripWS( $html, 8), 15  ))
+FileWrite( _ER_GetParam( $sLink, '(?s)loggeId=(.*?)-' ) & ".txt", $html)
 
 	_IEQuit($o)
 ;Dbg( "Quit " & _IEQuit($o) & " " & @error & " " & isobj($o) )
 	if @error then
-		Return "Error _IEQuit" & @error & " " & @extended
-		;return SetError(4, @error, 0 )
+		Return SetError(4, 0, "*** Error _IEQuit" & @error & " " & @extended )
 	endif
 DbgFile( "<--_IEQuit" )
 
