@@ -134,16 +134,33 @@ Func	_IEGetPage( $sLink )
 	EndIf
 	DbgFile( "   _IEEX_TabCreate" )
 
-	; Wait until all code loaded! otherwise window.onLoad is not completed?
-	Sleep( 250 )
+Local $tries = 1
+Local $sAdr = _IEPropertyGet( $o, "locationurl" )
 
-	; check that the link is right
-if _IEPropertyGet( $o, "locationurl" ) <> $sLink then
-	; we are not on that page: password?
-	; wait until you enter password or enter selv?
-;Dbg("Fail page  -- " & _IEPropertyGet( $o, "locationurl" )  )
-	 Return SetError(2, 0,"*** Error opened link failed: " & @CRLF & $sLink & @CR & _IEPropertyGet( $o, "locationurl" ) )
-EndIf
+; check that the link is right
+; we are not on that page: password?
+; wait until you enter password or enter selv?
+While $sAdr <> $sLink
+
+	DbgFile( "   " & $tries & ":" & $sAdr )
+
+	if $tries <= 10 then ; 2 sec
+		; Wait until all code loaded! otherwise window.onLoad is not completed?
+		Sleep( 200 )
+
+		$tries = $tries + 1
+
+		$sAdr = _IEPropertyGet( $o, "locationurl" )
+
+	Else
+
+		;Dbg("Fail page  -- " & _IEPropertyGet( $o, "locationurl" )  )
+		 Return SetError(2, 0,"*** Error opened link failed: " & @CRLF & $sLink & @CR & $sAdr )
+	EndIf
+
+
+WEnd
+
 DbgFile( "   _IEPropertyGet" )
 
 	Local $html = _IEBodyReadText( $o )

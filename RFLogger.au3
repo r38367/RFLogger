@@ -48,6 +48,7 @@ Update History:
 28 - added #25 - Add M9.5
 29 - added global hwnd to fix _IEAttach
    - added global logfileName
+30 - wait until webpage is loaded
 ================================
 #ce
 
