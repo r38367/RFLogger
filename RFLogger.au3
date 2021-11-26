@@ -66,6 +66,7 @@ Update History:
 #EndRegion Global Include files
 
 Global $gIEhwnd = -1
+Global $gLogFolder = "."
 Global $gLogfile = "log"
 Global $gDebugFile = "_debug.txt"
 
@@ -177,7 +178,8 @@ EndFunc
 Func	Get_Button_pressed()
 
 	Local $oTab
-	$gLogfile = @YEAR & @MON & @MDAY & "_" & @HOUR & @MIN & @SEC & "_log.txt"
+	$gLogFolder = @YEAR & "." & @MON & "." & @MDAY
+	$gLogfile = @YEAR & "." & @MON & "." & @MDAY & "_" & @HOUR & @MIN & @SEC & "_log.txt"
 
 ;GUICtrlSetData($idEdit, "" )
 GUICtrlSetData($idLabel, "Get Active IE" )
@@ -350,7 +352,11 @@ Func	DbgFile( $txt )
 EndFunc
 
 Func	LogFile( $txt )
-	FileWriteLine( $gLogfile, $txt )
+
+	if not FileExists( $gLogFolder ) then
+			DirCreate( $gLogFolder )
+	EndIf
+	FileWriteLine( $gLogFolder & "/" & $gLogfile, $txt )
 
 EndFunc
 
