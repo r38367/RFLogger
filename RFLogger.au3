@@ -46,9 +46,12 @@ Update History:
 6/9/21
 27 - fixed #24 - Resize controls when resize window
 28 - added #25 - Add M9.5
+24/11/21
 29 - added global hwnd to fix _IEAttach
    - added global logfileName
+25/11/21
 30 - wait until webpage is loaded
+26/11/21
 31 - save files in own folder
 ================================
 #ce
