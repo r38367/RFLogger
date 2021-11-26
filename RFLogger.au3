@@ -49,6 +49,7 @@ Update History:
 29 - added global hwnd to fix _IEAttach
    - added global logfileName
 30 - wait until webpage is loaded
+31 - save files in own folder
 ================================
 #ce
 
