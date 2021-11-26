@@ -182,7 +182,7 @@ EndFunc
 Func	Get_Button_pressed()
 
 	Local $oTab
-	$gLogFolder = @YEAR & "." & @MON & "." & @MDAY
+	$gLogFolder = @YEAR & "-" & @MON & "-" & @MDAY
 	$gLogfile = @YEAR & "." & @MON & "." & @MDAY & "_" & @HOUR & @MIN & @SEC & "_log.txt"
 
 ;GUICtrlSetData($idEdit, "" )
@@ -299,7 +299,7 @@ Else
 			Case 1 ; ok
 				;12.07.2019 18:15:04.275
 				Local $t = StringRegExpReplace( $msgTime, "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d)", "$3$2$1$4$5$6")
-				If FileSetTime( $fname, $t, 0) = 0 then
+				If FileSetTime( $gLogFolder & "/" & $fname, $t, 0) = 0 then
 					Dbg("error filesettime " & $fname )
 				EndIf
 			Case 2 ; file exists
@@ -310,7 +310,7 @@ Else
 EndIf
 			$i += 1
 
-			Local $retText = StringMid( $msgTime, 12, 8) & " " & $msgType & " " & StringLeft( $msgId, 9) & " " & $sParam
+			Local $retText = StringMid( $msgTime, 12, 8) & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam
 
 			GUICtrlSetData($idEdit, $retText & @CRLF, 0)
 			LogFile( $retText )
