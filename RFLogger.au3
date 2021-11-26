@@ -53,6 +53,7 @@ Update History:
 30 - wait until webpage is loaded
 26/11/21
 31 - save files in own folder
+32
 ================================
 #ce
 
@@ -329,11 +330,11 @@ EndFunc
 
 Func	_save_xml( $fname, $html )
 
-	if FileExists( $fname ) then
+	if FileExists( $gLogFolder & "/" & $fname ) then
 		return 2 ; do not overwrite
 	endif
 
-	if FileWrite( $fname, $html ) = 0 then
+	if FileWrite( $gLogFolder & "/" &  $fname, $html ) = 0 then
 		Dbg("error write file " & $fname )
 		return 0
 	EndIf
