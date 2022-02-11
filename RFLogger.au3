@@ -53,7 +53,10 @@ Update History:
 30 - wait until webpage is loaded
 26/11/21
 31 - save files in own folder
-32 - change forlder name
+32 - change forlder name to msg timestamp
+   - open msg xml in a new hidden window
+   - if msg size <1000 read again
+   - add M91, M93
 ================================
 #ce
 
