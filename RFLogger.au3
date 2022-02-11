@@ -57,6 +57,7 @@ Update History:
    - open msg xml in a new hidden window
    - if msg size <1000 read again
    - add M91, M93
+33 - remove _IEGetPAge
 ================================
 #ce
 
