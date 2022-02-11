@@ -10,7 +10,7 @@
 Function to work with IE
 	_IEGetActibTab() - Retrieve the Window Object of the currently active IE (on top)
 	_IEGetActibWindow() -
-
+	_IEGetPageInNewWindow() - open page in a new hidden window and return its xml
 
 
 26/6/21
@@ -107,7 +107,7 @@ Local $aWinList, $oTab
 EndFunc
 ;===============================================================================
 ;
-; Function Name:    _IEGetBodyText( $sLink )
+; Function Name:    _IEGetPageInNewWindow( $sLink )
 ; Description:      Retrieve body text from web page
 ; Parameter(s):     $sLink - link to web page
 ; Returns:
@@ -118,94 +118,6 @@ EndFunc
 ;				3 - _IEBodyReadText error and sets @extended to _IERead @error
 ;				4 - Quit error and @extended = Quit @error
 ; =========================================================
-#cs
-Func	_IEGetPage( $sLink )
-
-	DbgFile( "-->_IEGetPage " & $sLink )
-
-	Local $err = 0
-	Local $oMain = _IEAttach( $gIEhwnd, "hwnd" ) ;_IEAttach( "", "instance", 1 )
-
-	DbgFile( "   _IEAttach" )
-
-
-	Local $o = _MyTabCreate( $oMain, $sLink );--> ### Does not work. try to open in a nyew window.
-	;Local $o = _IEEx_TabCreate( $oMain, $sLink )
-;Dbg("Tab create -- " & @error & " " & isobj($o) )
-	if not IsObj($o) then
-	;if @error then
-		return SetError(1, 0, "*** Error _TabCreate " & @error & " " & @extended )
-	EndIf
-	DbgFile( "   _IEEX_TabCreate" )
-
-;!!! TODO !!! After TabCreate WinExists(can get not the new Tab obj and need to attach via $sLink !!!
-
-Local $tries = 1
-Local $sAdr = _IEPropertyGet( $o, "locationurl" )
-
-; check that the link is right
-; we are not on that page: password?
-; wait until you enter password or enter selv?
-While $sAdr <> $sLink
-
-	DbgFile( "   " & $tries & ":" & $sAdr )
-
-	if $tries <= 10 then ; 2 sec
-		; Wait until all code loaded! otherwise window.onLoad is not completed?
-		Sleep( 200 )
-
-		$tries = $tries + 1
-
-		$sAdr = _IEPropertyGet( $o, "locationurl" )
-
-	Else
-
-		;Dbg("Fail page  -- " & _IEPropertyGet( $o, "locationurl" )  )
-		 Return SetError(2, 0,"*** Error opened link failed: " & @CRLF & $sLink & @CR & $sAdr )
-	EndIf
-
-
-WEnd
-
-DbgFile( "   _IEPropertyGet" )
-
-	Local $html = _IEBodyReadText( $o )
-	;Dbg( "Get body " & @error & " " & isobj($o) )
-	if @error then
-		Return SetError(3, 0, "*** Error _IEBodyReadText " & @error & " " & @extended )
-	endif
-DbgFile( "   _IEBodyReadText " & StringLen( $html) & " " & StringLeft( StringStripWS( $html, 8), 15  ))
-;FileWrite( _ER_GetParam( $sLink, '(?s)loggeId=(.*?)-' ) & ".txt", $html)
-
-	_IEQuit($o)
-;Dbg( "Quit " & _IEQuit($o) & " " & @error & " " & isobj($o) )
-	if @error then
-		Return SetError(4, 0, "*** Error _IEQuit" & @error & " " & @extended )
-	endif
-DbgFile( "<--_IEQuit" )
-
-	return $html
-
-EndFunc
-
-
-Func	_MyTabCreate( $oMain, $sLink )
-
-	Local $iRet = $oMain.navigate2($sLink, 0x0800 , "", "", "")
-	If $iRet Then
-		Return SetError($iRet, 2, 0)
-	EndIf
-
-	Local $oRet = _IEGetActiveTab()
-	_IELoadWait($oRet)
-	If @error Then
-		Return SetError(@error, 4, $oRet)
-	EndIf
-
-	Return $oRet
-
-EndFunc
-#ce
 
 Func	_IEGetPageInNewWindow( $sLink )
 
