@@ -426,30 +426,5 @@ Func	_ER_GetParam( $html, $regexp )
 
 EndFunc
 
-; $m.Id
-; $m.Time
-; $m.RefToPar
-; $m.RetToConv
-; $m.Sender.HerId
-; $m.Sender.OrgNr
-; $m.Sender.ReshId
-; $m.Sender.Navn
-; $m.Pasient.Navn
-; $m.Pasient.Etternavn
-; $m.Pasient.NIN
-; $m.Pasient.fdato
-; $m.Pasient.Adresse
-; $m.Pasient.Kjonn
-; $m.Pasient.
-; $m.M1.Legemiddel
-; $m.M1.Refusjon
-; $m.M1.RefKode
-; $m.M1.Dato
-; $m.M1.Dato
-; $m.M91.Verge
-; $m.M93.Alle
-; $m.M93.Fdato
-; $m.M93.Navn
-
 
 
