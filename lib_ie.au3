@@ -118,6 +118,7 @@ EndFunc
 ;				3 - _IEBodyReadText error and sets @extended to _IERead @error
 ;				4 - Quit error and @extended = Quit @error
 ; =========================================================
+#cs
 Func	_IEGetPage( $sLink )
 
 	DbgFile( "-->_IEGetPage " & $sLink )
@@ -127,12 +128,17 @@ Func	_IEGetPage( $sLink )
 
 	DbgFile( "   _IEAttach" )
 
-	Local $o = _IEEx_TabCreate( $oMain, $sLink )
+
+	Local $o = _MyTabCreate( $oMain, $sLink );--> ### Does not work. try to open in a nyew window.
+	;Local $o = _IEEx_TabCreate( $oMain, $sLink )
 ;Dbg("Tab create -- " & @error & " " & isobj($o) )
-	if @error then
+	if not IsObj($o) then
+	;if @error then
 		return SetError(1, 0, "*** Error _TabCreate " & @error & " " & @extended )
 	EndIf
 	DbgFile( "   _IEEX_TabCreate" )
+
+;!!! TODO !!! After TabCreate WinExists(can get not the new Tab obj and need to attach via $sLink !!!
 
 Local $tries = 1
 Local $sAdr = _IEPropertyGet( $o, "locationurl" )
@@ -177,6 +183,63 @@ DbgFile( "   _IEBodyReadText " & StringLen( $html) & " " & StringLeft( StringStr
 		Return SetError(4, 0, "*** Error _IEQuit" & @error & " " & @extended )
 	endif
 DbgFile( "<--_IEQuit" )
+
+	return $html
+
+EndFunc
+
+
+Func	_MyTabCreate( $oMain, $sLink )
+
+	Local $iRet = $oMain.navigate2($sLink, 0x0800 , "", "", "")
+	If $iRet Then
+		Return SetError($iRet, 2, 0)
+	EndIf
+
+	Local $oRet = _IEGetActiveTab()
+	_IELoadWait($oRet)
+	If @error Then
+		Return SetError(@error, 4, $oRet)
+	EndIf
+
+	Return $oRet
+
+EndFunc
+#ce
+
+Func	_IEGetPageInNewWindow( $sLink )
+
+	DbgFile( "-->_IEGetPageInNewWindow " & $sLink )
+
+	Local $err = 0
+	Local $oXml = _IECreate( $sLink ,0,0 )
+
+	DbgFile( "   _IEAttach" )
+
+	if not IsObj($oXml) then
+	;if @error then
+		return SetError(1, 0, "*** Error _IECreate " & @error & " " & @extended )
+	EndIf
+
+	DbgFile( "   _IEPropertyGet" )
+
+	Local $html = _IEBodyReadText( $oXml )
+	if StringLen( $html ) < 1000 then
+		Sleep(1000)
+		$html = _IEBodyReadText( $oXml )
+	EndIf
+	if @error then
+		Return SetError(3, 0, "*** Error _IEBodyReadText " & @error & " " & @extended )
+	endif
+
+	DbgFile( "   _IEBodyReadText len:" & StringLen( $html) & " " & StringLeft( StringStripWS( $html, 8), 15  ))
+
+	_IEQuit($oXml)
+	if @error then
+		Return SetError(4, 0, "*** Error _IEQuit" & @error & " " & @extended )
+	endif
+
+	DbgFile( "<--_IEQuit" )
 
 	return $html
 

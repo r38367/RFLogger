@@ -41,6 +41,10 @@
 ;	_ER_GetAnnullering( $html)
 ;	_ER_GetReseptId( $html)
 ;	_ER_GetKansellering( $html)
+;=== M91
+;	_ER_GetM10($html)
+;=== M93
+;	_ER_GetM10($html)
 ;=== general
 ;	_ER_GetParam( $html, $regexp )
 ;
@@ -89,6 +93,10 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM10($html)
 		case "ERM95"
 			$ret = _ER_GetM95($html)
+		case "ERM91"
+			$ret = _ER_GetM91($html)
+		case "ERM93"
+			$ret = _ER_GetM93($html)
 		case "APPREC"
 			$ret = _ER_GetApprec($html)
 		;case Else
@@ -358,7 +366,52 @@ Func _ER_GetM95($html)
 
 EndFunc
 
+;================================================================================================================================
+;	M9.1 functions
+;================================================================================================================================
 
+Func _ER_GetM91($html)
+;<Fnr>02048735722</Fnr>
+;<RefNr>
+;<AlleResepter DN="Nei" V="2" />
+;<AnsattId>30057506179</AnsattId>
+;<InkluderVergeinnsynsreservasjon DN="Nei" V="2" />
+
+;<Fdato>1945-05-17</Fdato>
+;<Fornavn>Ola</Fornavn>
+;<Etternavn>Donk</Etternavn>
+;<Arsak DN="Ikke medbrakt legitimasjon" V="I" />
+
+Local $text = ""
+
+	if _ER_GetParam( $html, '(?s)Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Fnr>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Fornavn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Fornavn>(.*?)<' )
+	;if _ER_GetParam( $html, '(?s)Etternavn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Etternavn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Fdato>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Fdato>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Arsak DN="(.*?)"' ) then $text &= " " & _ER_GetParam( $html, '(?s)Arsak DN="(.*?)"' )
+	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParam( $html, '(?s)RefNr>(.*?)<' )
+	$text &= " Alle_" & _ER_GetParam( $html, '(?s)AlleResepter DN="(.*?)"' )
+	$text &= " Verg_" & _ER_GetParam( $html, '(?s)InkluderVergeinnsynsreservasjon DN="(.*?)"' )
+
+	Return	$text
+
+EndFunc
+;================================================================================================================================
+;	M9.3 functions
+;================================================================================================================================
+
+Func _ER_GetM93($html)
+;<Fnr>02048735722</Fnr>
+	Local $text = ""
+	;<Kansellering DN="Forespurt resept finnes ikke i RF" V="7" />
+	Local $ret = _ER_GetParam( $html, '(?s)Kansellering.*?DN="(.*?)"' )
+	if $ret then
+		$text = "Kansellering " & $ret
+	endif
+
+	Return	$text
+
+EndFunc
 ;====================================
 ; generic internal function
 ;====================================
@@ -372,4 +425,31 @@ Func	_ER_GetParam( $html, $regexp )
 	Return $a[0]
 
 EndFunc
+
+; $m.Id
+; $m.Time
+; $m.RefToPar
+; $m.RetToConv
+; $m.Sender.HerId
+; $m.Sender.OrgNr
+; $m.Sender.ReshId
+; $m.Sender.Navn
+; $m.Pasient.Navn
+; $m.Pasient.Etternavn
+; $m.Pasient.NIN
+; $m.Pasient.fdato
+; $m.Pasient.Adresse
+; $m.Pasient.Kjonn
+; $m.Pasient.
+; $m.M1.Legemiddel
+; $m.M1.Refusjon
+; $m.M1.RefKode
+; $m.M1.Dato
+; $m.M1.Dato
+; $m.M91.Verge
+; $m.M93.Alle
+; $m.M93.Fdato
+; $m.M93.Navn
+
+
 

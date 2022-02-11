@@ -53,7 +53,7 @@ Update History:
 30 - wait until webpage is loaded
 26/11/21
 31 - save files in own folder
-32
+32 - change forlder name
 ================================
 #ce
 
@@ -182,7 +182,7 @@ EndFunc
 Func	Get_Button_pressed()
 
 	Local $oTab
-	$gLogFolder = @YEAR & "-" & @MON & "-" & @MDAY
+	;$gLogFolder = @YEAR & "." & @MON & "." & @MDAY ; folder will correspond to timestamp
 	$gLogfile = @YEAR & "." & @MON & "." & @MDAY & "_" & @HOUR & @MIN & @SEC & "_log.txt"
 
 ;GUICtrlSetData($idEdit, "" )
@@ -281,12 +281,16 @@ _IELoadWaitTimeout( 3000 )
 			Local $sParam
 DbgFileClear()
 DbgFile( $txt )
-			Local $html = _IEGetPage( $oLink.href )
-			if @error then
+			Local $html = _IEGetPageInNewWindow( $oLink.href )
+	if StringLen( $html ) < 1000 then
+		DbgFile( $html)
+		$html = _IEGetPageInNewWindow( $oLink.href )
+	EndIf
+		if @error then
 				DbgFile( $html)
 				$sParam = $html
 				;return 0 ;
-Else
+		Else
 			$html = _ER_GetBody($html)
 
 			$sParam = _ER_GetExtraParam( $html )
@@ -295,19 +299,21 @@ Else
 
 			$sParam = $sParam & " " & $msgHerId
 
+			Local $t = StringRegExpReplace( $msgTime, "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d).*", "$3$2$1$4$5$6")
+			$gLogFolder = StringLeft( $t, 8)
+
 			switch _save_xml( $fname, $html )
 			Case 1 ; ok
 				;12.07.2019 18:15:04.275
-				Local $t = StringRegExpReplace( $msgTime, "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d)", "$3$2$1$4$5$6")
-				If FileSetTime( $gLogFolder & "/" & $fname, $t, 0) = 0 then
-					Dbg("error filesettime " & $fname )
+				If FileSetTime( $gLogFolder & "/"& $fname, $t, 0) = 0 then
+					Dbg("error filesettime '" & $t & "'->" & $fname )
 				EndIf
 			Case 2 ; file exists
 				$sParam = $sParam & " *** file exists"
 			Case 0 ; error saving file
 				$sParam = $sParam & " *** not saved"
 			EndSwitch
-EndIf
+		EndIf
 			$i += 1
 
 			Local $retText = StringMid( $msgTime, 12, 8) & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam
@@ -330,8 +336,13 @@ EndFunc
 
 Func	_save_xml( $fname, $html )
 
+
 	if FileExists( $gLogFolder & "/" & $fname ) then
 		return 2 ; do not overwrite
+	endif
+
+	if not FileExists( $gLogFolder ) then
+		DirCreate( $gLogFolder )
 	endif
 
 	if FileWrite( $gLogFolder & "/" &  $fname, $html ) = 0 then
@@ -348,7 +359,7 @@ Func	Dbg( $txt )
 EndFunc
 
 func DbgFileClear()
-	FileDelete( $gDebugFile )
+	;FileDelete( $gDebugFile )
 EndFunc
 
 Func	DbgFile( $txt )
