@@ -440,8 +440,8 @@ Func _ER_GetM912($html)
 	Local $text = ""
 
 	if _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' )
-	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " Le_" & _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
-	if _ER_GetParam( $html, '(?s)Multidoseapotek*?Navn>(.*?)<' ) then $text &= " Ap_" & _ER_GetParam( $html, '(?s)Multidoseapotek*?Navn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' )
 
 Return	$text
 
