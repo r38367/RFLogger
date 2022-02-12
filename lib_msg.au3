@@ -376,16 +376,6 @@ EndFunc
 ;================================================================================================================================
 
 Func _ER_GetM91($html)
-;<Fnr>02048735722</Fnr>
-;<RefNr>
-;<AlleResepter DN="Nei" V="2" />
-;<AnsattId>30057506179</AnsattId>
-;<InkluderVergeinnsynsreservasjon DN="Nei" V="2" />
-
-;<Fdato>1945-05-17</Fdato>
-;<Fornavn>Ola</Fornavn>
-;<Etternavn>Donk</Etternavn>
-;<Arsak DN="Ikke medbrakt legitimasjon" V="I" />
 
 Local $text = ""
 
@@ -395,8 +385,8 @@ Local $text = ""
 	if _ER_GetParam( $html, '(?s)Fdato>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Fdato>(.*?)<' )
 	if _ER_GetParam( $html, '(?s)Arsak DN="(.*?)"' ) then $text &= " " & _ER_GetParam( $html, '(?s)Arsak DN="(.*?)"' )
 	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParam( $html, '(?s)RefNr>(.*?)<' )
-	$text &= " Alle_" & _ER_GetParam( $html, '(?s)AlleResepter DN="(.*?)"' )
-	$text &= " Verg_" & _ER_GetParam( $html, '(?s)InkluderVergeinnsynsreservasjon DN="(.*?)"' )
+	$text &= " " & _ER_GetParam( $html, '(?s)AlleResepter DN="(.*?)"' )
+	$text &= " " & _ER_GetParam( $html, '(?s)InkluderVergeinnsynsreservasjon DN="(.*?)"' )
 
 	Return	$text
 
@@ -441,8 +431,47 @@ Func _ER_GetM912($html)
 	if _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' )
 	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
 	if _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' )
+	$text &= " " & _ER_GetReseptCount( $html )
 
 Return	$text
+
+EndFunc
+
+;================================================================================================================================
+;	Get resept counnt in M9.12 and presents count with type OID=7408
+;	Returns:
+;		f.eks. E12-U2-R1-T2-F1-X1
+;================================================================================================================================
+
+Func	_ER_GetReseptCount( $html )
+
+	Local $a
+	Local $CountTypes[6]
+	Local $ret=""
+
+	Local $ReseptType = "EURTF" ;Volven 7408 = https://volven.no/produkt.asp?id=469436&catID=3&subID=8
+
+	; get all resepter
+	$a = StringRegExp( $html, 'Status .*?V="(.)"', 3)
+	if @error then return ""
+
+
+	; count all types
+	for $r in $a
+		$CountTypes[ StringInStr( $ReseptType, $r) ] += 1
+	Next
+
+	for $i=1 to StringLen($ReseptType)
+		if $CountTypes[$i] > 0 then $ret &= StringMid( $ReseptType, $i, 1)  & $CountTypes[$i] & "-"
+	Next
+
+	; if we got unknown type - show as X
+	if $CountTypes[0] > 0 then $ret &= "X" & $CountTypes[0]
+
+	; remove unnecessary - at the end
+	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
+
+	Return  $ret
 
 EndFunc
 
@@ -459,6 +488,4 @@ Func	_ER_GetParam( $html, $regexp )
 	Return $a[0]
 
 EndFunc
-
-
 
