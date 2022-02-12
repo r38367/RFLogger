@@ -452,8 +452,9 @@ Func	_ER_GetReseptCount( $html )
 	Local $ReseptType = "EURTF" ;Volven 7408 = https://volven.no/produkt.asp?id=469436&catID=3&subID=8
 
 	; get all resepter
-	$a = StringRegExp( $html, 'Status DN=".*?V="(.)"', 3)
+	$a = StringRegExp( $html, 'Status .*?V="(.)"', 3)
 	if @error then return ""
+
 
 	; count all types
 	for $r in $a
