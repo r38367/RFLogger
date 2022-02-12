@@ -231,7 +231,7 @@ EndFunc
 Func	Get_Button_pressed()
 
 	Local $oTab
-	;$gLogFolder = @YEAR & "." & @MON & "." & @MDAY ; folder will correspond to timestamp
+	$gLogFolder = @YEAR & "." & @MON & "." & @MDAY ; folder will correspond to timestamp
 	$gLogfile = @YEAR & "." & @MON & "." & @MDAY & "_" & @HOUR & @MIN & @SEC & "_log.txt"
 
 ;GUICtrlSetData($idEdit, "" )
@@ -349,7 +349,7 @@ DbgFile( $txt )
 			$sParam = $sParam & " " & $msgHerId
 
 			Local $t = StringRegExpReplace( $msgTime, "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d).*", "$3$2$1$4$5$6")
-			$gLogFolder = StringLeft( $t, 8)
+			;$gLogFolder = StringLeft( $t, 8)
 
 			switch _save_xml( $fname, $html )
 			Case 1 ; ok
@@ -388,10 +388,6 @@ Func	_save_xml( $fname, $html )
 
 	if FileExists( $gLogFolder & "/" & $fname ) then
 		return 2 ; do not overwrite
-	endif
-
-	if not FileExists( $gLogFolder ) then
-		DirCreate( $gLogFolder )
 	endif
 
 	if FileWrite( $gLogFolder & "/" &  $fname, $html ) = 0 then
