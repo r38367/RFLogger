@@ -63,9 +63,10 @@ Update History:
 35 - #29 Resizable GUI
 36 - #26 Add M9.11/M9.12
 37 - Added resept count to M912 (_ER_GetReseptCount)
+38 - #32 Add M9.2
 ================================
 #ce
-Local const $nVer = "37"
+Local const $nVer = "38"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
