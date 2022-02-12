@@ -425,8 +425,7 @@ Func _ER_GetM911($html)
 
 	Local $text = ""
 
-	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
-	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+	if _ER_GetParam( $html, '(?s)M911.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)M911.*?Fnr>(.*?)<' )
 
 	Return	$text
 
