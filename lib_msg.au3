@@ -41,10 +41,10 @@
 ;	_ER_GetAnnullering( $html)
 ;	_ER_GetReseptId( $html)
 ;	_ER_GetKansellering( $html)
-;=== M91
-;	_ER_GetM10($html)
-;=== M93
-;	_ER_GetM10($html)
+;=== M91-4
+;	_ER_GetM91($html)
+;	_ER_GetM92($html)
+;	_ER_GetM93($html)
 ;=== general
 ;	_ER_GetParam( $html, $regexp )
 ;
@@ -95,6 +95,8 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM95($html)
 		case "ERM91"
 			$ret = _ER_GetM91($html)
+		case "ERM92"
+			$ret = _ER_GetM92($html)
 		case "ERM93"
 			$ret = _ER_GetM93($html)
 		case "APPREC"
@@ -391,6 +393,31 @@ Local $text = ""
 	Return	$text
 
 EndFunc
+
+;================================================================================================================================
+;	M9.2 functions
+;================================================================================================================================
+
+Func _ER_GetM92($html)
+	Local $text = ""
+
+	; first check if vi got resepter
+	if _ER_GetParam( $html, 'Reseptinfo>') then
+
+		$text &= " " & _ER_GetParam( $html, '(?s)Fornavn>(.*?)<' )
+		$text &= " " & _ER_GetParam( $html, '(?s)Etternavn>(.*?)<' )
+		$text &= " " & _ER_GetReseptCount( $html )
+
+	Else
+		; we did not have resepts
+		if _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' ) then $text &= _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
+
+	EndIf
+
+	Return	$text
+
+EndFunc
+
 ;================================================================================================================================
 ;	M9.3 functions
 ;================================================================================================================================
