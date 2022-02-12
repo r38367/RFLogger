@@ -147,7 +147,7 @@ Func GUI_Create()
 Local const $guiMargin = 10
 
 ;--- GUI
-Local const $guiWidth = 750
+Local const $guiWidth = 800
 Local const $guiHeight = 300
 Local const $guiLeft = -1
 Local const $guiTop = -1
