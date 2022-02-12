@@ -59,11 +59,13 @@ Update History:
    - add M91, M93
 33 - remove _IEGetPAge
 34 - add version to title
+12/02/22
 35 - #29 Resizable GUI
 36 - #26 Add M9.11/M9.12
+37 - Added resept count to M912 (_ER_GetReseptCount)
 ================================
 #ce
-Local const $nVer = "36"
+Local const $nVer = "37"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
