@@ -59,9 +59,10 @@ Update History:
    - add M91, M93
 33 - remove _IEGetPAge
 34 - add version to title
+35 - #29 Resizable GUI
 ================================
 #ce
-Local const $nVer = "34"
+Local const $nVer = "35"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -142,26 +143,68 @@ EndFunc
 
 Func GUI_Create()
 
+;--- space between elements
+Local const $guiMargin = 10
+
+;--- GUI
+Local const $guiWidth = 750
+Local const $guiHeight = 300
+Local const $guiLeft = -1
+Local const $guiTop = -1
+
+; GUI height includes windows title (23px)
+; GUI elements start
+#include <WinAPI.au3>
+Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
+
+
 	; Create input
+	GUICreate( "Get all active messages - v." & $nVer & "." &  GetVersion(), $guiWidth, $guiHeight, $guiLeft, $guiTop, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
 
-	GUICreate( "Get all active messages - v." & $nVer & "." &  GetVersion(), 660, 200, -1, -1, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
+	;--- buttons starting from right
+	Local const $guiBtnWidth = 50
+	Local const $guiBtnHeight = 30
+	Local $guiBtnLeft = $guiWidth - $guiMargin - $guiBtnWidth
+	Local $guiBtnTop = $guiMargin
 
+	; ----- 1st from right button
+	;$guiBtnLeft = $guiWidth - $guiMargin - $guiBtnWidth
+	;$guiBtnTop = $guiMargin
 
-	$idButtonGet = GUICtrlCreateButton("Get", 600, 5, 50, 30)
+	$idButtonGet = GUICtrlCreateButton("Get", $guiBtnLeft, $guiBtnTop, $guiBtnWidth, $guiBtnHeight)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
 
-	$idButtonClear = GUICtrlCreateButton("Clear", 540, 5, 50, 30)
+	; ----- 2nd button from right <<<--
+	$guiBtnLeft = $guiBtnLeft - $guiMargin - $guiBtnWidth
+
+	$idButtonClear = GUICtrlCreateButton("Clear", $guiBtnLeft, $guiBtnTop, $guiBtnWidth, $guiBtnHeight)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
 
-	$idEdit = GUICtrlCreateEdit("", 10, 40, 640, 120, $ES_READONLY + $ES_AUTOVSCROLL + $WS_VSCROLL)
-	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
-	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS )
+	; ----- Label
+	Local const $guiLabelLeft = $guiMargin
+	Local const $guiLabelTop = $guiBtnTop
+	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $guiLabelTop = ' & $guiLabelTop & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+	Local const $guiLabelWidth = $guiBtnLeft - $guiMargin - $guiLabelLeft
+	Local const $guiLabelHeight = $guiBtnHeight
 
-	$idLabel = GUICtrlCreateLabel(	"", 10, 10, 520, 30)
+	$idLabel = GUICtrlCreateLabel(	"", $guiLabelLeft, $guiLabelTop, $guiLabelWidth, $guiLabelHeight)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKHEIGHT )
+
+	; ----- Edit
+	Local const $guiEditLeft = $guiMargin
+	Local const $guiEditTop = $guiLabelTop + $guiLabelHeight + $guiMargin
+	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $guiEditTop = ' & $guiEditTop & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+	Local const $guiEditHeight = $guiHeight - $winTitleHeight - $guiLabelTop - $guiLabelHeight - $guiMargin - $guiMargin
+	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $guiLabelHeight = ' & $guiLabelHeight & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $guiEditHeight = ' & $guiEditHeight & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+	Local const $guiEditWidth = $guiWidth - $guiMargin - $guiEditLeft
+
+	$idEdit = GUICtrlCreateEdit("", $guiEditLeft, $guiEditTop, $guiEditWidth, $guiEditHeight, $ES_READONLY + $ES_AUTOVSCROLL + $WS_VSCROLL)
+	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
+	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS )
 
     GUISetState(@SW_SHOW)
 
