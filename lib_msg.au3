@@ -101,6 +101,8 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetApprec($html)
 		case "ERM911"
 			$ret = _ER_GetM911($html)
+		case "ERM912"
+			$ret = _ER_GetM912($html)
 
 		;case Else
 		;	$ret = $msgType & "_" & _ER_GetMsgId($html)
@@ -430,6 +432,20 @@ Func _ER_GetM911($html)
 
 EndFunc
 
+;================================================================================================================================
+;	M9.12 functions
+;================================================================================================================================
+Func _ER_GetM912($html)
+
+	Local $text = ""
+
+	if _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " Le_" & _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Multidoseapotek*?Navn>(.*?)<' ) then $text &= " Ap_" & _ER_GetParam( $html, '(?s)Multidoseapotek*?Navn>(.*?)<' )
+
+Return	$text
+
+EndFunc
 
 ;====================================
 ; generic internal function
