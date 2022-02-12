@@ -401,6 +401,7 @@ Func _ER_GetM93($html)
 	;<Kansellering DN="Forespurt resept finnes ikke i RF" V="7" />
 	if _ER_GetParam( $html, '(?s)Kansellering.*?DN="(.*?)"' ) then $text = " " & _ER_GetParam( $html, '(?s)Kansellering.*?DN="(.*?)"' )
 	if _ER_GetParam( $html, '(?s)M93.*?>.*?ReseptId>(.*?-)' ) then $text = " " & _ER_GetParam( $html, '(?s)M93.*?>.*?ReseptId>(.*?-)' )
+	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParam( $html, '(?s)RefNr>(.*?)<' )
 
 	Return	$text
 
