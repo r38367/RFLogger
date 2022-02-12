@@ -144,7 +144,7 @@ Func GUI_Create()
 
 	; Create input
 
-	GUICreate( "Get all active messages - v."& $nVer & "." &  GetVersion(), 660, 200, -1, -1, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
+	GUICreate( "Get all active messages - v." & $nVer & "." &  GetVersion(), 660, 200, -1, -1, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
 
 
 	$idButtonGet = GUICtrlCreateButton("Get", 600, 5, 50, 30)
