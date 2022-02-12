@@ -58,10 +58,8 @@ Update History:
    - if msg size <1000 read again
    - add M91, M93
 33 - remove _IEGetPAge
-34 - add version to title
 ================================
 #ce
-Local const $nVer = "34"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -144,7 +142,7 @@ Func GUI_Create()
 
 	; Create input
 
-	GUICreate( "Get all active messages - v."& $nVer & "." &  GetVersion(), 660, 200, -1, -1, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
+	GUICreate( "Get all active messages - " & GetVersion(), 660, 200, -1, -1, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
 
 
 	$idButtonGet = GUICtrlCreateButton("Get", 600, 5, 50, 30)
