@@ -60,9 +60,10 @@ Update History:
 33 - remove _IEGetPAge
 34 - add version to title
 35 - #29 Resizable GUI
+36 - #26 Add M9.11/M9.12
 ================================
 #ce
-Local const $nVer = "35"
+Local const $nVer = "36"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files

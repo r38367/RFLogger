@@ -99,6 +99,11 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM93($html)
 		case "APPREC"
 			$ret = _ER_GetApprec($html)
+		case "ERM911"
+			$ret = _ER_GetM911($html)
+		case "ERM912"
+			$ret = _ER_GetM912($html)
+
 		;case Else
 		;	$ret = $msgType & "_" & _ER_GetMsgId($html)
 	EndSwitch
@@ -412,6 +417,35 @@ Func _ER_GetM93($html)
 	Return	$text
 
 EndFunc
+
+;================================================================================================================================
+;	M9.11 functions
+;================================================================================================================================
+Func _ER_GetM911($html)
+
+	Local $text = ""
+
+	if _ER_GetParam( $html, '(?s)M911.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)M911.*?Fnr>(.*?)<' )
+
+	Return	$text
+
+EndFunc
+
+;================================================================================================================================
+;	M9.12 functions
+;================================================================================================================================
+Func _ER_GetM912($html)
+
+	Local $text = ""
+
+	if _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' )
+
+Return	$text
+
+EndFunc
+
 ;====================================
 ; generic internal function
 ;====================================
