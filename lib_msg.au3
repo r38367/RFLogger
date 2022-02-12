@@ -99,6 +99,9 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM93($html)
 		case "APPREC"
 			$ret = _ER_GetApprec($html)
+		case "ERM911"
+			$ret = _ER_GetM911($html)
+
 		;case Else
 		;	$ret = $msgType & "_" & _ER_GetMsgId($html)
 	EndSwitch
@@ -412,6 +415,22 @@ Func _ER_GetM93($html)
 	Return	$text
 
 EndFunc
+
+;================================================================================================================================
+;	M9.11 functions
+;================================================================================================================================
+Func _ER_GetM911($html)
+
+	Local $text = ""
+
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	Return	$text
+
+EndFunc
+
+
 ;====================================
 ; generic internal function
 ;====================================
