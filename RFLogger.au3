@@ -185,7 +185,6 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 	; ----- Label
 	Local const $guiLabelLeft = $guiMargin
 	Local const $guiLabelTop = $guiBtnTop
-	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $guiLabelTop = ' & $guiLabelTop & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 	Local const $guiLabelWidth = $guiBtnLeft - $guiMargin - $guiLabelLeft
 	Local const $guiLabelHeight = $guiBtnHeight
 
@@ -196,10 +195,7 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 	; ----- Edit
 	Local const $guiEditLeft = $guiMargin
 	Local const $guiEditTop = $guiLabelTop + $guiLabelHeight + $guiMargin
-	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $guiEditTop = ' & $guiEditTop & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 	Local const $guiEditHeight = $guiHeight - $winTitleHeight - $guiLabelTop - $guiLabelHeight - $guiMargin - $guiMargin
-	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $guiLabelHeight = ' & $guiLabelHeight & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
-	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $guiEditHeight = ' & $guiEditHeight & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 	Local const $guiEditWidth = $guiWidth - $guiMargin - $guiEditLeft
 
 	$idEdit = GUICtrlCreateEdit("", $guiEditLeft, $guiEditTop, $guiEditWidth, $guiEditHeight, $ES_READONLY + $ES_AUTOVSCROLL + $WS_VSCROLL)
