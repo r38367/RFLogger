@@ -65,9 +65,10 @@ Update History:
 37 - Added resept count to M912 (_ER_GetReseptCount)
 38 - #32 Add M9.2
 39 - #36 Fixed log file
+40 - #35 Add M9.4
 ================================
 #ce
-Local const $nVer = "39"
+Local const $nVer = "40"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
