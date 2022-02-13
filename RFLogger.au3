@@ -373,7 +373,6 @@ DbgFile( $txt )
 				$sParam = $sParam & " *** not saved"
 			EndSwitch
 		EndIf
-			$i += 1
 
 			Local $retText = StringMid( $msgTime, 12, 8) & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam
 
