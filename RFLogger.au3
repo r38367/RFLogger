@@ -299,24 +299,30 @@ _IELoadWaitTimeout( 3000 )
 	GUICtrlSetData($idLabel, "5. Found messages: " & $nMsgCount )
 
 ;
-; Get link to Hent message
-; Link# is equal to Array#
+; Get links to $aTable[i][0]
 ;
-	Local $oLinks = _IELinkGetCollection($oTab)
-	if @error <> 0 then
-		Dbg( "*** Error: _IELinkGetCollection: " & @error)
-		return 0
-	EndIf
+	for $i=1 to $oTable.rows.length-1
+		; get html text from Column[0]
+		Local $msgRef = $oTable.rows.item($i).cells.item(0).innerHTML
+
+		; strip all but href to message log
+		$msgRef = StringRegExpReplace( $msgRef, '(?s).*href="(loggeview.rfa.*?)".*', "$1" )
+
+		; write ref to Column[0]
+		$aTableData[$i][0] = $msgRef
+	Next
+
+
 	GUICtrlSetData($idLabel, "6. Got links..." )
 
-	;Local $iNumLinks = @extended
 	$txt = ""
-	Local $i = 1
-	For $oLink In $oLinks
-		If StringInStr($oLink.href , "loggeview.rfa?" ) Then
+	For $i = 1 to $nMsgCount
+	;For $oLink In $oLinks
+	;	If StringInStr($oLink.href , "loggeview.rfa?" ) Then
 			; process link
 
 						; 12.07.2019 18:15:04.275
+			Local $msgLink = $aTableData[$i][0]
 			Local $msgId = $aTableData[$i][1]
 			Local $msgTime = $aTableData[$i][2]
 			Local $msgSystem = $aTableData[$i][3]
@@ -332,11 +338,13 @@ _IELoadWaitTimeout( 3000 )
 			Local $sParam
 DbgFileClear()
 DbgFile( $txt )
-			Local $html = _IEGetPageInNewWindow( $oLink.href )
-	if StringLen( $html ) < 1000 then
-		DbgFile( $html)
-		$html = _IEGetPageInNewWindow( $oLink.href )
-	EndIf
+			Local $html = _IEGetPageInNewWindow( $msgLink )
+
+			; if we did not get xml - get it one more time
+		if StringLen( $html ) < 1000 then
+			DbgFile( $html)
+			$html = _IEGetPageInNewWindow( $msgLink )
+		EndIf
 		if @error then
 				DbgFile( $html)
 				$sParam = $html
