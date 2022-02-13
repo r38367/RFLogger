@@ -45,6 +45,7 @@
 ;	_ER_GetM91($html)
 ;	_ER_GetM92($html)
 ;	_ER_GetM93($html)
+;	_ER_GetM94($html)
 ;=== general
 ;	_ER_GetParam( $html, $regexp )
 ;
@@ -99,6 +100,8 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM92($html)
 		case "ERM93"
 			$ret = _ER_GetM93($html)
+		case "ERM94"
+			$ret = _ER_GetM94($html)
 		case "APPREC"
 			$ret = _ER_GetApprec($html)
 		case "ERM911"
@@ -435,6 +438,20 @@ Func _ER_GetM93($html)
 EndFunc
 
 ;================================================================================================================================
+;	M9.4 functions
+;================================================================================================================================
+
+Func _ER_GetM94($html)
+	Local $text = ""
+
+	if _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
+	if _ER_GetParam( $html, '(?s)StatusSoknadSlv.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)StatusSoknadSlv.*?DN="(.*?)".*?>' )
+
+	Return	$text
+
+EndFunc
+
+;================================================================================================================================
 ;	M9.11 functions
 ;================================================================================================================================
 Func _ER_GetM911($html)
@@ -446,6 +463,7 @@ Func _ER_GetM911($html)
 	Return	$text
 
 EndFunc
+
 
 ;================================================================================================================================
 ;	M9.12 functions
