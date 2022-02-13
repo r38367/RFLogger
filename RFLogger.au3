@@ -380,7 +380,6 @@ DbgFile( $txt )
 			GUICtrlSetData($idEdit, $retText & @CRLF, 0)
 			LogFile( $retText )
 
-		EndIf
 	Next
 
 	GUICtrlSetData($idLabel, $i-1 & "/" & $nMsgCount )
