@@ -299,30 +299,35 @@ _IELoadWaitTimeout( 3000 )
 	GUICtrlSetData($idLabel, "5. Found messages: " & $nMsgCount )
 
 ;
-; Get links to $aTable[i][0]
+; Get link to Hent message
+; Link# is equal to Array#
 ;
-	for $i=1 to $oTable.rows.length-1
-		; get html text from Column[0]
-		Local $msgRef = $oTable.rows.item($i).cells.item(0).innerHTML
+	Local $oLinks = _IELinkGetCollection($oTab)
+	if @error <> 0 then
+		Dbg( "*** Error: _IELinkGetCollection: " & @error)
+		return 0
+	EndIf
 
-		; strip all but href to message log
-		$msgRef = StringRegExpReplace( $msgRef, '(?s).*href="(loggeview.rfa.*?)".*', "$1" )
+	; get links to messages
+	Local $i = 1
+	For $oLink In $oLinks
+		If StringInStr($oLink.href , "loggeview.rfa?" ) Then
+			$aTableData[$i][0] = $oLink.href
+			$i += 1
+		EndIf
+	next
 
-		; write ref to Column[0]
-		$aTableData[$i][0] = $msgRef
-	Next
+	GUICtrlSetData($idLabel, "6. Got links... " & $i-1)
 
-
-	GUICtrlSetData($idLabel, "6. Got links..." )
-
+	;Local $iNumLinks = @extended
 	$txt = ""
-	For $i = 1 to $nMsgCount
+	For $i = 1 to UBound($aTableData,1)-1
+	;for $i=1 to $oTable.rows.length-1
 	;For $oLink In $oLinks
-	;	If StringInStr($oLink.href , "loggeview.rfa?" ) Then
+		;If StringInStr($oLink.href , "loggeview.rfa?" ) Then
 			; process link
 
 						; 12.07.2019 18:15:04.275
-			Local $msgLink = $aTableData[$i][0]
 			Local $msgId = $aTableData[$i][1]
 			Local $msgTime = $aTableData[$i][2]
 			Local $msgSystem = $aTableData[$i][3]
@@ -338,13 +343,11 @@ _IELoadWaitTimeout( 3000 )
 			Local $sParam
 DbgFileClear()
 DbgFile( $txt )
-			Local $html = _IEGetPageInNewWindow( $msgLink )
-
-			; if we did not get xml - get it one more time
-		if StringLen( $html ) < 1000 then
-			DbgFile( $html)
-			$html = _IEGetPageInNewWindow( $msgLink )
-		EndIf
+			Local $html = _IEGetPageInNewWindow( $aTableData[$i][0] );$oLink.href )
+	if StringLen( $html ) < 1000 then
+		DbgFile( $html)
+		$html = _IEGetPageInNewWindow( $aTableData[$i][0] );$oLink.href )
+	EndIf
 		if @error then
 				DbgFile( $html)
 				$sParam = $html
@@ -373,12 +376,14 @@ DbgFile( $txt )
 				$sParam = $sParam & " *** not saved"
 			EndSwitch
 		EndIf
+			;$i += 1
 
 			Local $retText = StringMid( $msgTime, 12, 8) & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam
 
 			GUICtrlSetData($idEdit, $retText & @CRLF, 0)
 			LogFile( $retText )
 
+		;EndIf
 	Next
 
 	GUICtrlSetData($idLabel, $i-1 & "/" & $nMsgCount )
