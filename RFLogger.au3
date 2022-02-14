@@ -66,9 +66,10 @@ Update History:
 38 - #32 Add M9.2
 39 - #36 Fixed log file
 40 - #35 Add M9.4
+41 - #41 Put links to messages in table
 ================================
 #ce
-Local const $nVer = "40"
+Local const $nVer = "41"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
