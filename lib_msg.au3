@@ -86,6 +86,14 @@ EndFunc
 Func _ER_GetExtraParam( $html )
 
 	Local $ret = ""
+	Local $ref = ""
+
+	;ConversationRef
+	$ref = StringLeft( _ER_GetRefToParent( $html ), 9) & " " & StringLeft( _ER_GetRefToConversation( $html ), 9)
+
+	; ************* >>> REMOVE <<< *************
+	Return	$ref
+	; ************* >>> REMOVE <<< *************
 
 	Switch _ER_GetMsgType( $html)
 		case "ERM1"
@@ -113,7 +121,7 @@ Func _ER_GetExtraParam( $html )
 		;	$ret = $msgType & "_" & _ER_GetMsgId($html)
 	EndSwitch
 
-	Return	$ret ; return file name without Time Type MsgId
+	Return	$ref & $ret ; return file name without Time Type MsgId
 
 EndFunc
 
