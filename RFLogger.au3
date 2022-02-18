@@ -96,6 +96,7 @@ Global $gDebugFile = "_debug.txt"
 ;OnAutoItExitRegister("MyExitFunc")
 #include "lib_msg.au3"
 #include "lib_ie.au3"
+#include "lib_time.au3"
 #EndRegion LIB files
 
 
@@ -103,6 +104,8 @@ Global $gDebugFile = "_debug.txt"
 #Region Global Variables
 Global $idButtonGet
 Global $idButtonClear
+Global $idButtonNew
+
 Global $idEdit
 Global $idLabel
 Global $nLine = 0
@@ -134,6 +137,9 @@ Func	Main()
 		ElseIf $msg = $idButtonClear then
 			;Gui_update_list()
 			Clear_Button_pressed()
+		ElseIf $msg = $idButtonNew then
+			;Gui_update_list()
+			New_Button_pressed()
 		EndIf
 
 	Until $msg = $GUI_EVENT_CLOSE
@@ -168,7 +174,7 @@ Local const $guiTop = -1
 Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 
 
-	; Create input
+; Create input
 	GUICreate( "Get all active messages - v." & $nVer & "." &  GetVersion(), $guiWidth, $guiHeight, $guiLeft, $guiTop, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
 
 	;--- buttons starting from right
@@ -177,7 +183,7 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 	Local $guiBtnLeft = $guiWidth - $guiMargin - $guiBtnWidth
 	Local $guiBtnTop = $guiMargin
 
-	; ----- 1st from right button
+; ----- 1st from right button
 	;$guiBtnLeft = $guiWidth - $guiMargin - $guiBtnWidth
 	;$guiBtnTop = $guiMargin
 
@@ -185,14 +191,21 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
 
-	; ----- 2nd button from right <<<--
+; ----- 2nd button from right <<<--
 	$guiBtnLeft = $guiBtnLeft - $guiMargin - $guiBtnWidth
 
 	$idButtonClear = GUICtrlCreateButton("Clear", $guiBtnLeft, $guiBtnTop, $guiBtnWidth, $guiBtnHeight)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
 
-	; ----- Label
+; ----- 3rd button from right <<<--
+	$guiBtnLeft = $guiBtnLeft - $guiMargin - $guiBtnWidth
+
+	$idButtonNew = GUICtrlCreateButton("New", $guiBtnLeft, $guiBtnTop, $guiBtnWidth, $guiBtnHeight)
+	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
+	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
+
+; ----- Label
 	Local const $guiLabelLeft = $guiMargin
 	Local const $guiLabelTop = $guiBtnTop
 	Local const $guiLabelWidth = $guiBtnLeft - $guiMargin - $guiLabelLeft
@@ -230,6 +243,95 @@ Func Clear_Button_pressed()
 
 EndFunc
 
+;===============================================================================
+; Function Name:    New_Button_pressed()
+;===============================================================================
+
+Func New_Button_pressed()
+
+
+	; if this was first time then
+	;	create IE
+	; if url = login
+	;	login with credentials and save them
+	;	get to loglist
+	; if url = loglist
+	;	get old window $oTab
+	;	change time to -5 min
+	;	save all the fields
+	;	submit form
+
+	; get Activ IE window
+	Local $oTab = _IEGetActiveTab()
+	if not IsObj($oTab) then
+		; start IE
+		; get to loglist!
+		_IECreate( "https://rfadmin.test1.reseptformidleren.net/RFAdmin/loglist.rfa" )
+		;Dbg("*** Error: No active IE tab " & $oTab )
+		$oTab = _IEGetActiveTab()
+	EndIf
+
+	GUICtrlSetData($idLabel,"1. IE found..." )
+
+	; check that is is logger
+	Local $url = _IEPropertyGet( $oTab, "locationurl")
+
+	; if login
+	if StringInStr( $url, "login.rfa" ) > 0 then
+		; this is login page
+		; https://rfadmin.test1.reseptformidleren.net/RFAdmin/login.rfa
+		; enter name
+Local $oLoginForm = _IEFormGetObjByName($oTab, "login")
+Local $oUserId = _IEFormElementGetObjByName($oLoginForm,  "userId" )
+Local $oPass = _IEFormElementGetObjByName($oLoginForm,  "pass" )
+
+_IEFormElementSetValue($oUserId, "Anton.Gerasimov@nhn.no")
+_IEFormElementSetValue($oPass, "Lisplaskq22021" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343")
+
+_IEFormSubmit($oLoginForm)
+
+		 _IENavigate ( $oTab, "https://rfadmin.test1.reseptformidleren.net/RFAdmin/loglist.rfa" )
+
+	EndIf
+
+	; check that is is logger
+	Local $url = _IEPropertyGet( $oTab, "locationurl")
+	if StringInStr( $url, "loglist.rfa" ) = 0 AND StringInStr( $url, "logsearch.rfa" ) = 0 then
+		Dbg("*** Error: No message log on IE page" & @CRLF & $url )
+		return 0
+	EndIf
+	GUICtrlSetData($idLabel,"2. Got message page..." )
+
+; we are on loglist page!
+
+Local $oForm = _IEFormGetObjByName($oTab, "logfilter")
+Local $oDatoFra = _IEFormElementGetObjByName($oForm,  "datoFra" )
+Local $oDatoTil = _IEFormElementGetObjByName($oForm,  "datoTil" )
+Local $oMsgType = _IEFormElementGetObjByName($oForm,  "msgType" )
+Local $oAktor = _IEFormElementGetObjByName($oForm,  "aktor" )
+Local $oMsgId = _IEFormElementGetObjByName($oForm,  "msgId" )
+
+; Returns the current Date and Time in format YYYY/MM/DD HH:MM:SS.
+Local $sFrom = _RFtimeDiff( -10, 'n')
+Local $sTo = _RFtimeDiff(1,'h')
+
+_IEFormElementSetValue($oDatoFra, $sFrom)
+_IEFormElementSetValue($oDatoTil, $sTo)
+_IEFormElementSetValue($oMsgType, "")
+_IEFormElementSetValue($oAktor, "")
+_IEFormElementSetValue($oMsgId, "" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343")
+_IEFormElementCheckBoxSelect($oForm, "WS-R" )
+_IEFormElementCheckBoxSelect($oForm, "WS-U" )
+
+_IEFormSubmit($oForm)
+
+; if we got to password page
+; get thru password page
+; get to loglist
+; refill form
+; submit
+
+EndFunc
 ;===============================================================================
 ; Function Name:    Hent_Button_pressed()
 ;===============================================================================
@@ -327,7 +429,7 @@ _IELoadWaitTimeout( 3000 )
 ; ====== main cycle thru messages =====
 
 	$txt = ""
-	For $i = 1 to $nMsgCount
+	For $i = $nMsgCount to 1 step -1
 
 			Local $msgId = $aTableData[$i][1]
 			Local $msgTime = $aTableData[$i][2]
