@@ -446,8 +446,20 @@ Func _ER_GetM94($html)
 
 	if _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
 	if _ER_GetParam( $html, '(?s)StatusSoknadSlv.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)StatusSoknadSlv.*?DN="(.*?)".*?>' )
+	$text &= _ER_GetEgenandel( $html )
 
 	Return	$text
+
+EndFunc
+
+Func	_ER_GetEgenandel( $html )
+
+	Local $a
+
+	$a = StringRegExp( $html, '(?s)BetaltEgenandel.*?V="(.*?)"', 3)
+	if @error then return ""
+
+	Return "("&_ArrayToString( $a, " " )&")"
 
 EndFunc
 
