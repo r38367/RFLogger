@@ -488,7 +488,7 @@ DbgFile( $txt )
 
 	Next ; $i
 
-	GUICtrlSetData($idLabel, $i-1 & "/" & $nMsgCount )
+	GUICtrlSetData($idLabel, $i & "/" & $nMsgCount )
 
 ;GUICtrlSetData($idEdit, $txt & @CRLF, 0)
 ;GUICtrlSetData($idLabel, $nMsgCount & " messages found")
