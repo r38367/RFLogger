@@ -247,10 +247,23 @@ EndFunc
 
 Func New_Button_pressed()
 
+
+	; if this was first time then
+	;	create IE
+	; if url = login
+	;	login with credentials and save them
+	;	get to loglist
+	; if url = loglist
+	;	get old window $oTab
+	;	change time to -5 min
+	;	save all the fields
+	;	submit form
+
 	; get Activ IE window
 	Local $oTab = _IEGetActiveTab()
 	if not IsObj($oTab) then
 		; start IE
+		; get to loglist!
 		_IECreate( "https://rfadmin.test1.reseptformidleren.net/RFAdmin/loglist.rfa" )
 		;Dbg("*** Error: No active IE tab " & $oTab )
 		$oTab = _IEGetActiveTab()
@@ -261,24 +274,22 @@ Func New_Button_pressed()
 	; check that is is logger
 	Local $url = _IEPropertyGet( $oTab, "locationurl")
 
-
+	; if login
 	if StringInStr( $url, "login.rfa" ) > 0 then
 		; this is login page
 		; https://rfadmin.test1.reseptformidleren.net/RFAdmin/login.rfa
-
 		; enter name
-		if $sLogin = "" then
-			$sLogin = ""
-		EndIf
+Local $oLoginForm = _IEFormGetObjByName($oTab, "login")
+Local $oUserId = _IEFormElementGetObjByName($oLoginForm,  "userId" )
+Local $oPass = _IEFormElementGetObjByName($oLoginForm,  "pass" )
 
-		if $sPass = "" then
-			$sPass = ""
-		EndIf
+_IEFormElementSetValue($oUserId, "Anton.Gerasimov@nhn.no")
+_IEFormElementSetValue($oPass, "Lisplaskq22021" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343")
 
-		;  form 'login'
-		; input  'userId'
-		; input  'pass'
-		; 'submit'
+_IEFormSubmit($oLoginForm)
+
+		 _IENavigate ( $oTab, "https://rfadmin.test1.reseptformidleren.net/RFAdmin/loglist.rfa" )
+
 	EndIf
 
 	; check that is is logger
@@ -289,6 +300,7 @@ Func New_Button_pressed()
 	EndIf
 	GUICtrlSetData($idLabel,"2. Got message page..." )
 
+; we are on loglist page!
 
 Local $oForm = _IEFormGetObjByName($oTab, "logfilter")
 Local $oDatoFra = _IEFormElementGetObjByName($oForm,  "datoFra" )
@@ -310,6 +322,12 @@ _IEFormElementCheckBoxSelect($oForm, "WS-R" )
 _IEFormElementCheckBoxSelect($oForm, "WS-U" )
 
 _IEFormSubmit($oForm)
+
+; if we got to password page
+; get thru password page
+; get to loglist
+; refill form
+; submit
 
 EndFunc
 ;===============================================================================
