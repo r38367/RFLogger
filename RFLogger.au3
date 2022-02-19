@@ -69,7 +69,8 @@ Update History:
 15/02/22
 41 - #41 Put links to messages in table
 18/02/22
-42 - #49 add egenandel to M94
+42 - #40 Add refToPar/Conv
+   - #51 fix space before RefToPar in file name
 19/02/22
 43 - #40 Add refToPar/Conv
 #ce
