@@ -68,9 +68,11 @@ Update History:
 40 - #35 Add M9.4
 15/02/22
 41 - #41 Put links to messages in table
+19/02/22
+42 - #49 add egenandel to M94
 ================================
 #ce
-Local const $nVer = "41"
+Local const $nVer = "42"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
