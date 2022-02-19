@@ -89,7 +89,7 @@ Func _ER_GetExtraParam( $html )
 	Local $ref = ""
 
 	;ConversationRef
-	$ref = StringLeft( _ER_GetRefToParent( $html ) & '000000000', 9) & " " & StringLeft( _ER_GetRefToConversation( $html )& '000000000', 9)
+	$ref = " " & StringLeft( _ER_GetRefToParent( $html ) & '000000000', 9) & " " & StringLeft( _ER_GetRefToConversation( $html )& '000000000', 9)
 
 	; ************* >>> REMOVE <<< *************
 	;Return	$ref

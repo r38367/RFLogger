@@ -70,6 +70,7 @@ Update History:
 41 - #41 Put links to messages in table
 18/2/22
 42 - #40 Add refToPar/Conv
+   - #51 fix space before RefToPar in file name
 ================================
 #ce
 Local const $nVer = "42"
