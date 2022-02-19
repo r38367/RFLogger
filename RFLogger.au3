@@ -66,9 +66,11 @@ Update History:
 38 - #32 Add M9.2
 39 - #36 Fixed log file
 40 - #35 Add M9.4
+15/02/22
+41 - #41 Put links to messages in table
 ================================
 #ce
-Local const $nVer = "40"
+Local const $nVer = "41"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -299,24 +301,32 @@ _IELoadWaitTimeout( 3000 )
 	GUICtrlSetData($idLabel, "5. Found messages: " & $nMsgCount )
 
 ;
-; Get link to Hent message
-; Link# is equal to Array#
+; Get links to  message
 ;
 	Local $oLinks = _IELinkGetCollection($oTab)
 	if @error <> 0 then
 		Dbg( "*** Error: _IELinkGetCollection: " & @error)
 		return 0
 	EndIf
-	GUICtrlSetData($idLabel, "6. Got links..." )
 
-	;Local $iNumLinks = @extended
-	$txt = ""
+;
+; put links into $aTable
+;
 	Local $i = 1
 	For $oLink In $oLinks
 		If StringInStr($oLink.href , "loggeview.rfa?" ) Then
-			; process link
+			$aTableData[$i][0] = $oLink.href
+			$i += 1
+		EndIf
+	next
 
-						; 12.07.2019 18:15:04.275
+	GUICtrlSetData($idLabel, "6. Got links... " )
+
+; ====== main cycle thru messages =====
+
+	$txt = ""
+	For $i = 1 to $nMsgCount
+
 			Local $msgId = $aTableData[$i][1]
 			Local $msgTime = $aTableData[$i][2]
 			Local $msgSystem = $aTableData[$i][3]
@@ -332,48 +342,47 @@ _IELoadWaitTimeout( 3000 )
 			Local $sParam
 DbgFileClear()
 DbgFile( $txt )
-			Local $html = _IEGetPageInNewWindow( $oLink.href )
-	if StringLen( $html ) < 1000 then
-		DbgFile( $html)
-		$html = _IEGetPageInNewWindow( $oLink.href )
-	EndIf
-		if @error then
+			Local $html = _IEGetPageInNewWindow( $aTableData[$i][0] )
+			if StringLen( $html ) < 1000 then
 				DbgFile( $html)
-				$sParam = $html
-				;return 0 ;
-		Else
-			$html = _ER_GetBody($html)
+				$html = _IEGetPageInNewWindow( $aTableData[$i][0] )
+			EndIf
 
-			$sParam = _ER_GetExtraParam( $html )
+			if @error then
+					DbgFile( $html)
+					$sParam = $html
+					;return 0 ;
+			Else
+				$html = _ER_GetBody($html)
 
-			Local $fname = $msgType & StringReplace( $sParam, " ", "_" ) & "_" & StringLeft( $msgId, 9) & ".xml"
+				$sParam = _ER_GetExtraParam( $html )
 
-			$sParam = $sParam & " " & $msgHerId
+				Local $fname = $msgType & StringReplace( $sParam, " ", "_" ) & "_" & StringLeft( $msgId, 9) & ".xml"
 
-			Local $t = StringRegExpReplace( $msgTime, "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d).*", "$3$2$1$4$5$6")
-			;$gLogFolder = StringLeft( $t, 8)
+				$sParam = $sParam & " " & $msgHerId
 
-			switch _save_xml( $fname, $html )
-			Case 1 ; ok
-				;12.07.2019 18:15:04.275
-				If FileSetTime( $gLogFolder & "/"& $fname, $t, 0) = 0 then
-					Dbg("error filesettime '" & $t & "'->" & $fname )
-				EndIf
-			Case 2 ; file exists
-				$sParam = $sParam & " *** file exists"
-			Case 0 ; error saving file
-				$sParam = $sParam & " *** not saved"
-			EndSwitch
-		EndIf
-			$i += 1
+				Local $t = StringRegExpReplace( $msgTime, "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d).*", "$3$2$1$4$5$6")
+				;$gLogFolder = StringLeft( $t, 8)
+
+				switch _save_xml( $fname, $html )
+				Case 1 ; ok
+					;12.07.2019 18:15:04.275
+					If FileSetTime( $gLogFolder & "/"& $fname, $t, 0) = 0 then
+						Dbg("error filesettime '" & $t & "'->" & $fname )
+					EndIf
+				Case 2 ; file exists
+					$sParam = $sParam & " *** file exists"
+				Case 0 ; error saving file
+					$sParam = $sParam & " *** not saved"
+				EndSwitch
+			EndIf
 
 			Local $retText = StringMid( $msgTime, 12, 8) & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam
 
 			GUICtrlSetData($idEdit, $retText & @CRLF, 0)
 			LogFile( $retText )
 
-		EndIf
-	Next
+	Next ; $i
 
 	GUICtrlSetData($idLabel, $i-1 & "/" & $nMsgCount )
 
