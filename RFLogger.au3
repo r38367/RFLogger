@@ -68,11 +68,13 @@ Update History:
 40 - #35 Add M9.4
 15/02/22
 41 - #41 Put links to messages in table
-18/2/22
+18/02/22
 42 - #40 Add refToPar/Conv
-================================
+   - #51 fix space before RefToPar in file name
+19/02/22
+43 - #40 Add refToPar/Conv
 #ce
-Local const $nVer = "42"
+Local const $nVer = "43"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -488,7 +490,7 @@ DbgFile( $txt )
 
 	Next ; $i
 
-	GUICtrlSetData($idLabel, $i-1 & "/" & $nMsgCount )
+	GUICtrlSetData($idLabel, $i & "/" & $nMsgCount )
 
 ;GUICtrlSetData($idEdit, $txt & @CRLF, 0)
 ;GUICtrlSetData($idLabel, $nMsgCount & " messages found")

@@ -89,7 +89,7 @@ Func _ER_GetExtraParam( $html )
 	Local $ref = ""
 
 	;ConversationRef
-	$ref = StringLeft( _ER_GetRefToParent( $html ) & '000000000', 9) & " " & StringLeft( _ER_GetRefToConversation( $html )& '000000000', 9)
+	$ref = " " & StringLeft( _ER_GetRefToParent( $html ) & '000000000', 9) & " " & StringLeft( _ER_GetRefToConversation( $html )& '000000000', 9)
 
 	; ************* >>> REMOVE <<< *************
 	;Return	$ref
@@ -454,8 +454,20 @@ Func _ER_GetM94($html)
 
 	if _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
 	if _ER_GetParam( $html, '(?s)StatusSoknadSlv.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)StatusSoknadSlv.*?DN="(.*?)".*?>' )
+	$text &= _ER_GetEgenandel( $html )
 
 	Return	$text
+
+EndFunc
+
+Func	_ER_GetEgenandel( $html )
+
+	Local $a
+
+	$a = StringRegExp( $html, '(?s)BetaltEgenandel.*?V="(.*?)"', 3)
+	if @error then return ""
+
+	Return "("&_ArrayToString( $a, " " )&")"
 
 EndFunc
 
