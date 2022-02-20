@@ -46,6 +46,9 @@
 ;	_ER_GetM92($html)
 ;	_ER_GetM93($html)
 ;	_ER_GetM94($html)
+;=== M3-M15
+;	_ER_GetM3($html)
+;	_ER_GetM15($html)
 ;=== general
 ;	_ER_GetParam( $html, $regexp )
 ;
@@ -110,6 +113,8 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM93($html)
 		case "ERM94"
 			$ret = _ER_GetM94($html)
+		case "ERM3"
+			$ret = _ER_GetM3($html)
 		case "APPREC"
 			$ret = _ER_GetApprec($html)
 		case "ERM911"
@@ -470,6 +475,14 @@ Func	_ER_GetEgenandel( $html )
 	Return "("&_ArrayToString( $a, " " )&")"
 
 EndFunc
+
+;================================================================================================================================
+;	M3,M14,M15 functions
+;================================================================================================================================
+Func _ER_GetM3($html)
+	Return " " & _ER_GetReseptId($html)
+EndFunc
+
 
 ;================================================================================================================================
 ;	M9.11 functions

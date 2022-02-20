@@ -73,8 +73,11 @@ Update History:
    - #51 fix space before RefToPar in file name
 19/02/22
 43 - #40 Add refToPar/Conv
+20/02/22
+44 - #43 Add M3
+
 #ce
-Local const $nVer = "43"
+Local const $nVer = "44"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -288,7 +291,7 @@ Local $oUserId = _IEFormElementGetObjByName($oLoginForm,  "userId" )
 Local $oPass = _IEFormElementGetObjByName($oLoginForm,  "pass" )
 
 _IEFormElementSetValue($oUserId, "Anton.Gerasimov@nhn.no")
-_IEFormElementSetValue($oPass, "Lisplaskq22021" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343")
+_IEFormElementSetValue($oPass, "Lisplaskq22021" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343") _Crypt_EncryptData
 
 _IEFormSubmit($oLoginForm)
 
