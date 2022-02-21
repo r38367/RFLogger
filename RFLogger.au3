@@ -73,8 +73,10 @@ Update History:
    - #51 fix space before RefToPar in file name
 19/02/22
 43 - #40 Add refToPar/Conv
+22/02/22
+44 - #51 Fix annullering
 #ce
-Local const $nVer = "43"
+Local const $nVer = "44"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
