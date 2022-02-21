@@ -357,10 +357,12 @@ EndFunc
 Func _ER_GetAnnullering( $html)
 
 ;<Annullering>false</Annullering>
-;return _ER_GetParam( $html, '(?s)(Annullering)>true<' ) = 0 ? 0: "Annullering"
-Local $ret = _ER_GetParam( $html, '(?s)Annullering>(true)<' );
+
+Local $ret = _ER_GetParam( $html, '(?s)Annullering>true<' );
 Local $antall = _ER_GetParam( $html, '(?s)Antall>(.*?)<' );
-	return $ret='true'? "Annullering("&$antall&")": ""
+
+return $ret? "Annullering("&$antall&")": ""
+
 EndFunc
 
 Func _ER_GetReseptId( $html)
