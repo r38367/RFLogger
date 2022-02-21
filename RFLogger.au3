@@ -76,6 +76,7 @@ Update History:
 21/02/22
 44 - #43 Add M3
    - #51 Fix annullering
+   - #52 Add date to msg log
 #ce
 Local const $nVer = "44"
 
@@ -489,7 +490,9 @@ DbgFile( $txt )
 			Local $retText = StringMid( $msgTime, 12, 8) & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam
 
 			GUICtrlSetData($idEdit, $retText & @CRLF, 0)
-			LogFile( $retText )
+			;LogFile( $retText )
+			LogFile( $msgTime & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam )
+
 
 	Next ; $i
 
