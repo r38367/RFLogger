@@ -319,13 +319,13 @@ Local $oMsgId = _IEFormElementGetObjByName($oForm,  "msgId" )
 
 ; Returns the current Date and Time in format YYYY/MM/DD HH:MM:SS.
 Local $sFrom = _RFtimeDiff( -10, 'n')
-Local $sTo = _RFtimeDiff(1,'h')
+;Local $sTo = _RFtimeDiff(1,'h')
 
 _IEFormElementSetValue($oDatoFra, $sFrom)
-_IEFormElementSetValue($oDatoTil, $sTo)
-_IEFormElementSetValue($oMsgType, "")
-_IEFormElementSetValue($oAktor, "")
-_IEFormElementSetValue($oMsgId, "" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343")
+;_IEFormElementSetValue($oDatoTil, $sTo)
+;_IEFormElementSetValue($oMsgType, "")
+;_IEFormElementSetValue($oAktor, "")
+;_IEFormElementSetValue($oMsgId, "" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343")
 _IEFormElementCheckBoxSelect($oForm, "WS-R" )
 _IEFormElementCheckBoxSelect($oForm, "WS-U" )
 
