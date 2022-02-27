@@ -310,11 +310,11 @@ Local $oAktor = _IEFormElementGetObjByName($oForm,  "aktor" )
 Local $oMsgId = _IEFormElementGetObjByName($oForm,  "msgId" )
 
 ; Returns the current Date and Time in format YYYY/MM/DD HH:MM:SS.
-Local $sFrom = _RFtimeDiff( -10, 'n')
-;Local $sTo = _RFtimeDiff(1,'h')
+Local $sFrom = _RFtimeLast() ;_RFtimeDiff( -10, 'n')
+Local $sTo = _RFtimeTomorow()
 
 _IEFormElementSetValue($oDatoFra, $sFrom)
-;_IEFormElementSetValue($oDatoTil, $sTo)
+_IEFormElementSetValue($oDatoTil, $sTo)
 ;_IEFormElementSetValue($oMsgType, "")
 ;_IEFormElementSetValue($oAktor, "")
 ;_IEFormElementSetValue($oMsgId, "" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343")
@@ -482,7 +482,11 @@ DbgFile( $txt )
 			Local $retText = StringMid( $msgTime, 12, 8) & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam
 
 			GUICtrlSetData($idEdit, $retText & @CRLF, 0)
-			LogFile( $retText )
+			;LogFile( $retText )
+			LogFile( $msgTime & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam )
+
+			; set last processed msg time
+			_RFtimeLast( $msgTime )
 
 	Next ; $i
 
