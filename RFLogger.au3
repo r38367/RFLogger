@@ -77,8 +77,13 @@ Update History:
 44 - #43 Add M3
    - #51 Fix annullering
    - #52 Add date to msg log
+27/02/22
+45 - small fixes:
+	- change only start time when press new
+	- count msges from 1-max (was from max to 0)
+
 #ce
-Local const $nVer = "44"
+Local const $nVer = "45"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -447,7 +452,7 @@ _IELoadWaitTimeout( 3000 )
 			$txt &=  " " & $msgType
 			$txt &=  " " & $msgId
 
-			GUICtrlSetData($idLabel, $i & "/" & $nMsgCount & " " & $txt)
+			GUICtrlSetData($idLabel, $nMsgCount-$i+1 & "/" & $nMsgCount & " " & $txt)
 
 			Local $sParam
 DbgFileClear()
@@ -496,7 +501,7 @@ DbgFile( $txt )
 
 	Next ; $i
 
-	GUICtrlSetData($idLabel, $i & "/" & $nMsgCount )
+	GUICtrlSetData($idLabel, $nMsgCount-$i & "/" & $nMsgCount )
 
 ;GUICtrlSetData($idEdit, $txt & @CRLF, 0)
 ;GUICtrlSetData($idLabel, $nMsgCount & " messages found")
