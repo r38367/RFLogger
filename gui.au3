@@ -83,7 +83,7 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 
 
 ; Create input
-	GUICreate( "Get all active messages - v." &  GetVersion(), $guiWidth, $guiHeight, $guiLeft, $guiTop, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
+	GUICreate( "RF logger - v." & GetVersion(), $guiWidth, $guiHeight, $guiLeft, $guiTop, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
 
 	;--- buttons starting from right
 	Local const $guiBtnWidth = 50
