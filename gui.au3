@@ -2,17 +2,13 @@
 #include-once
 #include <GUIConstants.au3>
 #include <WinAPI.au3>
+#include <date.au3>
+#include <Guibutton.au3>
+#include <GuiEdit.au3>
 
 #EndRegion ***** includes
 
-#Region Lib files
-;#include "lib_msg.au3"
-;#include "lib_ie.au3"
-;#include "lib_time.au3"
-#EndRegion LIB files
-
 #Region *** Global variables
-
 Global $idButtonGet
 Global $idButtonClear
 Global $idButtonNew
@@ -25,16 +21,18 @@ Global $idLabel
 Opt('MustDeclareVars', 1)
 
 
-_gui_main()
+GUI_Run("RFAdmin logger")
+exit
+
 
 ;===============================================================================
 ; Function Name:  Main
 ;===============================================================================
-Func	_gui_main()
+Func	GUI_Run($title)
 
-	Local $msg
+	Local $msg, $sFunc
 
-	GUI_Create()
+	GUI_Create($title)
 
 	Do
 
@@ -48,25 +46,25 @@ Func	_gui_main()
 			Clear_Button_pressed()
 		ElseIf $msg = $idButtonNew then
 			;Gui_update_list()
-			New_Button_pressed()
+			$sFunc="New_Button_pressed"
+			Call($sFunc)
 		EndIf
 
 	Until $msg = $GUI_EVENT_CLOSE
 
 	GUIDelete()
 
-	Exit
 EndFunc
 
 ;===============================================================================
 ;
-; Function Name:    GUI_Create()
+; Function Name:    GUI_Create( $gui_title )
 ; Description:      Create GUI form
 ; Parameter(s):     None
 ; Returns:          None
 ;===============================================================================
 
-Func GUI_Create()
+Func GUI_Create($title)
 
 ;--- space between elements
 Local const $guiMargin = 10
@@ -83,7 +81,7 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 
 
 ; Create input
-	GUICreate( "RF logger - v." & GetVersion(), $guiWidth, $guiHeight, $guiLeft, $guiTop, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
+	GUICreate( $title, $guiWidth, $guiHeight, $guiLeft, $guiTop, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
 
 	;--- buttons starting from right
 	Local const $guiBtnWidth = 50
@@ -143,7 +141,7 @@ EndFunc
 ;===============================================================================
 ; Clears all info in GUI
 ;===============================================================================
-Func _gui_Clear() ;Clear_Button_pressed()
+Func GUI_Clear() ;Clear_Button_pressed()
 
 	GUICtrlSetData($idLabel, "" )
 	GUICtrlSetData($idEdit, "" )
@@ -153,21 +151,30 @@ EndFunc
 ;===============================================================================
 ; Print top line
 ;===============================================================================
-Func	_gui_setStatus( $text )
+Func	GUI_setStatus( $text )
 	GUICtrlSetData($idLabel, $text )
 EndFunc
 
 ;===============================================================================
 ; Add text to the end of log
 ;===============================================================================
-Func	_gui_addLine( $text )
+Func	GUI_addLine( $text )
+
+	; get selection
+	Local $aSel = _GUICtrlEdit_GetSel($idEdit)
 
 	; move to the end of text
 	Local $cEnd = StringLen( GUICtrlRead($idEdit) )
-	GuiCtrlSendMsg($idEdit, $EM_SETSEL, $cEnd, $cEnd )
+	_GUICtrlEdit_SetSel($idEdit, $cEnd, $cEnd )
 
 	; write line to the end
 	GUICtrlSetData($idEdit, $text & @CRLF, 0)
+
+	; restore selection
+	_GUICtrlEdit_SetSel($idEdit, $aSel[0], $aSel[1])
+
+	; make selection visible
+	GUICtrlSetState($idEdit, $GUI_FOCUS)
 
 	;GUICtrlSetData($idEdit, GUICtrlRead($idEdit) & $text & @CRLF)
 
@@ -176,11 +183,27 @@ EndFunc
 ;===============================================================================
 ; return log file
 ;===============================================================================
-Func	_gui_getLog()
+Func	GUI_getLog()
 	return GUICtrlRead($idEdit)
 EndFunc
 
+;===============================================================================
+; Process functions
+;===============================================================================
 
+Func	New_Button_pressed()
+	GUI_setStatus( _Now() & " " & _GUICtrlButton_GetText($idButtonNew) )
+
+EndFunc
+Func	Clear_Button_pressed()
+	GUI_Clear()
+	GUI_setStatus( "" & _GUICtrlButton_GetText($idButtonClear) )
+EndFunc
+Func	Get_Button_pressed()
+
+	GUI_addLine( _Now() & " " & Random() & _GUICtrlButton_GetText($idButtonGet) )
+
+EndFunc
 #Region ***** System testing
 ;#include "test/unittest.au3"
 ;Test("user")
