@@ -3,6 +3,20 @@
 ;#include <array.au3>
 #EndRegion ***** includes
 
+#cs
+================================
+Function for work with .ini file:
+
+_ini_setFilename( $path ) - set fille path and name
+_ini_getFilename() - return current ini file path and name
+_ini_read( $par ) - retuun $par value from ini file
+_ini_save( $par, $val ) - saves $par in ini file
+_ini_delete() - deletes current ini file
+
+================================
+
+#ce
+
 #Region *** Global variables
 
 Global $_ini_filename = @ScriptFullPath & ".ini" ; ini file name
