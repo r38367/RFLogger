@@ -17,16 +17,24 @@ Global $_user_pass  ; RF Admin password
 
 #EndRegion Global variables
 
-;_user_passGUI()
+#cs
+================================
+Function  function spesific to credentials:
+
+_user_getUser()
+_user_getPass()
+_user_setUser()
+_user_setPass()
+_user_gui() -> cresate gui for user/pass entering;
+
+================================
+
+#ce
+
+;_user_GUI()
 ;ConsoleWrite( $_user_user & @CRLF )
 ;ConsoleWrite( $_user_pass & @CRLF )
 
-; function spesific to credentials
-; _user_getUser()
-; _user_getPass()
-; _user_setPass()
-; _user_setUser()
-; _user_gui() -> cresate gui for pass entering
 
 Func	_user_getUser()
 	return $_user_user
