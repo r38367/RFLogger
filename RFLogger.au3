@@ -81,6 +81,7 @@ Update History:
 45 - small fixes:
 	- change only start time when press new
 	- count msges from 1-max (was from max to 0)
+	- add egenandel in M10
 
 #ce
 Local const $nVer = "45"
@@ -296,8 +297,8 @@ Local $oLoginForm = _IEFormGetObjByName($oTab, "login")
 Local $oUserId = _IEFormElementGetObjByName($oLoginForm,  "userId" )
 Local $oPass = _IEFormElementGetObjByName($oLoginForm,  "pass" )
 
-_IEFormElementSetValue($oUserId, "Anton.Gerasimov@nhn.no")
-_IEFormElementSetValue($oPass, "Lisplaskq22021" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343") _Crypt_EncryptData
+_IEFormElementSetValue($oUserId, "")
+_IEFormElementSetValue($oPass, "" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343") _Crypt_EncryptData
 
 _IEFormSubmit($oLoginForm)
 
