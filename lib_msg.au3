@@ -354,6 +354,7 @@ Func _ER_GetM10($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
 	if _ER_GetReseptId( $html) then $text &= " " & _ER_GetReseptId($html)
+	$text &= _ER_GetEgenandel( $html )
 
 	Return	$text
 
