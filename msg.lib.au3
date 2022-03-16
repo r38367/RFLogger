@@ -56,6 +56,6 @@ EndFunc
 #include "test/unittest.au3"
 
 Test("_get_Message")
-UTAssertEqual( _get_Message( UTFileRead( 'M10 annullering.xml') ), "ERM10 ad8d8ceb- b7f8db46- ")
+UTAssertEqual( _get_Message( UTFileRead( 'ERM10_annullering.xml') ), "ERM10 ad8d8ceb- b7f8db46- Annullering(0)")
 
 #EndRegion
