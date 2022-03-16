@@ -104,6 +104,21 @@ Func UTAssertFileEqual( Const $file1, Const $file2, Const $ignorewhitespace = tr
 
 EndFunc
 
+Func 	UTFileRead( Const $file )
+	Local $f
+	;$f = StringRegExpReplace( @ScriptFullPath, "(.*\\test\\).*", "$1files\\" & $file )
+	$f = @WorkingDir & "\test\files\" & $file
+
+	if not FileExists( $f ) then
+		;ConsoleWrite( "*** File not found "& $f & @CRLF )
+		DoTestFail( "File not found", $f)
+		Return 0 ; "File not found"
+	EndIf
+
+	Return FileRead( $f )
+
+EndFunc ;-> UTReadFile
+
 Func DoTestPass()
 	$iTotalPass += 1
 	;ConsoleWrite( "." )

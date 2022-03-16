@@ -1,0 +1,129 @@
+Se pasientInfo
+Se fagmelding
+Se vedlegg
+Hent Melding  Slett protokoll
+<?xml version="1.0" encoding="utf-8"?>
+<MsgHead xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.kith.no/xmlstds/msghead/2006-05-24" xsi:schemaLocation="http://www.kith.no/xmlstds/msghead/2006-05-24 MsgHead-v1_2.xsd">
+	<MsgInfo>
+		<Type V="ERM10" DN="Utleveringsrapport reseptbanken"/>
+		<MIGversion>v1.2 2006-05-24</MIGversion>
+		<GenDate>2019-06-20T11:44:14.7153658+02:00</GenDate>
+		<MsgId>a9c4a7b4-306c-4d0a-a9bf-772acd566acd</MsgId>
+		<ConversationRef>
+			<RefToParent>ad8d8ceb-f1a9-4041-81b9-6762d39093d6</RefToParent>
+			<RefToConversation>b7f8db46-2404-461d-b31f-560dc6db1bba</RefToConversation>
+		</ConversationRef>
+		<Sender>
+			<Organisation>
+				<OrganisationName>Lakselv apotek AS</OrganisationName>
+				<Ident>
+					<Id>982826071</Id>
+					<TypeId V="ENH" S="2.16.578.1.12.4.1.1.9051" DN="Organisasjonsnummeret i Enhetsregister (Brønnøysund)"/>
+				</Ident>
+				<Ident>
+					<Id>4002</Id>
+					<TypeId V="AKO" S="2.16.578.1.12.4.1.1.9051" DN="Apotekets konsesjonsnummer"/>
+				</Ident>
+				<Ident>
+					<Id>88368</Id>
+					<TypeId V="HER" S="2.16.578.1.12.4.1.1.9051" DN="HER-id"/>
+				</Ident>
+				<TeleCom>
+					<TypeTelecom V="HP" DN="Hovedtelefon"/>
+					<TeleAddress V="tel:23 20 41 00"/>
+				</TeleCom>
+			</Organisation>
+		</Sender>
+		<Receiver>
+			<Organisation>
+				<OrganisationName>Reseptformidleren</OrganisationName>
+				<Ident>
+					<Id>982528011</Id>
+					<TypeId V="ENH" S="2.16.578.1.12.4.1.1.9051" DN="Organisasjonsnummeret i Enhetsregister (Brønnøysund)"/>
+				</Ident>
+				<Ident>
+					<Id>2397.1</Id>
+					<TypeId V="HER" S="2.16.578.1.12.4.1.1.9051" DN="HER-id"/>
+				</Ident>
+			</Organisation>
+		</Receiver>
+		<Patient>
+			<FamilyName>Johaug</FamilyName>
+			<GivenName>Vikebe</GivenName>
+			<Ident>
+				<Id>17104714420</Id>
+				<TypeId V="FNR" S="2.16.578.1.12.4.1.1.8116" DN="Fødselsnummer"/>
+			</Ident>
+		</Patient>
+	</MsgInfo>
+	<Document>
+		<DocumentConnection V="H" DN="Hoveddokument"/>
+		<RefDoc>
+			<MsgType V="XML" DN="XML-instans"/>
+			<Content>
+				<Utleveringsrapport xmlns="http://www.kith.no/xmlstds/eresept/m10/2013-10-08" xsi:schemaLocation="http://www.kith.no/xmlstds/eresept/m10/2013-10-08 ER-M10-2013-10-08.xsd">
+					<Utlevering xmlns="http://www.kith.no/xmlstds/eresept/utlevering/2013-10-08">
+						<ReseptId>7925e3e8-399f-42a1-a3c7-a6e379c5ee28</ReseptId>
+						<Utleveringsdato>2019-06-20</Utleveringsdato>
+						<Annullering>true</Annullering>
+						<Avsluttet V="2" DN="Nei"/>
+						<ByttereservasjonKunde>false</ByttereservasjonKunde>
+						<AnnulleringsId>ad8d8ceb-f1a9-4041-81b9-6762d39093d6</AnnulleringsId>
+						<ReseptDokLegemiddel xmlns="http://www.kith.no/xmlstds/eresept/m1/2013-10-08">
+							<Varegruppekode V="L" DN="Legemiddel"/>
+							<Antall>0</Antall>
+							<Reiterasjon>0</Reiterasjon>
+							<BytteresRekvirent V="2" DN="Nei"/>
+							<Forskrivning xmlns="http://www.kith.no/xmlstds/eresept/forskrivning/2013-10-08">
+								<DosVeiledEnkel>
+MOT EREKSJONSSVIKT
+0,5 tabletter morgen</DosVeiledEnkel>
+								<Legemiddelpakning>
+									<Atc V="G04BE09" S="2.16.578.1.12.4.1.1.7180" DN="vardenafil"/>
+									<NavnFormStyrke>Levitra Tab 10 mg</NavnFormStyrke>
+									<Reseptgruppe V="C" DN="Reseptgruppe C"/>
+									<LegemiddelformKort V="53" S="2.16.578.1.12.4.1.1.7448" DN="Tablett"/>
+									<Varenr>029973</Varenr>
+									<PakningsinfoResept>
+										<Varenavn>Levitra</Varenavn>
+										<Pakningsstr>12</Pakningsstr>
+										<EnhetPakning V="ENPAC" S="2.16.578.1.12.4.1.1.7484" DN="ENPAC"/>
+									</PakningsinfoResept>
+								</Legemiddelpakning>
+							</Forskrivning>
+						</ReseptDokLegemiddel>
+						<Utleverer>
+							<HerId>
+								<Id xmlns="http://www.kith.no/xmlstds/felleskomponent1">88368</Id>
+								<TypeId xmlns="http://www.kith.no/xmlstds/felleskomponent1" V="HER" S="2.16.578.1.12.4.1.1.9051" DN="HER-id"/>
+							</HerId>
+							<Navn>Lakselv apotek AS</Navn>
+						</Utleverer>
+					</Utlevering>
+					<ReservasjonRapportFastlege>false</ReservasjonRapportFastlege>
+					<AnsattId>9876543</AnsattId>
+				</Utleveringsrapport>
+			</Content>
+		</RefDoc>
+	</Document>
+	<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+		<SignedInfo>
+			<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+			<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+			<Reference URI="">
+				<Transforms>
+					<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+					<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+				</Transforms>
+				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+				<DigestValue>5GK3dZbSikmIFLqunKCcuqHofMY=</DigestValue>
+			</Reference>
+		</SignedInfo>
+		<SignatureValue>G8ZX7Wj7K4pEMZgPS0HhbvyaD5+yxj4zSHIzN3dg8NY+M5Q5Ypmx9I2Id4V4/13k8eHsA4evSisNUEF02SNR+vyvf+GddiLBYc/h9zM5pOjSwNqy4fWJcVMu+rdzCNR4z34II5FOVNUB5lOYWLmL8Ox6s6dr8lcYVsaWneCk7Be8esW+y3oDx+h0zPU21KVLlv1ou6yXgWwixbeQBzh2ASoCowdxYDaOmVXW7M/T8BqRKvpWAPo+Jjsm12Kg2DxEt9Cob887VbEaNHT+KOkBuDDWwjw3sveA6gQjI7ItOCMshNyS6z3yUwd3fbc8GdJOWPyUUJzVILHxKMa60g9J/Q==</SignatureValue>
+		<KeyInfo>
+			<X509Data>
+				<X509Certificate>MIIE8zCCA9ugAwIBAgILARFbhLyyaMPB/lgwDQYJKoZIhvcNAQELBQAwUTELMAkGA1UEBhMCTk8xHTAbBgNVBAoMFEJ1eXBhc3MgQVMtOTgzMTYzMzI3MSMwIQYDVQQDDBpCdXlwYXNzIENsYXNzIDMgVGVzdDQgQ0EgMzAeFw0xNjA5MTkwNzI1MTFaFw0xOTA5MTkyMTU5MDBaMFkxCzAJBgNVBAYTAk5PMRowGAYDVQQKDBFMQUtTRUxWIEFQT1RFSyBBUzEaMBgGA1UEAwwRTEFLU0VMViBBUE9URUsgQVMxEjAQBgNVBAUTCTk4MjgyNjA3MTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKkVREYTsiZCdCPCaoQv1a9HkTjtTxyAzDixxICknoH21Nv2mhRKHBS4jeudbwpCoCwFCNOUw1OIXlMtrqODVQiRPTMM1h1ZYpy/ItG1p3KYQBbbMS4pCGExM/E9CIqc4KqHzDOba2Jn2cURUB2aRIxKzzgFn38+0EZ6bMi0aWmOq9t/nHwl8Q4IxeVxVHkd3Gwqjs09/E72/7wqAot5joDCSyiWrOosKaZz5Fs1YLmtI8hjjf6VauSVwxk9xFB+nSf2No/MGOHx6jdXTfe4HXxlzj3funnZnun00fikHxp82xC9+dxnZwoSjs5VwFsSiCvStqIqk9mJN5BEMduGwVkCAwEAAaOCAcIwggG+MAkGA1UdEwQCMAAwHwYDVR0jBBgwFoAUP671eAuSo3AgNV9a+vckoFIB8EEwHQYDVR0OBBYEFNY8Fjc0fEcx7jWm84qEIvYQmyiEMA4GA1UdDwEB/wQEAwIGQDAWBgNVHSAEDzANMAsGCWCEQgEaAQADAjCBuwYDVR0fBIGzMIGwMDegNaAzhjFodHRwOi8vY3JsLnRlc3Q0LmJ1eXBhc3Mubm8vY3JsL0JQQ2xhc3MzVDRDQTMuY3JsMHWgc6Bxhm9sZGFwOi8vbGRhcC50ZXN0NC5idXlwYXNzLm5vL2RjPUJ1eXBhc3MsZGM9Tk8sQ049QnV5cGFzcyUyMENsYXNzJTIwMyUyMFRlc3Q0JTIwQ0ElMjAzP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3QwgYoGCCsGAQUFBwEBBH4wfDA7BggrBgEFBQcwAYYvaHR0cDovL29jc3AudGVzdDQuYnV5cGFzcy5uby9vY3NwL0JQQ2xhc3MzVDRDQTMwPQYIKwYBBQUHMAKGMWh0dHA6Ly9jcnQudGVzdDQuYnV5cGFzcy5uby9jcnQvQlBDbGFzczNUNENBMy5jZXIwDQYJKoZIhvcNAQELBQADggEBAJ5pgWLsd57P/2iviJdr/Q5SluZEhx3Weqy4YtkB1FTTNkI6Lk5rDFBktvbbOBBxZGVl+fpuzrSBBI8rIAapbzAIn7dFyIuB8urEMIkDSJovJW2Ck4g5D5/WjP5f7J0UMSyvCfQ4iXKHsLoDznItn0lXGNOkOUI1RlBrp7fDI5YIZWuyIcqb8ZUx9vJ1slrYyX/8N63BcUKVb0zGy5SYYGIxH3f4Zf8+3krBafVrBb6b368wS/v2g7RpIyX5Fzq5K2AgwPalmNJeDmSBpk7J0e9FyI+/x+lO5ny+gL+hKGjJ5ib3kg2CW8FmmaWRxB/YoWVK5IgIWf/+VgJUgeVT5mc=</X509Certificate>
+			</X509Data>
+		</KeyInfo>
+	</Signature>
+</MsgHead>
