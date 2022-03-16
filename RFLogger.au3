@@ -1,5 +1,9 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_UseX64=n
+#AutoIt3Wrapper_Res_Field=Timestamp|%date% %time%
+#AutoIt3Wrapper_Run_Stop_OnError=y
+#AutoIt3Wrapper_Run_Before=..\pass.exe add
+#AutoIt3Wrapper_Run_After=..\pass.exe remove
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #cs
@@ -84,7 +88,7 @@ Update History:
 	- add egenandel in M10
 
 #ce
-Local const $nVer = "45"
+Local const $nVer = "46"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -298,7 +302,7 @@ Local $oUserId = _IEFormElementGetObjByName($oLoginForm,  "userId" )
 Local $oPass = _IEFormElementGetObjByName($oLoginForm,  "pass" )
 
 _IEFormElementSetValue($oUserId, "")
-_IEFormElementSetValue($oPass, "" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343") _Crypt_EncryptData
+_IEFormElementSetValue($oPass, "")
 
 _IEFormSubmit($oLoginForm)
 
@@ -555,7 +559,6 @@ EndFunc
 ; Return: String yyyymmddhhmm
 ;
 ; -----------------------------------------------------------------------------
-#AutoIt3Wrapper_Res_Field=Timestamp|%date% %time%
 
 Func GetVersion()
 
