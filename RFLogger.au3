@@ -6,6 +6,9 @@
 #AutoIt3Wrapper_Run_After=..\pass.exe remove
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
+;_save_xml( "<head>This is text åøæ</head>", "02.12.2021 22:00:59.046 a09b87e- ERM10 a09b87e- a09b87e- Annullering" )
+;_save_xml( "", "18:23:59.046 a09b87e- ERM10 a09b87e- a09b87e- Annullering" )
+
 #cs
 ================================
 Simple GUI module to create xml file from messagelist in IE
@@ -459,7 +462,7 @@ _IELoadWaitTimeout( 3000 )
 
 			GUICtrlSetData($idLabel, $nMsgCount-$i+1 & "/" & $nMsgCount & " " & $txt)
 
-			Local $sParam
+			Local $sParam = ""
 DbgFileClear()
 DbgFile( $txt )
 			Local $html = _IEGetPageInNewWindow( $aTableData[$i][0] )
@@ -474,35 +477,19 @@ DbgFile( $txt )
 					;return 0 ;
 			Else
 				$html = _ER_GetBody($html)
-
 				$sParam = _ER_GetExtraParam( $html )
-
-				Local $fname = $msgType & StringReplace( $sParam, " ", "_" ) & "_" & StringLeft( $msgId, 9) & ".xml"
-
-				$sParam = $sParam & " " & $msgHerId
-
-				Local $t = StringRegExpReplace( $msgTime, "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d).*", "$3$2$1$4$5$6")
-				;$gLogFolder = StringLeft( $t, 8)
-
-				switch _save_xml( $fname, $html )
-				Case 1 ; ok
-					;12.07.2019 18:15:04.275
-					If FileSetTime( $gLogFolder & "/"& $fname, $t, 0) = 0 then
-						Dbg("error filesettime '" & $t & "'->" & $fname )
-					EndIf
-				Case 2 ; file exists
-					$sParam = $sParam & " *** file exists"
-				Case 0 ; error saving file
-					$sParam = $sParam & " *** not saved"
-				EndSwitch
+				$sParam = $msgTime & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam & " " & $msgHerId
 			EndIf
 
-			Local $retText = StringMid( $msgTime, 12, 8) & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam
+			; save xml in a file
+			_save_xml( $html, $sParam )
 
-			GUICtrlSetData($idEdit, $retText & @CRLF, 0)
+			; add line to log file
+			LogFile( $sParam )
+
+			; Add line to screen
+			GUICtrlSetData($idEdit, $sParam & @CRLF, 0)
 			;LogFile( $retText )
-			LogFile( $msgTime & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam )
-
 
 	Next ; $i
 
@@ -516,19 +503,41 @@ EndFunc
 
 
 
-Func	_save_xml( $fname, $html )
+Func	_save_xml( $html, $sParam )
 
+Local	$folder
+Local	$fileName
+Local	$fileTime
 
-	if FileExists( $gLogFolder & "/" & $fname ) then
-		return 2 ; do not overwrite
-	endif
-
-	if FileWrite( $gLogFolder & "/" &  $fname, $html ) = 0 then
-		Dbg("error write file " & $fname )
-		return 0
+	$fileTime = StringRegExpReplace( $sParam , "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d).*", "$3$2$1$4$5$6") ; 20220117192000
+	if @extended = 0 then
+		return 1
 	EndIf
 
-	Return 1
+	$folder = StringRegExpReplace( $fileTime, "(\d\d\d\d)(\d\d)(\d\d).*", "$1-$2-$3" ) ; 2022-01-17
+
+	Local $a = StringSplit( $sParam, " " )
+	if $a[0]<4 then
+		return 2
+	EndIf
+
+	$fileName = $a[4] & "_" & $a[3] & ".xml"
+
+	if not FileExists( $folder ) then
+		DirCreate( $folder )
+	endif
+
+	if FileWrite( $folder & "\" &  $fileName, $html ) = 0 then
+		Dbg("error write file " & $fileName)
+		return 3
+	EndIf
+
+	If FileSetTime( $folder & "\" &  $fileName, $fileTime, 0) = 0 then
+		Dbg("error filesettime '" & $fileTime & "'->" & $fileName)
+		return 4
+	EndIf
+
+	Return 0
 EndFunc
 
 
@@ -544,12 +553,22 @@ Func	DbgFile( $txt )
 	FileWriteLine( $gDebugFile, $txt )
 EndFunc
 
-Func	LogFile( $txt )
+Func	LogFile( $sParam )
 
-	if not FileExists( $gLogFolder ) then
-			DirCreate( $gLogFolder )
+	Local $folder = StringRegExpReplace( $sParam , "(\d+).(\d+).(\d\d\d\d) .*", "$3-$2-$1") ; 2022-01-17
+	if @extended = 0 then
+		return 1
 	EndIf
-	FileWriteLine( $gLogFolder & "/" & $gLogfile, $txt )
+
+	Local $fileName = $folder & "\" & $folder & "_rf.log") ; 2022-01-17\2022-01-17_rf.log
+
+	if not FileExists( $folder ) then
+		DirCreate( $folder )
+	endif
+
+	FileWriteLine( $fileName , $sParam )
+
+	return 0
 
 EndFunc
 
