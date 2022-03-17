@@ -6,9 +6,6 @@
 #AutoIt3Wrapper_Run_After=..\pass.exe remove
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-;_save_xml( "<head>This is text åøæ</head>", "02.12.2021 22:00:59.046 a09b87e- ERM10 a09b87e- a09b87e- Annullering" )
-;_save_xml( "", "18:23:59.046 a09b87e- ERM10 a09b87e- a09b87e- Annullering" )
-
 #cs
 ================================
 Simple GUI module to create xml file from messagelist in IE
@@ -106,8 +103,6 @@ Local const $nVer = "46"
 #EndRegion Global Include files
 
 Global $gIEhwnd = -1
-Global $gLogFolder = "."
-Global $gLogfile = "log"
 Global $gDebugFile = "_debug.txt"
 
 ; #LIB# ===================================================================================================================
@@ -358,14 +353,11 @@ EndFunc
 Func	Get_Button_pressed()
 
 	Local $oTab
-	$gLogFolder = @YEAR & "." & @MON & "." & @MDAY ; folder will correspond to timestamp
-	$gLogfile = @YEAR & "." & @MON & "." & @MDAY & "_" & @HOUR & @MIN & @SEC & "_log.txt"
 
 ;GUICtrlSetData($idEdit, "" )
 GUICtrlSetData($idLabel, "Get Active IE" )
 
 DbgFile( "start " & _Now()  )
-LogFile( "start " & _Now()  )
 
 _IELoadWaitTimeout( 3000 )
 
@@ -516,12 +508,7 @@ Local	$fileTime
 
 	$folder = StringRegExpReplace( $fileTime, "(\d\d\d\d)(\d\d)(\d\d).*", "$1-$2-$3" ) ; 2022-01-17
 
-	Local $a = StringSplit( $sParam, " " )
-	if $a[0]<4 then
-		return 2
-	EndIf
-
-	$fileName = $a[4] & "_" & $a[3] & ".xml"
+	$fileName = StringRegExpReplace( $sParam, " *\S+ +\S+ +(\S+) +(\S+).*", "$2_$1.xml")
 
 	if not FileExists( $folder ) then
 		DirCreate( $folder )
@@ -560,7 +547,7 @@ Func	LogFile( $sParam )
 		return 1
 	EndIf
 
-	Local $fileName = $folder & "\" & $folder & "_rf.log") ; 2022-01-17\2022-01-17_rf.log
+	Local $fileName = $folder & "\" & $folder & "_rf.log" ; 2022-01-17\2022-01-17_rf.log
 
 	if not FileExists( $folder ) then
 		DirCreate( $folder )
