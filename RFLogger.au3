@@ -92,6 +92,7 @@ Update History:
 47	- rewrite logging - folder with actual date
 	- rewrite files
 	- only one log file per folder
+	- add papirresept i M10
 #ce
 Local const $nVer = "47"
 
