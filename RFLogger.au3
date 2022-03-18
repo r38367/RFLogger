@@ -87,7 +87,7 @@ Update History:
 	- count msges from 1-max (was from max to 0)
 	- add egenandel in M10
 17/03/22
-46	- rewrite logging - folder with actual date
+47	- rewrite logging - folder with actual date
 	- rewrite files
 	- only one log file per folder
 #ce
