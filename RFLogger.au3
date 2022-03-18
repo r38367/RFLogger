@@ -93,7 +93,7 @@ Update History:
 	- rewrite files
 	- only one log file per folder
 #ce
-Local const $nVer = "46"
+Local const $nVer = "47"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
