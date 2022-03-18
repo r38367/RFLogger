@@ -92,7 +92,7 @@ Func _ER_GetExtraParam( $html )
 	Local $ref = ""
 
 	;ConversationRef
-	$ref = " " & StringLeft( _ER_GetRefToParent( $html ) & '000000000', 9) & " " & StringLeft( _ER_GetRefToConversation( $html )& '000000000', 9)
+	$ref = StringLeft( _ER_GetRefToParent( $html ) & '000000000', 9) & " " & StringLeft( _ER_GetRefToConversation( $html )& '000000000', 9)
 
 	Switch _ER_GetMsgType( $html)
 		case "ERM1"
@@ -276,6 +276,7 @@ Local $text = ""
 	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
+	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParam( $html, '(?s)RefNr>(.*?)<' )
 
 	Return	$text
 
@@ -427,7 +428,7 @@ Func _ER_GetM92($html)
 
 	Else
 		; we did not have resepts
-		if _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' ) then $text &= _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
+		if _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
 
 	EndIf
 
