@@ -86,7 +86,10 @@ Update History:
 	- change only start time when press new
 	- count msges from 1-max (was from max to 0)
 	- add egenandel in M10
-
+17/03/22
+46	- rewrite logging - folder with actual date
+	- rewrite files
+	- only one log file per folder
 #ce
 Local const $nVer = "46"
 
@@ -443,7 +446,7 @@ _IELoadWaitTimeout( 3000 )
 	For $i = $nMsgCount to 1 step -1
 
 			Local $msgId = $aTableData[$i][1]
-			Local $msgTime = $aTableData[$i][2]
+			Local $msgTime = StringStripWS($aTableData[$i][2],3)
 			Local $msgSystem = $aTableData[$i][3]
 			Local $msgType = $aTableData[$i][4]
 			Local $msgHerId = $aTableData[$i][10]
