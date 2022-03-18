@@ -86,6 +86,8 @@ Update History:
 	- change only start time when press new
 	- count msges from 1-max (was from max to 0)
 	- add egenandel in M10
+16/03/22
+46 - fix #56 - show all RefNr in M91
 
 #ce
 Local const $nVer = "46"
