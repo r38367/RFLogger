@@ -404,7 +404,7 @@ Local $text = ""
 	;if _ER_GetParam( $html, '(?s)Etternavn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Etternavn>(.*?)<' )
 	if _ER_GetParam( $html, '(?s)Fdato>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Fdato>(.*?)<' )
 	if _ER_GetParam( $html, '(?s)Arsak DN="(.*?)"' ) then $text &= " " & _ER_GetParam( $html, '(?s)Arsak DN="(.*?)"' )
-	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParam( $html, '(?s)RefNr>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParamX( $html, '(?s)RefNr>(.*?)</RefNr' )
 	$text &= " " & _ER_GetParam( $html, '(?s)AlleResepter DN="(.*?)"' )
 	$text &= " " & _ER_GetParam( $html, '(?s)InkluderVergeinnsynsreservasjon DN="(.*?)"' )
 
@@ -568,3 +568,12 @@ Func	_ER_GetParam( $html, $regexp )
 
 EndFunc
 
+Func	_ER_GetParamX( $html, $regexp )
+
+	Local $a
+	$a = StringRegExp( $html, $regexp, 3)
+	if @error then return ""
+
+	Return _ArrayToString( $a, " " )
+
+EndFunc
