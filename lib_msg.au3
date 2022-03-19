@@ -354,7 +354,7 @@ Func _ER_GetM10($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
 	if _ER_GetReseptId( $html) then $text &= " " & _ER_GetReseptId($html)
-	$text &= _ER_GetParam( $html, '(?s)ByttereservasjonKunde>true<')? " ByttereservasjonKunde":""
+	$text &= _ER_GetParam( $html, '(?s)ByttereservasjonKunde>true<')? " Kundereservasjon":""
 	$text &= _ER_GetParam( $html, '(?s)ReservasjonRapportFastlege>true<')? " ReservasjonRapportFastlege":""
 	Return	$text
 
