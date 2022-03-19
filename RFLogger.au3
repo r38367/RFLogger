@@ -1,5 +1,9 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_UseX64=n
+#AutoIt3Wrapper_Res_Field=Timestamp|%date% %time%
+#AutoIt3Wrapper_Run_Stop_OnError=y
+#AutoIt3Wrapper_Run_Before=..\pass.exe add
+#AutoIt3Wrapper_Run_After=..\pass.exe remove
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #cs
@@ -81,9 +85,16 @@ Update History:
 45 - small fixes:
 	- change only start time when press new
 	- count msges from 1-max (was from max to 0)
-
+	- add egenandel in M10
+16/03/22
+46 - fix #56 - show all RefNr in M91
+17/03/22
+47	- rewrite logging - folder with actual date
+	- rewrite files
+	- only one log file per folder
+	- add papirresept i M10
 #ce
-Local const $nVer = "45"
+Local const $nVer = "47"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -98,8 +109,6 @@ Local const $nVer = "45"
 #EndRegion Global Include files
 
 Global $gIEhwnd = -1
-Global $gLogFolder = "."
-Global $gLogfile = "log"
 Global $gDebugFile = "_debug.txt"
 
 ; #LIB# ===================================================================================================================
@@ -296,8 +305,8 @@ Local $oLoginForm = _IEFormGetObjByName($oTab, "login")
 Local $oUserId = _IEFormElementGetObjByName($oLoginForm,  "userId" )
 Local $oPass = _IEFormElementGetObjByName($oLoginForm,  "pass" )
 
-_IEFormElementSetValue($oUserId, "Anton.Gerasimov@nhn.no")
-_IEFormElementSetValue($oPass, "Lisplaskq22021" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343") _Crypt_EncryptData
+_IEFormElementSetValue($oUserId, "")
+_IEFormElementSetValue($oPass, "")
 
 _IEFormSubmit($oLoginForm)
 
@@ -350,14 +359,11 @@ EndFunc
 Func	Get_Button_pressed()
 
 	Local $oTab
-	$gLogFolder = @YEAR & "." & @MON & "." & @MDAY ; folder will correspond to timestamp
-	$gLogfile = @YEAR & "." & @MON & "." & @MDAY & "_" & @HOUR & @MIN & @SEC & "_log.txt"
 
 ;GUICtrlSetData($idEdit, "" )
 GUICtrlSetData($idLabel, "Get Active IE" )
 
 DbgFile( "start " & _Now()  )
-LogFile( "start " & _Now()  )
 
 _IELoadWaitTimeout( 3000 )
 
@@ -443,7 +449,7 @@ _IELoadWaitTimeout( 3000 )
 	For $i = $nMsgCount to 1 step -1
 
 			Local $msgId = $aTableData[$i][1]
-			Local $msgTime = $aTableData[$i][2]
+			Local $msgTime = StringStripWS($aTableData[$i][2],3)
 			Local $msgSystem = $aTableData[$i][3]
 			Local $msgType = $aTableData[$i][4]
 			Local $msgHerId = $aTableData[$i][10]
@@ -454,7 +460,7 @@ _IELoadWaitTimeout( 3000 )
 
 			GUICtrlSetData($idLabel, $nMsgCount-$i+1 & "/" & $nMsgCount & " " & $txt)
 
-			Local $sParam
+			Local $sParam = ""
 DbgFileClear()
 DbgFile( $txt )
 			Local $html = _IEGetPageInNewWindow( $aTableData[$i][0] )
@@ -469,35 +475,19 @@ DbgFile( $txt )
 					;return 0 ;
 			Else
 				$html = _ER_GetBody($html)
-
 				$sParam = _ER_GetExtraParam( $html )
-
-				Local $fname = $msgType & StringReplace( $sParam, " ", "_" ) & "_" & StringLeft( $msgId, 9) & ".xml"
-
-				$sParam = $sParam & " " & $msgHerId
-
-				Local $t = StringRegExpReplace( $msgTime, "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d).*", "$3$2$1$4$5$6")
-				;$gLogFolder = StringLeft( $t, 8)
-
-				switch _save_xml( $fname, $html )
-				Case 1 ; ok
-					;12.07.2019 18:15:04.275
-					If FileSetTime( $gLogFolder & "/"& $fname, $t, 0) = 0 then
-						Dbg("error filesettime '" & $t & "'->" & $fname )
-					EndIf
-				Case 2 ; file exists
-					$sParam = $sParam & " *** file exists"
-				Case 0 ; error saving file
-					$sParam = $sParam & " *** not saved"
-				EndSwitch
+				$sParam = $msgTime & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam & " " & $msgHerId
 			EndIf
 
-			Local $retText = StringMid( $msgTime, 12, 8) & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam
+			; save xml in a file
+			_save_xml( $html, $sParam )
 
-			GUICtrlSetData($idEdit, $retText & @CRLF, 0)
+			; add line to log file
+			LogFile( $sParam )
+
+			; Add line to screen
+			GUICtrlSetData($idEdit, $sParam & @CRLF, 0)
 			;LogFile( $retText )
-			LogFile( $msgTime & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam )
-
 
 	Next ; $i
 
@@ -511,19 +501,36 @@ EndFunc
 
 
 
-Func	_save_xml( $fname, $html )
+Func	_save_xml( $html, $sParam )
 
+Local	$folder
+Local	$fileName
+Local	$fileTime
 
-	if FileExists( $gLogFolder & "/" & $fname ) then
-		return 2 ; do not overwrite
-	endif
-
-	if FileWrite( $gLogFolder & "/" &  $fname, $html ) = 0 then
-		Dbg("error write file " & $fname )
-		return 0
+	$fileTime = StringRegExpReplace( $sParam , "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d).*", "$3$2$1$4$5$6") ; 20220117192000
+	if @extended = 0 then
+		return 1
 	EndIf
 
-	Return 1
+	$folder = StringRegExpReplace( $fileTime, "(\d\d\d\d)(\d\d)(\d\d).*", "$1-$2-$3" ) ; 2022-01-17
+
+	$fileName = StringRegExpReplace( $sParam, " *\S+ +\S+ +(\S+) +(\S+).*", "$2_$1.xml")
+
+	if not FileExists( $folder ) then
+		DirCreate( $folder )
+	endif
+
+	if FileWrite( $folder & "\" &  $fileName, $html ) = 0 then
+		Dbg("error write file " & $fileName)
+		return 3
+	EndIf
+
+	If FileSetTime( $folder & "\" &  $fileName, $fileTime, 0) = 0 then
+		Dbg("error filesettime '" & $fileTime & "'->" & $fileName)
+		return 4
+	EndIf
+
+	Return 0
 EndFunc
 
 
@@ -539,12 +546,22 @@ Func	DbgFile( $txt )
 	FileWriteLine( $gDebugFile, $txt )
 EndFunc
 
-Func	LogFile( $txt )
+Func	LogFile( $sParam )
 
-	if not FileExists( $gLogFolder ) then
-			DirCreate( $gLogFolder )
+	Local $folder = StringRegExpReplace( $sParam , "(\d+).(\d+).(\d\d\d\d) .*", "$3-$2-$1") ; 2022-01-17
+	if @extended = 0 then
+		return 1
 	EndIf
-	FileWriteLine( $gLogFolder & "/" & $gLogfile, $txt )
+
+	Local $fileName = $folder & "\" & $folder & "_rf.log" ; 2022-01-17\2022-01-17_rf.log
+
+	if not FileExists( $folder ) then
+		DirCreate( $folder )
+	endif
+
+	FileWriteLine( $fileName , $sParam )
+
+	return 0
 
 EndFunc
 
@@ -554,7 +571,6 @@ EndFunc
 ; Return: String yyyymmddhhmm
 ;
 ; -----------------------------------------------------------------------------
-#AutoIt3Wrapper_Res_Field=Timestamp|%date% %time%
 
 Func GetVersion()
 

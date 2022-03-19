@@ -92,11 +92,7 @@ Func _ER_GetExtraParam( $html )
 	Local $ref = ""
 
 	;ConversationRef
-	$ref = " " & StringLeft( _ER_GetRefToParent( $html ) & '000000000', 9) & " " & StringLeft( _ER_GetRefToConversation( $html )& '000000000', 9)
-
-	; ************* >>> REMOVE <<< *************
-	;Return	$ref
-	; ************* >>> REMOVE <<< *************
+	$ref = StringLeft( _ER_GetRefToParent( $html ) & '000000000', 9) & " " & StringLeft( _ER_GetRefToConversation( $html )& '000000000', 9)
 
 	Switch _ER_GetMsgType( $html)
 		case "ERM1"
@@ -280,6 +276,7 @@ Local $text = ""
 	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
+	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParam( $html, '(?s)RefNr>(.*?)<' )
 
 	Return	$text
 
@@ -354,6 +351,8 @@ Func _ER_GetM10($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
 	if _ER_GetReseptId( $html) then $text &= " " & _ER_GetReseptId($html)
+	$text &= _ER_GetEgenandel( $html )
+	$text &= _ER_GetParam( $html, '(?s)Papirresept>true<')? " papir":""
 	$text &= _ER_GetParam( $html, '(?s)ByttereservasjonKunde>true<')? " Kundereservasjon":""
 	$text &= _ER_GetParam( $html, '(?s)ReservasjonRapportFastlege>true<')? " ReservasjonRapportFastlege":""
 	Return	$text
@@ -407,7 +406,7 @@ Local $text = ""
 	;if _ER_GetParam( $html, '(?s)Etternavn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Etternavn>(.*?)<' )
 	if _ER_GetParam( $html, '(?s)Fdato>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Fdato>(.*?)<' )
 	if _ER_GetParam( $html, '(?s)Arsak DN="(.*?)"' ) then $text &= " " & _ER_GetParam( $html, '(?s)Arsak DN="(.*?)"' )
-	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParam( $html, '(?s)RefNr>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParamX( $html, '(?s)RefNr>(.*?)</RefNr' )
 	$text &= " " & _ER_GetParam( $html, '(?s)AlleResepter DN="(.*?)"' )
 	$text &= " " & _ER_GetParam( $html, '(?s)InkluderVergeinnsynsreservasjon DN="(.*?)"' )
 
@@ -431,7 +430,7 @@ Func _ER_GetM92($html)
 
 	Else
 		; we did not have resepts
-		if _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' ) then $text &= _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
+		if _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
 
 	EndIf
 
@@ -477,7 +476,7 @@ Func	_ER_GetEgenandel( $html )
 	$a = StringRegExp( $html, '(?s)BetaltEgenandel.*?V="(.*?)"', 3)
 	if @error then return ""
 
-	Return "("&_ArrayToString( $a, " " )&")"
+	Return " ("&_ArrayToString( $a, " " )&")"
 
 EndFunc
 
@@ -571,3 +570,12 @@ Func	_ER_GetParam( $html, $regexp )
 
 EndFunc
 
+Func	_ER_GetParamX( $html, $regexp )
+
+	Local $a
+	$a = StringRegExp( $html, $regexp, 3)
+	if @error then return ""
+
+	Return _ArrayToString( $a, " " )
+
+EndFunc
