@@ -93,6 +93,7 @@ Update History:
 	- rewrite files
 	- only one log file per folder
 	- add papirresept i M10
+	- add rekvirentNordisk
 #ce
 Local const $nVer = "47"
 
