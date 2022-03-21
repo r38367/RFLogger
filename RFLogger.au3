@@ -185,7 +185,7 @@ Func GUI_Create()
 Local const $guiMargin = 10
 
 ;--- GUI
-Local const $guiWidth = 800
+Local const $guiWidth = 1000
 Local const $guiHeight = 300
 Local const $guiLeft = -1
 Local const $guiTop = -1
@@ -246,6 +246,7 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 	$idEdit = GUICtrlCreateEdit("", $guiEditLeft, $guiEditTop, $guiEditWidth, $guiEditHeight, $ES_READONLY + $ES_AUTOVSCROLL + $WS_VSCROLL)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS )
+	_GUICtrlEdit_SetLimitText(-1, 2000*100)
 
     GUISetState(@SW_SHOW)
 
@@ -497,21 +498,7 @@ EndFunc
 
 Func	LogScreen( $text )
 
-	; get current selection
-	Local $aSel = _GUICtrlEdit_GetSel($idEdit)
-
-	; move to the end of text
-	Local $cEnd = StringLen( GUICtrlRead($idEdit) )
-	_GUICtrlEdit_SetSel($idEdit, $cEnd, $cEnd )
-
-	; write line to the end
-	GUICtrlSetData($idEdit, $text & @CRLF, 0)
-
-	; restore selection
-	_GUICtrlEdit_SetSel($idEdit, $aSel[0], $aSel[1])
-
-	; make selection visible
-	GUICtrlSetState($idEdit, $GUI_FOCUS)
+	_GUICtrlEdit_AppendText($idEdit, $text & @CRLF)
 
 EndFunc
 
