@@ -1,0 +1,127 @@
+<h:MsgHead xmlns:h="http://www.kith.no/xmlstds/msghead/2006-05-24">
+  <h:MsgInfo>
+    <h:Type DN="Utleveringsrapport reseptbanken" V="ERM10" />
+    <h:MIGversion>v1.2 2006-05-24</h:MIGversion>
+    <h:GenDate>2022-03-01T09:34:21.84Z</h:GenDate>
+    <h:MsgId>e7cb0f5d-9efe-48d4-9f64-c99ffb67f1f9</h:MsgId>
+    <h:ConversationRef>
+      <h:RefToParent>b9e00329-7a4a-4bf8-b6a5-f822e28dad08</h:RefToParent>
+      <h:RefToConversation>b9e00329-7a4a-4bf8-b6a5-f822e28dad08</h:RefToConversation>
+    </h:ConversationRef>
+    <h:Sender>
+      <h:Organisation>
+        <h:OrganisationName>Boots apotek Geilo</h:OrganisationName>
+        <h:Ident>
+          <h:Id>982547822</h:Id>
+          <h:TypeId DN="Organisasjonsnummeret i Enhetsregister" V="ENH" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:Ident>
+          <h:Id>88585</h:Id>
+          <h:TypeId DN="HER-id" V="HER" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:Ident>
+          <h:Id>8163</h:Id>
+          <h:TypeId DN="Apotekets konsesjonsnummer" V="AKO" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:TeleCom>
+          <h:TypeTelecom DN="Hovedtelefon" V="HP" />
+          <h:TeleAddress V="tel:+4732095880" />
+        </h:TeleCom>
+      </h:Organisation>
+    </h:Sender>
+    <h:Receiver>
+      <h:Organisation>
+        <h:OrganisationName>Reseptformidleren</h:OrganisationName>
+        <h:Ident>
+          <h:Id>983544622</h:Id>
+          <h:TypeId DN="Organisasjonsnummeret i Enhetsregister" V="ENH" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+        <h:Ident>
+          <h:Id>80624</h:Id>
+          <h:TypeId DN="Identifikator fra Helsetjenesteenhetsregisteret" V="HER" S="2.16.578.1.12.4.1.1.9051" />
+        </h:Ident>
+      </h:Organisation>
+    </h:Receiver>
+    <h:Patient>
+      <h:FamilyName>Holsen</h:FamilyName>
+      <h:GivenName>Knut Kjell</h:GivenName>
+      <h:DateOfBirth>1993-05-13</h:DateOfBirth>
+      <h:Sex DN="Mann" V="1" />
+      <h:Ident>
+        <h:Id>13059310199</h:Id>
+        <h:TypeId DN="Fødselsnummer" V="FNR" S="2.16.578.1.12.4.1.1.8116" />
+      </h:Ident>
+    </h:Patient>
+  </h:MsgInfo>
+  <h:Document>
+    <h:DocumentConnection DN="Hoveddokument" V="H" />
+    <h:RefDoc>
+      <h:MsgType DN="XML-instans" V="XML" />
+      <h:Content>
+        <Utleveringsrapport xmlns="http://www.kith.no/xmlstds/eresept/m10/2013-10-08">
+          <Utlevering xmlns="http://www.kith.no/xmlstds/eresept/utlevering/2013-10-08">
+            <ReseptId>8335be66-f51d-4d70-901c-97de6d06822d</ReseptId>
+            <Utleveringsdato>2022-03-01</Utleveringsdato>
+            <Annullering>false</Annullering>
+            <Avsluttet DN="Nei" V="2" />
+            <ReseptDokLegemiddel xmlns="http://www.kith.no/xmlstds/eresept/m1/2013-10-08">
+              <Varegruppekode DN="Legemiddel" V="L" />
+              <Antall>1</Antall>
+              <Reiterasjon>0</Reiterasjon>
+              <Forskrivning xmlns="http://www.kith.no/xmlstds/eresept/forskrivning/2013-10-08">
+                <DosVeiledEnkel>SMERTESTILLENDE
+Ved behov</DosVeiledEnkel>
+                <Legemiddelpakning>
+                  <Atc DN="Paracetamol" V="N02BE01" S="2.16.578.1.12.4.1.1.7180" />
+                  <NavnFormStyrke>Paracet tab  500mg</NavnFormStyrke>
+                  <Reseptgruppe DN="Reseptgruppe C" V="C" />
+                  <LegemiddelformKort DN="Tablett" V="53" S="2.16.578.1.12.4.1.1.7448" />
+                  <Varenr>003111</Varenr>
+                  <PakningsinfoResept>
+                    <Varenavn>Paracet tab  500mg</Varenavn>
+                    <Pakningsstr>100</Pakningsstr>
+                    <EnhetPakning DN="stk" V="STK" S="2.16.578.1.12.4.1.1.7484" />
+                  </PakningsinfoResept>
+                </Legemiddelpakning>
+              </Forskrivning>
+            </ReseptDokLegemiddel>
+            <Utleverer>
+              <HerId>
+                <Id xmlns="http://www.kith.no/xmlstds/felleskomponent1">88585</Id>
+                <TypeId xmlns="http://www.kith.no/xmlstds/felleskomponent1" DN="HER-id" V="HER" S="2.16.578.1.12.4.1.1.9051" />
+              </HerId>
+              <Navn>Boots apotek Geilo</Navn>
+            </Utleverer>
+          </Utlevering>
+          <ReservasjonRapportFastlege>false</ReservasjonRapportFastlege>
+          <AnsattId>Henriette Brekke</AnsattId>
+          <Papirresept>true</Papirresept>
+          <RekvirentPapir xmlns="http://www.kith.no/xmlstds/eresept/utlevering/2013-10-08">
+            <Fornavn>Anna</Fornavn>
+            <Etternavn>Hansson</Etternavn>
+            <RekvirentNordisk>true</RekvirentNordisk>
+          </RekvirentPapir>
+        </Utleveringsrapport>
+      </h:Content>
+    </h:RefDoc>
+  </h:Document>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+      <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+      <Reference URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <DigestValue>1hZIAm8dh/eYKiqANBuOUrzCAd8=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>Ng91+fVNUDkU0fzRySsP3CDCBziRDD0zVex+zt+7by73kvgxede7OPz4lcx5QMGxH2Ire3ziqMIMUEBWm3K+SCucjP0ZEWI6mQfvklncXN73vOPSRq2SPXy7PEsfb9tcHB2KD9Oq9jCfyM/0NFBJyv96cGtiqIhqhl5TjAGrcsSMTavjfr1w4hIt0gyuTWhHMW5LsyW0Ie6Hblhkse4mgcEY/PVnIS7ErFqWQf9PxGx6cSNhSUqz5j88dU9twQVees0+SJHG8Sskh/s9U1O6aA+AeF+MjeqfF6zVV4siJCthGHIjjuQ6jawp0VFnkxspXt8TkQSihjN1opGYIAI4AQ==</SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509Certificate>MIIFPTCCBCWgAwIBAgILBQSJOAyNQUdAsl8wDQYJKoZIhvcNAQELBQAwUTELMAkGA1UEBhMCTk8xHTAbBgNVBAoMFEJ1eXBhc3MgQVMtOTgzMTYzMzI3MSMwIQYDVQQDDBpCdXlwYXNzIENsYXNzIDMgVGVzdDQgQ0EgMzAeFw0yMTEwMjYxNTAzMTNaFw0yNDEwMjYyMTU5MDBaMIGDMQswCQYDVQQGEwJOTzEXMBUGA1UECgwOQk9PVFMgTk9SR0UgQVMxJTAjBgNVBAsMHEJvb3RzIGFwb3RlayBHZWlsby05ODI2OTM4MDIxIDAeBgNVBAMMF0Jvb3RzIGFwb3RlayBHZWlsbyBURVNUMRIwEAYDVQQFEwk5ODI1NDc4MjIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDHXwJJjTnkAQpt7MTvZZ0OpVxnGgjHXsUiFuB4XuBrjVj0JclvbNnfTBmxi17wT3K38d5jc06RBCNOa57EX+1O378b9dSWbWcZNQlbniGBRCtX1AYrnC95VGuoktHRtKZ1rbm+pIHHKWRHkW3RSvDPUdL7JhXM8Rx9iPY5Q1PASvm9zVjhqvOPiEV4HLoMKLfTecJFDw0Nc8UsXf1Q+I+xMTqbsCXN2BILP13mmY3rtHc4bArwJ62T9aSPWLrcz+UnxwaGNvhr5Miovhy3DDNC01Uvr84YUG/Jjf6EKFIYR9hGEJcOYkaXrOT4xuuTIp1S1nfpEDCYpYZ2ZedG24xpAgMBAAGjggHhMIIB3TAJBgNVHRMEAjAAMB8GA1UdIwQYMBaAFD+u9XgLkqNwIDVfWvr3JKBSAfBBMB0GA1UdDgQWBBSaXir/0THDjR0T6NeLP/rCnPH2fTAOBgNVHQ8BAf8EBAMCBkAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBYGA1UdIAQPMA0wCwYJYIRCARoBAAMCMIG7BgNVHR8EgbMwgbAwN6A1oDOGMWh0dHA6Ly9jcmwudGVzdDQuYnV5cGFzcy5uby9jcmwvQlBDbGFzczNUNENBMy5jcmwwdaBzoHGGb2xkYXA6Ly9sZGFwLnRlc3Q0LmJ1eXBhc3Mubm8vZGM9QnV5cGFzcyxkYz1OTyxDTj1CdXlwYXNzJTIwQ2xhc3MlMjAzJTIwVGVzdDQlMjBDQSUyMDM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDCBigYIKwYBBQUHAQEEfjB8MDsGCCsGAQUFBzABhi9odHRwOi8vb2NzcC50ZXN0NC5idXlwYXNzLm5vL29jc3AvQlBDbGFzczNUNENBMzA9BggrBgEFBQcwAoYxaHR0cDovL2NydC50ZXN0NC5idXlwYXNzLm5vL2NydC9CUENsYXNzM1Q0Q0EzLmNlcjANBgkqhkiG9w0BAQsFAAOCAQEAVNjWy2R6WGugNSFHKnmcKdOQBG6/IoDBQxK7RXae3PGZxvEEQkQJcGLjNJrH3s1tLyzopVC6wBR9xcgYkVGM+KSMRg4xsBz2+QmJyGXj+CMV/IEFkcfZI7yEQRpM1sDx9Qr5OBY+Wc69GZwxR0DyKOfiYYxmpALPCauANUGtkhFW776OZbU7ePuodDP2Mf6f7K6fJe1PLRb/VBIbwLkRMkiOiUiTVpCw88bZp0LAau2y6rxwluH5fIVtb0r8Hx7DNL69xXXZ9XnMXUef49Jx34nzBlC9nVTeND1jcr4O/+WB33HNngarjvvdRWucH08pNhPsn5wu4UWxXyuY/bP98w==</X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+</h:MsgHead>
