@@ -94,8 +94,12 @@ Update History:
 	- only one log file per folder
 	- add papirresept i M10
 	- add rekvirentNordisk
+21/03/22
+48	- fix #71
+	- extend width to 1000
+	- set edit buffer size to 200K
 #ce
-Local const $nVer = "47"
+Local const $nVer = "48"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
