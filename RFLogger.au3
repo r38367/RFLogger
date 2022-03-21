@@ -107,6 +107,7 @@ Local const $nVer = "47"
 #include <WindowsConstants.au3>
 #include <EditConstants.au3>
 #include <FontConstants.au3>
+#include <GuiEdit.au3>
 #EndRegion Global Include files
 
 Global $gIEhwnd = -1
@@ -371,11 +372,6 @@ _IELoadWaitTimeout( 3000 )
 ;Get_line_from_link( "https://rfadmin.test2.reseptformidleren.net/RFAdmin/loggeview.rfa?loggeId=c7d0d0b6-4014-4ef0-be60-d9522d39045a&filename=/nfstest2/sharedFiles/log/2021/175/21/13/c7d0d0b6-4014-4ef0-be60-d9522d39045a" )
 ;return
 
-	; move to the end of text
-	Local $cEnd = StringLen( GUICtrlRead($idEdit) )
-	GuiCtrlSendMsg($idEdit, $EM_SETSEL, $cEnd, $cEnd )
-	;GUICtrlSetData($idEdit, _NowTime(), 0)
-
 	; get Activ IE window
 	$oTab = _IEGetActiveTab()
 	if not IsObj($oTab) then
@@ -487,7 +483,7 @@ DbgFile( $txt )
 			LogFile( $sParam )
 
 			; Add line to screen
-			GUICtrlSetData($idEdit, $sParam & @CRLF, 0)
+			LogScreen( $sParam )
 			;LogFile( $retText )
 
 	Next ; $i
@@ -499,6 +495,25 @@ DbgFile( $txt )
 
 EndFunc
 
+Func	LogScreen( $text )
+
+	; get current selection
+	Local $aSel = _GUICtrlEdit_GetSel($idEdit)
+
+	; move to the end of text
+	Local $cEnd = StringLen( GUICtrlRead($idEdit) )
+	_GUICtrlEdit_SetSel($idEdit, $cEnd, $cEnd )
+
+	; write line to the end
+	GUICtrlSetData($idEdit, $text & @CRLF, 0)
+
+	; restore selection
+	_GUICtrlEdit_SetSel($idEdit, $aSel[0], $aSel[1])
+
+	; make selection visible
+	GUICtrlSetState($idEdit, $GUI_FOCUS)
+
+EndFunc
 
 
 
