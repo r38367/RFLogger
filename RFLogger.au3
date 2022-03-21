@@ -98,6 +98,7 @@ Update History:
 48	- fix #71
 	- extend width to 1000
 	- set edit buffer size to 200K
+	- fix #72
 #ce
 Local const $nVer = "48"
 
