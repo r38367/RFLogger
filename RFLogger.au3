@@ -94,8 +94,12 @@ Update History:
 	- only one log file per folder
 	- add papirresept i M10
 	- add rekvirentNordisk
+21/03/22
+48	- fix #71
+	- extend width to 1000
+	- set edit buffer size to 200K
 #ce
-Local const $nVer = "47"
+Local const $nVer = "48"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -107,6 +111,7 @@ Local const $nVer = "47"
 #include <WindowsConstants.au3>
 #include <EditConstants.au3>
 #include <FontConstants.au3>
+#include <GuiEdit.au3>
 #EndRegion Global Include files
 
 Global $gIEhwnd = -1
@@ -184,7 +189,7 @@ Func GUI_Create()
 Local const $guiMargin = 10
 
 ;--- GUI
-Local const $guiWidth = 800
+Local const $guiWidth = 1000
 Local const $guiHeight = 300
 Local const $guiLeft = -1
 Local const $guiTop = -1
@@ -245,6 +250,7 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 	$idEdit = GUICtrlCreateEdit("", $guiEditLeft, $guiEditTop, $guiEditWidth, $guiEditHeight, $ES_READONLY + $ES_AUTOVSCROLL + $WS_VSCROLL)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS )
+	_GUICtrlEdit_SetLimitText(-1, 2000*100)
 
     GUISetState(@SW_SHOW)
 
@@ -371,11 +377,6 @@ _IELoadWaitTimeout( 3000 )
 ;Get_line_from_link( "https://rfadmin.test2.reseptformidleren.net/RFAdmin/loggeview.rfa?loggeId=c7d0d0b6-4014-4ef0-be60-d9522d39045a&filename=/nfstest2/sharedFiles/log/2021/175/21/13/c7d0d0b6-4014-4ef0-be60-d9522d39045a" )
 ;return
 
-	; move to the end of text
-	Local $cEnd = StringLen( GUICtrlRead($idEdit) )
-	GuiCtrlSendMsg($idEdit, $EM_SETSEL, $cEnd, $cEnd )
-	;GUICtrlSetData($idEdit, _NowTime(), 0)
-
 	; get Activ IE window
 	$oTab = _IEGetActiveTab()
 	if not IsObj($oTab) then
@@ -487,7 +488,7 @@ DbgFile( $txt )
 			LogFile( $sParam )
 
 			; Add line to screen
-			GUICtrlSetData($idEdit, $sParam & @CRLF, 0)
+			LogScreen( $sParam )
 			;LogFile( $retText )
 
 	Next ; $i
@@ -499,6 +500,11 @@ DbgFile( $txt )
 
 EndFunc
 
+Func	LogScreen( $text )
+
+	_GUICtrlEdit_AppendText($idEdit, $text & @CRLF)
+
+EndFunc
 
 
 
