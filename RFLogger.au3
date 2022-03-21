@@ -527,6 +527,8 @@ Local	$fileTime
 		DirCreate( $folder )
 	endif
 
+	FileDelete( $folder & "\" &  $fileName )
+
 	if FileWrite( $folder & "\" &  $fileName, $html ) = 0 then
 		Dbg("error write file " & $fileName)
 		return 3
