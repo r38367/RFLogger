@@ -99,8 +99,12 @@ Update History:
 	- extend width to 1000
 	- set edit buffer size to 200K
 	- fix #72
+22/03/22
+49	- fix #72
+	- show only new messages when GET button pressed
+	- refresh IE when NEW button pressed and show new messages
 #ce
-Local const $nVer = "48"
+Local const $nVer = "49"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -351,13 +355,20 @@ _IEFormElementSetValue($oDatoFra, $sFrom)
 _IEFormElementCheckBoxSelect($oForm, "WS-R" )
 _IEFormElementCheckBoxSelect($oForm, "WS-U" )
 
-_IEFormSubmit($oForm)
+;_IEFormSubmit($oForm, 0)
+;_IELoadWait($oTab)
+
+Local $oSubmit = _IEGetObjById($oTab, "sokeknapp")
+_IEAction($oSubmit, "click")
+_IELoadWait($oTab)
+
 
 ; if we got to password page
 ; get thru password page
 ; get to loglist
 ; refill form
 ; submit
+	Get_Button_pressed()
 
 EndFunc
 ;===============================================================================
@@ -447,12 +458,16 @@ _IELoadWaitTimeout( 3000 )
 	GUICtrlSetData($idLabel, "6. Got links... " )
 
 ; ====== main cycle thru messages =====
+	Local $buffer = GUICtrlRead($idEdit)
 
 	$txt = ""
 	For $i = $nMsgCount to 1 step -1
 
 			Local $msgId = $aTableData[$i][1]
 			Local $msgTime = StringStripWS($aTableData[$i][2],3)
+
+			if( StringInStr( $buffer, $msgTime ) ) then ContinueLoop
+
 			Local $msgSystem = $aTableData[$i][3]
 			Local $msgType = $aTableData[$i][4]
 			Local $msgHerId = $aTableData[$i][10]
