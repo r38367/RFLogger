@@ -99,8 +99,12 @@ Update History:
 	- extend width to 1000
 	- set edit buffer size to 200K
 	- fix #72
+22/03/22
+49	- fix #72
+	- show only new messages when GET button pressed
+	- refresh IE when NEW button pressed and show new messages
 #ce
-Local const $nVer = "48"
+Local const $nVer = "49"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
