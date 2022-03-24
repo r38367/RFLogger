@@ -372,7 +372,7 @@ _IELoadWait($oTab)
 ; get to loglist
 ; refill form
 ; submit
-	Get_Button_pressed()
+;	Get_Button_pressed()
 
 EndFunc
 ;===============================================================================
