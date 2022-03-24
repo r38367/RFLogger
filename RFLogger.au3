@@ -326,7 +326,7 @@ _IEFormElementSetValue($oPass, "")
 
 _IEFormSubmit($oLoginForm)
 
-		 _IENavigate ( $oTab, StringRegExpReplace( $url, "/RFAdmin/.*", "/RFAdmin/loglist.rfa" )
+		 _IENavigate ( $oTab, StringRegExpReplace( $url, "/RFAdmin/.*", "/RFAdmin/loglist.rfa" ) )
 
 	EndIf
 
