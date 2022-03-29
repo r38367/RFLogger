@@ -103,12 +103,15 @@ Update History:
 49	- fix #72
 	- show only new messages when GET button pressed
 	- refresh IE when NEW button pressed and show new messages
+23/03/22
 50
-23/03/22 - fix #78
-29/03/22 - fix #81
+	- fix #78
+29/03/22
+51	- fix #81
+	- fix #80
 
 #ce
-Local const $nVer = "50"
+Local const $nVer = "51"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
