@@ -331,7 +331,7 @@ Func	_ER_GetRefHjemmel($html)
 
 	EndSwitch
 
-	return $a[0]
+	return "$" & $a[0]
 
 EndFunc
 
