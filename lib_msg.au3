@@ -272,7 +272,11 @@ Local $text = ""
 
 	if _ER_isV24($html) then $text = " " & _ER_isV24($html)
 	if _ER_GetRefHjemmel($html) then $text &= " " & _ER_GetRefHjemmel($html)
-	if _ER_GetNavnFormStyrke($html) then $text &= " " & _ER_GetNavnFormStyrke($html)
+	if _ER_isMagistrell($html) then
+		$text &= " Magistrell " & StringLeft(_ER_GetMagistrellNavn($html), 40)
+	else
+		if _ER_GetNavnFormStyrke($html) then $text &= " " & _ER_GetNavnFormStyrke($html)
+	EndIf
 	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
@@ -286,6 +290,15 @@ Func	_ER_isV24($html)
 	if StringInStr( $html, 'xmlns="http://www.kith.no/xmlstds/eresept/m1/2010-05-01"' ) then return "v24"
 	Return 0
 EndFunc
+
+Func	_ER_isMagistrell($html)
+	return _ER_GetParam( $html, '(?s)Legemiddelblanding>')
+EndFunc
+
+Func _ER_GetMagistrellNavn($html)
+	Return _ER_GetParam( $html, '(?s)Navn>(.*?)<' );
+EndFunc
+
 
 Func	_ER_GetNavnFormStyrke($html)
 
@@ -346,7 +359,11 @@ Func _ER_GetM10($html)
 	if _ER_GetKansellering( $html) then $text &= " " & _ER_GetKansellering($html)
 	if _ER_GetAnnullering( $html) then $text &= " " & _ER_GetAnnullering($html)
 	if _ER_GetRefHjemmel($html) then $text &= " " & _ER_GetRefHjemmel($html)
-	if _ER_GetNavnFormStyrke($html) then $text &= " " & _ER_GetNavnFormStyrke($html)
+	if _ER_isMagistrell($html) then
+		$text &= " Magistrell " & StringLeft(_ER_GetMagistrellNavn($html), 40)
+	else
+		if _ER_GetNavnFormStyrke($html) then $text &= " " & _ER_GetNavnFormStyrke($html)
+	EndIf
 	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
