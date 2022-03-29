@@ -111,7 +111,7 @@ Update History:
 	- fix #80
 52	- fix #69
 #ce
-Local const $nVer = "51"
+Local const $nVer = "52"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
