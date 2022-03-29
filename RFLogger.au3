@@ -103,8 +103,12 @@ Update History:
 49	- fix #72
 	- show only new messages when GET button pressed
 	- refresh IE when NEW button pressed and show new messages
+50
+23/03/22 - fix #78
+
+
 #ce
-Local const $nVer = "49"
+Local const $nVer = "50"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -322,7 +326,7 @@ _IEFormElementSetValue($oPass, "")
 
 _IEFormSubmit($oLoginForm)
 
-		 _IENavigate ( $oTab, "https://rfadmin.test1.reseptformidleren.net/RFAdmin/loglist.rfa" )
+		 _IENavigate ( $oTab, StringRegExpReplace( $url, "/RFAdmin/.*", "/RFAdmin/loglist.rfa" ) )
 
 	EndIf
 
@@ -368,7 +372,7 @@ _IELoadWait($oTab)
 ; get to loglist
 ; refill form
 ; submit
-	Get_Button_pressed()
+;	Get_Button_pressed()
 
 EndFunc
 ;===============================================================================
