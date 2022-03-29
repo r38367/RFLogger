@@ -105,7 +105,7 @@ Update History:
 	- refresh IE when NEW button pressed and show new messages
 50
 23/03/22 - fix #78
-
+29/03/22 - fix #81
 
 #ce
 Local const $nVer = "50"
