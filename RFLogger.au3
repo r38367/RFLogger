@@ -110,8 +110,11 @@ Update History:
 51	- fix #81
 	- fix #80
 52	- fix #69
+08/04/22
+53	- add #89 - type legemiddel - partially
 #ce
-Local const $nVer = "52"
+
+Local const $nVer = "53"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files

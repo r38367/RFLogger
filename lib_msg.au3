@@ -274,9 +274,15 @@ Local $text = ""
 	if _ER_GetRefHjemmel($html) then $text &= " " & _ER_GetRefHjemmel($html)
 	if _ER_isMagistrell($html) then
 		$text &= " Magistrell " & StringLeft(_ER_GetMagistrellNavn($html), 40)
+		$text &=  " " & _ER_GetTypeLegemiddel($html)
 	else
-		if _ER_GetNavnFormStyrke($html) then $text &= " " & _ER_GetNavnFormStyrke($html)
+		if _ER_GetNavnFormStyrke($html) then
+			$text &= " " & _ER_GetNavnFormStyrke($html)
+			$text &=  " " & _ER_GetTypeLegemiddel($html)
+		EndIf
 	EndIf
+
+
 	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
@@ -368,7 +374,7 @@ Func _ER_GetM10($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
 	if _ER_GetReseptId( $html) then $text &= " " & _ER_GetReseptId($html)
-	$text &= _ER_GetEgenandel( $html )
+	_ER_GetEgenandel( $html )
 	$text &= _ER_GetParam( $html, '(?s)Papirresept>true<')? " papir":""
 	$text &= _ER_GetParam( $html, '(?s)RekvirentNordisk>true<')? " RekvirentNordisk":""
 	$text &= _ER_GetParam( $html, '(?s)ByttereservasjonKunde>true<')? " Kundereservasjon":""
@@ -571,6 +577,53 @@ Func	_ER_GetReseptCount( $html )
 	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
 
 	Return  $ret
+
+EndFunc
+
+;================================================================================================================================
+;	Get type of legemiddel in M1
+;	Returns:
+;		f.eks. for simple reciept
+;		(P) - pakning
+;		(V) - virkestoff
+;		(M) - merkevare
+;		for magistrelle
+;		(V1-L2-A1) - legemiddelblanding
+;================================================================================================================================
+
+Func	_ER_GetTypeLegemiddel( $html )
+
+	Local $a
+	Local $CountTypes[6]
+	Local $ret=""
+
+	Local $ReseptType = "LXVA" ; added extra symbols for antivirus
+
+	; get bestanddeler for magistrelle
+	$a = StringRegExp( $html, "(?i)<[^/]*Bestanddel(Legemiddel|Virkestoff|Annet)>", 3)
+	if not @error then
+
+		; count all types
+		for $r in $a
+			$CountTypes[ StringInStr( $ReseptType, StringLeft( $r, 1) ) ] += 1
+		Next
+
+		for $i=1 to StringLen($ReseptType)
+			if $CountTypes[$i] > 0 then $ret &= StringMid( $ReseptType, $i, 1)  & $CountTypes[$i] & "-"
+		Next
+
+		; remove unnecessary - at the end
+		if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
+
+	Else
+
+		; get legemiddel type for ordinary receipt - can only be 1
+		if _ER_GetParam( $html, "(?i)Legemiddelpakning>" ) then $ret &= "P"
+		if _ER_GetParam( $html, "(?i)Legemiddelmerkevare>" ) then $ret &= "M"
+		if _ER_GetParam( $html, "(?i)Legemiddelvirkestoff>" ) then $ret &= "V"
+	EndIf
+
+	Return  "("&$ret&")"
 
 EndFunc
 
