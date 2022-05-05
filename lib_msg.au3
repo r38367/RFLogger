@@ -374,7 +374,7 @@ Func _ER_GetM10($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
 	if _ER_GetReseptId( $html) then $text &= " " & _ER_GetReseptId($html)
-	_ER_GetEgenandel( $html )
+	$text &= _ER_GetEgenandel( $html )
 	$text &= _ER_GetParam( $html, '(?s)Papirresept>true<')? " papir":""
 	$text &= _ER_GetParam( $html, '(?s)RekvirentNordisk>true<')? " RekvirentNordisk":""
 	$text &= _ER_GetParam( $html, '(?s)ByttereservasjonKunde>true<')? " Kundereservasjon":""
