@@ -1,5 +1,7 @@
 #include-once
 
+#include "array.au3"
+
 ; #CHANGES# =====================================================================================================================
 ; 06/09/21
 ;	Added:
@@ -487,9 +489,22 @@ Func _ER_GetM94($html)
 
 	if _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
 	if _ER_GetParam( $html, '(?s)StatusSoknadSlv.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)StatusSoknadSlv.*?DN="(.*?)".*?>' )
+	$text &= _ER_GetM1b64( $html)
 	$text &= _ER_GetEgenandel( $html )
 
 	Return	$text
+
+EndFunc
+
+Func	_ER_GetM1b64( $html)
+
+Local $m1 = _Base64Decode( _ER_GetParam( $html, '(?s)base64container.*?>([A-Za-z0-9+=]+)<' ))
+Local $text = _ER_GetM1( $m1 )
+Local $fname = _ER_GetMsgType( $m1 ) & "_" & StringReplace( StringStripWS($text, 7), " ", "_") & "_" & StringLeft( _ER_GetMsgId( $m1 ), 9)  & ".xml"
+
+FileWrite( $fname, $m1 )
+
+return $text
 
 EndFunc
 
@@ -650,3 +665,45 @@ Func	_ER_GetParamX( $html, $regexp )
 	Return _ArrayToString( $a, " " )
 
 EndFunc
+
+; #FUNCTION# ;===============================================================================
+;
+; Name...........: _Base64Decode
+; Description ...: Returns the strinng decoded from the provided Base64 string.
+; Syntax.........: _Base64Decode($sData)
+; Parameters ....: $sData
+; Return values .: Success - String decoded from Base64.
+;                  Failure - Returns 0 and Sets @Error:
+;                  |0 - No error.
+;                  |1 - Could not create DOMDocument
+;                  |2 - Could not create Element
+;                  |3 - No string to return
+; Author ........: turbov21
+; Modified.......:
+; Remarks .......:
+; Related .......: _Base64Encode
+; Link ..........;
+; Example .......; Yes
+;
+; ;==========================================================================================
+Func _Base64Decode($sData)
+    Local $oXml = ObjCreate("Msxml2.DOMDocument")
+    If Not IsObj($oXml) Then
+        SetError(1, 1, 0)
+    EndIf
+
+    Local $oElement = $oXml.createElement("b64")
+    If Not IsObj($oElement) Then
+        SetError(2, 2, 0)
+    EndIf
+
+    $oElement.dataType = "bin.base64"
+    $oElement.Text = $sData
+    Local $sReturn = BinaryToString($oElement.nodeTypedValue, 4)
+
+    If StringLen($sReturn) = 0 Then
+        SetError(3, 3, 0)
+    EndIf
+
+    Return $sReturn
+EndFunc   ;==>_Base64Decode

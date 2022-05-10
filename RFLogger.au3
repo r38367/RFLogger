@@ -112,6 +112,7 @@ Update History:
 52	- fix #69
 08/04/22
 53	- add #89 - type legemiddel - partially
+	- add #90 - add decoded M1 in M94
 #ce
 
 Local const $nVer = "53"
