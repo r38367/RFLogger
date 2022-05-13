@@ -156,3 +156,43 @@ Func	_IEGetPageInNewWindow( $sLink )
 	return $html
 
 EndFunc
+
+;===============================================================================
+;
+; Function Name:    _IEQuitAll( $bKillAll = true )
+; Description:      Quit from all IE instances av $type
+; Parameter(s):     $type
+;						true - kill visible also
+;						false - kill only invisible
+; Returns:
+;			Number of instances killed
+;           On Failure  - Returns 0 and sets @error
+;				1 - no IE instances
+;				2 - Quit error and @extended = Quit @error
+; =========================================================
+
+Func	_IEQuitAll( $bKillAll = true )
+
+	Local $oTab
+	Local $nTab = 0
+
+	Local $i = 1
+
+	While 1
+	   $oTab = _IEAttach( "", "instance", $i )
+	   If @error > 0 then ;= $_IESTATUS_NoMatch Then
+		  ExitLoop
+	   EndIf
+
+		if $bKillAll or not _IEPropertyGet( $oTab, "visible" ) then
+			_IEQuit( $oTab )
+			$nTab += 1
+		Else
+			$i += 1
+		endif
+
+	WEnd
+
+	return $nTab
+
+EndFunc

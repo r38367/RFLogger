@@ -111,8 +111,10 @@ Update History:
 	- fix #80
 52	- fix #69
 08/04/22
-53	- add #89 - type legemiddel - partially
+53	- add #86 - type legemiddel - partially
 	- add #90 - add decoded M1 in M94
+54	- add #89 - kill invisible IE at start
+
 #ce
 
 Local const $nVer = "53"
@@ -303,6 +305,12 @@ Func New_Button_pressed()
 	;	change time to -5 min
 	;	save all the fields
 	;	submit form
+
+	; clear from invisible objects
+	Local $nKilled = _IEQuitAll(false)
+	if $nKilled > 0 then
+		GUICtrlSetData($idEdit, $nKilled & " hidden instances killed" )
+	EndIf
 
 	; get Activ IE window
 	Local $oTab = _IEGetActiveTab()
