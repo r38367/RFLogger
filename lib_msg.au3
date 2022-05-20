@@ -232,6 +232,7 @@ Func	_ER_GetApprec( $html)
 
 	if _ER_GetApprecType( $html) then $text = " " & _ER_GetApprecType( $html)
 	if _ER_GetApprecStatus($html) then $text &= " " & _ER_GetApprecStatus($html)
+	if _ER_GetApprecError($html) <> 0 then $text &= " " & _ER_GetApprecError($html)
 	if _ER_GetApprecRef($html) then $text &= " " & StringLeft( _ER_GetApprecRef($html), 9)
 	return $text
 
@@ -259,7 +260,7 @@ Func	_ER_GetApprecStatus( $html)
 EndFunc
 
 Func	_ER_GetApprecError( $html)
-	return _ER_GetParam( $html, '(?s)Error.*?V="(.*?)".*?>' ) & ")"
+	return _ER_GetParam( $html, '(?s)Error.*?V="(.*?)".*?>' )
 	; <Error V="360"
 EndFunc
 
