@@ -114,10 +114,12 @@ Update History:
 53	- add #86 - type legemiddel - partially
 	- add #90 - add decoded M1 in M94
 54	- add #89 - kill invisible IE at start
-
+20/05/22
+	- fix #90 - improved decode b64
+	- add #89 - replace re-read with _IEAttach
 #ce
 
-Local const $nVer = "53"
+Local const $nVer = "54"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
