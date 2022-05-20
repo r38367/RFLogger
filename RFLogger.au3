@@ -501,13 +501,13 @@ _IELoadWaitTimeout( 3000 )
 DbgFileClear()
 DbgFile( $txt )
 			Local $html = _IEGetPageInNewWindow( $aTableData[$i][0] )
-			if StringLen( $html ) < 1000 then
-				DbgFile( $html)
-				$html = _IEGetPageInNewWindow( $aTableData[$i][0] )
-			EndIf
+;~ 			if StringLen( $html ) < 1000 then
+;~ 				DbgFile( $html)
+;~ 				$html = _IEGetPageInNewWindow( $aTableData[$i][0] )
+;~ 			EndIf
 
 			if @error then
-					DbgFile( $html)
+					DbgFile( $html )
 					$sParam = $html
 					;return 0 ;
 			Else

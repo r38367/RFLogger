@@ -123,35 +123,41 @@ Func	_IEGetPageInNewWindow( $sLink )
 
 	DbgFile( "-->_IEGetPageInNewWindow " & $sLink )
 
+	DbgFile( "   _IECreate" )
+
 	Local $err = 0
 	Local $oXml = _IECreate( $sLink ,0,0 )
-
-	DbgFile( "   _IEAttach" )
 
 	if not IsObj($oXml) then
 	;if @error then
 		return SetError(1, 0, "*** Error _IECreate " & @error & " " & @extended )
 	EndIf
 
-	DbgFile( "   _IEPropertyGet" )
+	DbgFile( "   _IEAttach" )
+	$oXml = _IEAttach($sLink, "url")
+	if @error then
+		Return SetError(5, 0, "*** Error _IEAttach " & @error & " " & @extended )
+	endif
 
+	DbgFile( "   _IEBodyReadText" )
 	Local $html = _IEBodyReadText( $oXml )
-	if StringLen( $html ) < 1000 then
-		Sleep(1000)
-		$html = _IEBodyReadText( $oXml )
-	EndIf
+;~ 	if StringLen( $html ) < 1000 then
+;~ 		Sleep(1000)
+;~ 		$html = _IEBodyReadText( $oXml )
+;~ 	EndIf
 	if @error then
 		Return SetError(3, 0, "*** Error _IEBodyReadText " & @error & " " & @extended )
 	endif
 
 	DbgFile( "   _IEBodyReadText len:" & StringLen( $html) & " " & StringLeft( StringStripWS( $html, 8), 15  ))
 
+	DbgFile( "   _IEQuit" )
 	_IEQuit($oXml)
 	if @error then
 		Return SetError(4, 0, "*** Error _IEQuit" & @error & " " & @extended )
 	endif
 
-	DbgFile( "<--_IEQuit" )
+	DbgFile( "<--_IEGetPageInNewWindow " )
 
 	return $html
 
