@@ -111,8 +111,10 @@ Update History:
 	- fix #80
 52	- fix #69
 08/04/22
-53	- add #89 - type legemiddel - partially
+53	- add #86 - type legemiddel - partially
 	- add #90 - add decoded M1 in M94
+54	- add #89 - kill invisible IE at start
+
 #ce
 
 Local const $nVer = "53"
@@ -304,6 +306,12 @@ Func New_Button_pressed()
 	;	save all the fields
 	;	submit form
 
+	; clear from invisible objects
+	Local $nKilled = _IEQuitAll(false)
+	if $nKilled > 0 then
+		GUICtrlSetData($idEdit, $nKilled & " hidden instances killed" )
+	EndIf
+
 	; get Activ IE window
 	Local $oTab = _IEGetActiveTab()
 	if not IsObj($oTab) then
@@ -493,13 +501,13 @@ _IELoadWaitTimeout( 3000 )
 DbgFileClear()
 DbgFile( $txt )
 			Local $html = _IEGetPageInNewWindow( $aTableData[$i][0] )
-			if StringLen( $html ) < 1000 then
-				DbgFile( $html)
-				$html = _IEGetPageInNewWindow( $aTableData[$i][0] )
-			EndIf
+;~ 			if StringLen( $html ) < 1000 then
+;~ 				DbgFile( $html)
+;~ 				$html = _IEGetPageInNewWindow( $aTableData[$i][0] )
+;~ 			EndIf
 
 			if @error then
-					DbgFile( $html)
+					DbgFile( $html )
 					$sParam = $html
 					;return 0 ;
 			Else
