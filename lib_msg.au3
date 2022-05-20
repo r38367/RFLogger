@@ -498,10 +498,19 @@ EndFunc
 
 Func	_ER_GetM1b64( $html)
 
-Local $m1 = _Base64Decode( _ER_GetParam( $html, '(?s)base64container.*?>([A-Za-z0-9+=]+)<' ))
+Local $b64
+; get base64 - b64 can be more than 32K, therefor use RegExReplace, as RegExp can not handle long patterns
+; strip all before Base64
+$b64 = StringRegExpReplace( $html, "(?s).*?Base64Container(.*)", "$1",1 )
+; strip all after base64 and return only inside >...<
+$b64 = StringRegExpReplace( $b64, "(?s).*?>(.*?)</.*", "$1",1 )
+
+Local $m1 = _Base64Decode( $b64 )
+
 Local $text = _ER_GetM1( $m1 )
 Local $fname = _ER_GetMsgType( $m1 ) & "_" & StringReplace( StringStripWS($text, 7), " ", "_") & "_" & StringLeft( _ER_GetMsgId( $m1 ), 9)  & ".xml"
 
+FileDelete( $fname )
 FileWrite( $fname, $m1 )
 
 return $text
