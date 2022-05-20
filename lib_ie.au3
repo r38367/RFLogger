@@ -141,10 +141,11 @@ Func	_IEGetPageInNewWindow( $sLink )
 
 	DbgFile( "   _IEBodyReadText" )
 	Local $html = _IEBodyReadText( $oXml )
-;~ 	if StringLen( $html ) < 1000 then
-;~ 		Sleep(1000)
-;~ 		$html = _IEBodyReadText( $oXml )
-;~ 	EndIf
+	if StringLen( $html ) < 1000 then
+		DbgFile( "   _IEBodyReadText ERR:" & StringLen( $html) & " " & StringLeft( StringStripWS( $html, 8), 15  ))
+		Sleep(1000)
+		$html = _IEBodyReadText( $oXml )
+	EndIf
 	if @error then
 		Return SetError(3, 0, "*** Error _IEBodyReadText " & @error & " " & @extended )
 	endif
