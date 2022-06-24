@@ -119,10 +119,13 @@ Update History:
 	- add #89 - replace re-read with _IEAttach
 54.2
 	- fix #14 - reopen comment for re-read if file is <1000 bytes
-
+55
+24/06/22
+	- fix #101 - added name for handelsvarer to M10 output
+	- fix #100 - added prodGruppe for handelsvarer to M1 output
 #ce
 
-Local const $nVer = "54"
+Local const $nVer = "55"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files

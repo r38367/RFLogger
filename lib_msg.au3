@@ -278,6 +278,8 @@ Local $text = ""
 	if _ER_isMagistrell($html) then
 		$text &= " Magistrell " & StringLeft(_ER_GetMagistrellNavn($html), 40)
 		$text &=  " " & _ER_GetTypeLegemiddel($html)
+	ElseIf _ER_isHandelsvare($html) then
+		$text &= " " & _ER_GetHandelsvareProdGruppe($html)
 	else
 		if _ER_GetNavnFormStyrke($html) then
 			$text &= " " & _ER_GetNavnFormStyrke($html)
@@ -306,6 +308,23 @@ EndFunc
 
 Func _ER_GetMagistrellNavn($html)
 	Return _ER_GetParam( $html, '(?s)Navn>(.*?)<' );
+EndFunc
+
+Func	_ER_isHandelsvare($html)
+	return _ER_GetParam( $html, '(?s)ReseptDokHandelsvare')
+EndFunc
+
+Func _ER_GetHandelsvareNavn($html)
+	Return _ER_GetParam( $html, '(?s)Navn>(.*?)<' );
+EndFunc
+
+;<ProdGruppe DN="Belter til kompresjon" S="2.16.578.1.12.4.1.1.7403" V="5050901"/>
+Func _ER_GetHandelsvareProdGruppe($html)
+
+	Local $a = StringRegExp( $html, '(?s)ProdGruppe.*?V="(.*?)"', 1)
+	if @error then return 0
+	return $a[0]
+
 EndFunc
 
 
@@ -370,6 +389,8 @@ Func _ER_GetM10($html)
 	if _ER_GetRefHjemmel($html) then $text &= " " & _ER_GetRefHjemmel($html)
 	if _ER_isMagistrell($html) then
 		$text &= " Magistrell " & StringLeft(_ER_GetMagistrellNavn($html), 40)
+	ElseIf _ER_isHandelsvare($html) then
+		$text &= " " & StringLeft(_ER_GetHandelsvareNavn($html), 20)
 	else
 		if _ER_GetNavnFormStyrke($html) then $text &= " " & _ER_GetNavnFormStyrke($html)
 	EndIf
