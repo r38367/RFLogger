@@ -122,7 +122,7 @@ Update History:
 55
 24/06/22
 	- fix #101 - added name for handelsvarer to M10 output
-
+	- fix #100 - added prodGruppe for handelsvarer to M1 output
 #ce
 
 Local const $nVer = "55"
