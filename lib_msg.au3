@@ -308,6 +308,13 @@ Func _ER_GetMagistrellNavn($html)
 	Return _ER_GetParam( $html, '(?s)Navn>(.*?)<' );
 EndFunc
 
+Func	_ER_isHandelsvare($html)
+	return _ER_GetParam( $html, '(?s)ReseptDokHandelsvare')
+EndFunc
+
+Func _ER_GetHandelsvareNavn($html)
+	Return _ER_GetParam( $html, '(?s)Navn>(.*?)<' );
+EndFunc
 
 Func	_ER_GetNavnFormStyrke($html)
 
@@ -370,6 +377,8 @@ Func _ER_GetM10($html)
 	if _ER_GetRefHjemmel($html) then $text &= " " & _ER_GetRefHjemmel($html)
 	if _ER_isMagistrell($html) then
 		$text &= " Magistrell " & StringLeft(_ER_GetMagistrellNavn($html), 40)
+	ElseIf _ER_isHandelsvare($html) then
+		$text &= " " & StringLeft(_ER_GetHandelsvareNavn($html), 20)
 	else
 		if _ER_GetNavnFormStyrke($html) then $text &= " " & _ER_GetNavnFormStyrke($html)
 	EndIf

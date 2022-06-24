@@ -118,10 +118,13 @@ Update History:
 	- fix #90 - improved decode b64
 	- add #89 - replace re-read with _IEAttach
 	- fix #14 - reopen comment for re-read if file is <1000 bytes
+55
+24/06/22
+	- fix #101 - added name for handelsvarer to M10 output
 
 #ce
 
-Local const $nVer = "54"
+Local const $nVer = "55"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
