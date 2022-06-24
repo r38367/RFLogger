@@ -117,6 +117,7 @@ Update History:
 20/05/22
 	- fix #90 - improved decode b64
 	- add #89 - replace re-read with _IEAttach
+54.2
 	- fix #14 - reopen comment for re-read if file is <1000 bytes
 
 #ce
