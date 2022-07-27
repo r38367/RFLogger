@@ -123,6 +123,8 @@ Update History:
 24/06/22
 	- fix #101 - added name for handelsvarer to M10 output
 	- fix #100 - added prodGruppe for handelsvarer to M1 output
+28/07/22
+	- add #104 - add numer of new messages after get
 #ce
 
 Local const $nVer = "55"
