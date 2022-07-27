@@ -486,6 +486,7 @@ _IELoadWaitTimeout( 3000 )
 
 ; ====== main cycle thru messages =====
 	Local $buffer = GUICtrlRead($idEdit)
+	Local $nNewMsgCount = 0
 
 	$txt = ""
 	For $i = $nMsgCount to 1 step -1
@@ -494,6 +495,8 @@ _IELoadWaitTimeout( 3000 )
 			Local $msgTime = StringStripWS($aTableData[$i][2],3)
 
 			if( StringInStr( $buffer, $msgTime ) ) then ContinueLoop
+
+			$nNewMsgCount += 1
 
 			Local $msgSystem = $aTableData[$i][3]
 			Local $msgType = $aTableData[$i][4]
@@ -536,7 +539,7 @@ DbgFile( $txt )
 
 	Next ; $i
 
-	GUICtrlSetData($idLabel, $nMsgCount-$i & "/" & $nMsgCount )
+	GUICtrlSetData($idLabel, $nMsgCount-$i & "/" & $nMsgCount & " (" & $nNewMsgCount & " new)" )
 
 ;GUICtrlSetData($idEdit, $txt & @CRLF, 0)
 ;GUICtrlSetData($idLabel, $nMsgCount & " messages found")
