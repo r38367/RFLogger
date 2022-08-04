@@ -605,7 +605,7 @@ Func	LogFile( $sParam )
 		return 1
 	EndIf
 
-	Local $fileName = $folder & "\" & $folder & "_rf.log" ; 2022-01-17\2022-01-17_rf.log
+	Local $fileName = $folder & "\" & $folder & "_rf.txt" ; 2022-01-17\2022-01-17_rf.txt
 
 	if not FileExists( $folder ) then
 		DirCreate( $folder )
