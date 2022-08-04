@@ -309,7 +309,7 @@ Func New_Button_pressed()
 	; clear from invisible objects
 	Local $nKilled = _IEQuitAll(false)
 	if $nKilled > 0 then
-		GUICtrlSetData($idEdit, $nKilled & " hidden instances killed" )
+		LogScreen($nKilled & " hidden instances killed" )
 	EndIf
 
 	; get Activ IE window
