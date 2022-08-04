@@ -123,9 +123,13 @@ Update History:
 24/06/22
 	- fix #101 - added name for handelsvarer to M10 output
 	- fix #100 - added prodGruppe for handelsvarer to M1 output
+56
+04/08/22
+	-fix #106 - change logfile ext from log to txt
+
 #ce
 
-Local const $nVer = "55"
+Local const $nVer = "56"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
