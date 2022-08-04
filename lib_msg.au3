@@ -135,7 +135,12 @@ EndFunc
 Func	_ER_GetMsgId( $html)
 
 	Local $a = StringRegExp( $html, 'MsgId>([0-9a-fA-F\-]+?)</', 1)
-	if @error then return 0
+	if @error then
+		; for apprec it is different format
+		;<Id>0d1fb989-7bfa-4e2d-9d05-5c64cbd4f390</Id>
+		$a = StringRegExp( $html, '(?s)GenDate>.*?Id>(.*?)<', 1)
+		if @error then return 0
+	endif
 	return $a[0]
 
 EndFunc
@@ -244,6 +249,10 @@ EndFunc
   </OriginalMsgId>
 
 #ce
+Func	_ER_GetApprecId( $html)
+	return _ER_GetParam( $html, '(?s)GenDate>.*?Id>(.*?)<' )
+EndFunc
+
 Func	_ER_GetApprecRef( $html)
 	return _ER_GetParam( $html, '(?s)OriginalMsgId>.*?Id>(.*?)<' )
 EndFunc
@@ -489,8 +498,21 @@ Func _ER_GetM94($html)
 
 	if _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)Status.*?DN="(.*?)".*?>' )
 	if _ER_GetParam( $html, '(?s)StatusSoknadSlv.*?DN="(.*?)".*?>' ) then $text &= " " & _ER_GetParam( $html, '(?s)StatusSoknadSlv.*?DN="(.*?)".*?>' )
-	$text &= _ER_GetM1b64( $html)
+
+	; decode b64 and save M1 as xml
+	Local $m1 = _ER_GetM1b64( $html)
+	Local $param =  _ER_GetM1( $m1 )
+	; save M1 as xml in current folder
+	_save_xml( $m1, $param, ".")
+
+	;(OR)
+	; save to same folder as m94
+	; _save_xml( $m1, $param, StringRegExpReplace( _ER_MsgGetTime( $html), "(\d\d\d\d)(\d\d)(\d\d).*", "$1-$2-$3" ) )
+
+	; add to text
+	$text &= " " & $param
 	$text &= _ER_GetEgenandel( $html )
+
 
 	Return	$text
 
@@ -498,22 +520,14 @@ EndFunc
 
 Func	_ER_GetM1b64( $html)
 
-Local $b64
-; get base64 - b64 can be more than 32K, therefor use RegExReplace, as RegExp can not handle long patterns
-; strip all before Base64
-$b64 = StringRegExpReplace( $html, "(?s).*?Base64Container(.*)", "$1",1 )
-; strip all after base64 and return only inside >...<
-$b64 = StringRegExpReplace( $b64, "(?s).*?>(.*?)</.*", "$1",1 )
+	Local $b64
+	; get base64 - b64 can be more than 32K, therefor use RegExReplace, as RegExp can not handle long patterns
+	; strip all before Base64
+	$b64 = StringRegExpReplace( $html, "(?s).*?Base64Container(.*)", "$1",1 )
+	; strip all after base64 and return only inside >...<
+	$b64 = StringRegExpReplace( $b64, "(?s).*?>(.*?)</.*", "$1",1 )
 
-Local $m1 = _Base64Decode( $b64 )
-
-Local $text = _ER_GetM1( $m1 )
-Local $fname = _ER_GetMsgType( $m1 ) & "_" & StringReplace( StringStripWS($text, 7), " ", "_") & "_" & StringLeft( _ER_GetMsgId( $m1 ), 9)  & ".xml"
-
-FileDelete( $fname )
-FileWrite( $fname, $m1 )
-
-return $text
+	return _Base64Decode( $b64 )
 
 EndFunc
 

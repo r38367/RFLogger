@@ -484,8 +484,8 @@ _IELoadWaitTimeout( 3000 )
 			Local $msgHerId = $aTableData[$i][10]
 
 			$txt =  $msgTime
+			$txt &=  " " & StringLeft( $msgId, 9)
 			$txt &=  " " & $msgType
-			$txt &=  " " & $msgId
 
 			GUICtrlSetData($idLabel, $nMsgCount-$i+1 & "/" & $nMsgCount & " " & $txt)
 
@@ -504,19 +504,21 @@ DbgFile( $txt )
 					;return 0 ;
 			Else
 				$html = _ER_GetBody($html)
-				$sParam = _ER_GetExtraParam( $html )
-				$sParam = $msgTime & " " & StringLeft( $msgId, 9) & " " & $msgType & " " & $sParam & " " & $msgHerId
+				$sParam = _ER_GetExtraParam( $html ) ; refPar refCon Text
 			EndIf
 
-			; save xml in a file
-			_save_xml( $html, $sParam )
-
 			; add line to log file
-			LogFile( $sParam )
+			LogFile( $txt & " " & $sParam & " " & $msgHerId )
 
 			; Add line to screen
-			LogScreen( $sParam )
+			LogScreen( $txt & " " & $sParam & " " & $msgHerId )
 			;LogFile( $retText )
+
+			; strip off RefTo before save xml in a file
+			$sParam = StringRegExpReplace( $sParam, "(\S{9}\s+\S{9}) ", "" )
+
+			_save_xml( $html, $sParam )
+
 
 	Next ; $i
 
@@ -535,20 +537,22 @@ EndFunc
 
 
 
-Func	_save_xml( $html, $sParam )
+Func	_save_xml( $html, $text, $folder=Default )
 
-Local	$folder
 Local	$fileName
 Local	$fileTime
 
-	$fileTime = StringRegExpReplace( $sParam , "(\d+).(\d+).(\d\d\d\d) (\d\d).(\d\d).(\d\d).*", "$3$2$1$4$5$6") ; 20220117192000
-	if @extended = 0 then
-		return 1
+	$fileTime = _ER_GetMsgTime( $html ) ; 20220117192033
+	if $fileTime = 0 then return 1
+
+	if $folder=Default then
+		$folder = StringRegExpReplace( $fileTime, "(\d\d\d\d)(\d\d)(\d\d).*", "$1-$2-$3" ) ; 2022-01-17
 	EndIf
 
-	$folder = StringRegExpReplace( $fileTime, "(\d\d\d\d)(\d\d)(\d\d).*", "$1-$2-$3" ) ; 2022-01-17
+	; strip off birthdate from NIN
+	$text = StringRegExpReplace( $text, "\s(\d{11})\s+(\d\d\d\d).(\d\d).(\d\d)", " $1" )
+	$filename = _ER_GetMsgType( $html ) & "_" & StringReplace( StringStripWS($text, 7), " ", "_") & "_" & StringLeft( _ER_GetMsgId( $html ), 9)  & ".xml"
 
-	$fileName = StringRegExpReplace( $sParam, " *\S+ +\S+ +(\S+) +(\S+).*", "$2_$1.xml")
 
 	if not FileExists( $folder ) then
 		DirCreate( $folder )
@@ -589,7 +593,7 @@ Func	LogFile( $sParam )
 		return 1
 	EndIf
 
-	Local $fileName = $folder & "\" & $folder & "_rf.log" ; 2022-01-17\2022-01-17_rf.log
+	Local $fileName = $folder & "\" & $folder & "_rf.txt" ; 2022-01-17\2022-01-17_rf.log
 
 	if not FileExists( $folder ) then
 		DirCreate( $folder )
