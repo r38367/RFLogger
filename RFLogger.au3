@@ -113,6 +113,9 @@ Update History:
 08/04/22
 53	- add #89 - type legemiddel - partially
 	- add #90 - add decoded M1 in M94
+05/08/22
+55	- fix #109 changed saving to file: full name for xml with folder choice for M1
+
 #ce
 
 Local const $nVer = "53"
