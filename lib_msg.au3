@@ -482,6 +482,15 @@ Func _ER_GetM92($html)
 
 	EndIf
 
+	; check if multidose bruker
+	if _ER_GetParam( $html, '(?s)Multidosebruker>' ) then
+		$text &= " multidosebruker"
+
+;~ 		$text &= " " & _ER_GetParam( $html, '(?s)Multidosebruker>.*?Fnr>(.*?)<' )
+;~ 		if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
+;~ 		if _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' )
+	EndIf
+
 	Return	$text
 
 EndFunc
