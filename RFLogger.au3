@@ -126,6 +126,7 @@ Update History:
 56
 04/08/22
 	-fix #106 - change logfile ext from log to txt
+	-fix #99 - add multidosebruker i M92
 
 #ce
 
