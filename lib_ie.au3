@@ -123,20 +123,26 @@ Func	_IEGetPageInNewWindow( $sLink )
 
 	DbgFile( "-->_IEGetPageInNewWindow " & $sLink )
 
+	DbgFile( "   _IECreate" )
+
 	Local $err = 0
 	Local $oXml = _IECreate( $sLink ,0,0 )
-
-	DbgFile( "   _IEAttach" )
 
 	if not IsObj($oXml) then
 	;if @error then
 		return SetError(1, 0, "*** Error _IECreate " & @error & " " & @extended )
 	EndIf
 
-	DbgFile( "   _IEPropertyGet" )
+	DbgFile( "   _IEAttach" )
+	$oXml = _IEAttach($sLink, "url")
+	if @error then
+		Return SetError(5, 0, "*** Error _IEAttach " & @error & " " & @extended )
+	endif
 
+	DbgFile( "   _IEBodyReadText" )
 	Local $html = _IEBodyReadText( $oXml )
 	if StringLen( $html ) < 1000 then
+		DbgFile( "   _IEBodyReadText ERR:" & StringLen( $html) & " " & StringLeft( StringStripWS( $html, 8), 15  ))
 		Sleep(1000)
 		$html = _IEBodyReadText( $oXml )
 	EndIf
@@ -146,13 +152,54 @@ Func	_IEGetPageInNewWindow( $sLink )
 
 	DbgFile( "   _IEBodyReadText len:" & StringLen( $html) & " " & StringLeft( StringStripWS( $html, 8), 15  ))
 
+	DbgFile( "   _IEQuit" )
 	_IEQuit($oXml)
 	if @error then
 		Return SetError(4, 0, "*** Error _IEQuit" & @error & " " & @extended )
 	endif
 
-	DbgFile( "<--_IEQuit" )
+	DbgFile( "<--_IEGetPageInNewWindow " )
 
 	return $html
+
+EndFunc
+
+;===============================================================================
+;
+; Function Name:    _IEQuitAll( $bKillAll = true )
+; Description:      Quit from all IE instances av $type
+; Parameter(s):     $type
+;						true - kill visible also
+;						false - kill only invisible
+; Returns:
+;			Number of instances killed
+;           On Failure  - Returns 0 and sets @error
+;				1 - no IE instances
+;				2 - Quit error and @extended = Quit @error
+; =========================================================
+
+Func	_IEQuitAll( $bKillAll = true )
+
+	Local $oTab
+	Local $nTab = 0
+
+	Local $i = 1
+
+	While 1
+	   $oTab = _IEAttach( "", "instance", $i )
+	   If @error > 0 then ;= $_IESTATUS_NoMatch Then
+		  ExitLoop
+	   EndIf
+
+		if $bKillAll or not _IEPropertyGet( $oTab, "visible" ) then
+			_IEQuit( $oTab )
+			$nTab += 1
+		Else
+			$i += 1
+		endif
+
+	WEnd
+
+	return $nTab
 
 EndFunc

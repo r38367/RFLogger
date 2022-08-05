@@ -111,14 +111,28 @@ Update History:
 	- fix #80
 52	- fix #69
 08/04/22
-53	- add #89 - type legemiddel - partially
+53	- add #86 - type legemiddel - partially
 	- add #90 - add decoded M1 in M94
+54	- add #89 - kill invisible IE at start
+20/05/22
+	- fix #90 - improved decode b64
+	- add #89 - replace re-read with _IEAttach
+54.2
+	- fix #14 - reopen comment for re-read if file is <1000 bytes
+55
+24/06/22
+	- fix #101 - added name for handelsvarer to M10 output
+	- fix #100 - added prodGruppe for handelsvarer to M1 output
+56
+04/08/22
+	-fix #106 - change logfile ext from log to txt
+	-fix #99 - add multidosebruker i M92
 05/08/22
-55	- fix #109 changed saving to file: full name for xml with folder choice for M1
-
+	- fix #88 - add interval control
+  - fix #109 - changed saving to file: full name for xml with folder choice for M1
 #ce
 
-Local const $nVer = "53"
+Local const $nVer = "56"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -147,9 +161,15 @@ Global $gDebugFile = "_debug.txt"
 
 ; #VARIABLES# ===================================================================================================================
 #Region Global Variables
+Global $gui
+Global $iInterval=1	; current interval, by default 5 min
+Global $aIntervals[] = [1,5,10,15,30,60,60*2,60*4,60*8] ; intervals range in minutes
+
 Global $idButtonGet
 Global $idButtonClear
 Global $idButtonNew
+Global $idInterval
+
 
 Global $idEdit
 Global $idLabel
@@ -169,10 +189,26 @@ Main()
 Func	Main()
 
 	Local $msg
+	Local $gci ; GUI cursor info
 
 	GUI_Create()
 
+	GUIRegisterMsg($WM_MOUSEWHEEL, "_MOUSEWHEEL")
+
+
 	Do
+
+		; to control when mouse is over interval control
+		If WinActive($gui) Then
+			$gci = GUIGetCursorInfo($gui)
+			If $gci[4] = $idInterval Then
+				;; Mouse is over control
+				ToolTip("Use mouse wheel to increase/decrease interval in min" )
+			Else
+				;; Mouse has left control
+				ToolTip("")
+			EndIf
+		EndIf
 
 		$msg = GUIGetMsg()
 
@@ -217,10 +253,11 @@ Local const $guiTop = -1
 ; GUI elements start
 #include <WinAPI.au3>
 Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
+#include <StaticConstants.au3>
 
 
 ; Create input
-	GUICreate( "Get all active messages - v." & $nVer & "." &  GetVersion(), $guiWidth, $guiHeight, $guiLeft, $guiTop, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
+	$gui = GUICreate( "Get all active messages - v." & $nVer & "." &  GetVersion(), $guiWidth, $guiHeight, $guiLeft, $guiTop, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
 
 	;--- buttons starting from right
 	Local const $guiBtnWidth = 50
@@ -247,6 +284,13 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 	$guiBtnLeft = $guiBtnLeft - $guiMargin - $guiBtnWidth
 
 	$idButtonNew = GUICtrlCreateButton("New", $guiBtnLeft, $guiBtnTop, $guiBtnWidth, $guiBtnHeight)
+	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
+	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
+
+; ----- 4rd control from right <<<--
+	$guiBtnLeft = $guiBtnLeft - $guiMargin - $guiBtnWidth
+
+	$idInterval = GUICtrlCreateLabel( GetCurInterval(), $guiBtnLeft, $guiBtnTop, $guiBtnWidth, $guiBtnHeight, $SS_CENTER+$SS_CENTERIMAGE)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
 
@@ -278,6 +322,52 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 
 EndFunc
 
+
+;===============================================================================
+; Function Name:    GetCurInterval(bool $inMin)
+;
+; Return: if $inMin
+;		false - (default) text string with current interval
+;		true - number of minute in interval
+;===============================================================================
+Func GetCurInterval($inMin = False)
+	Local $i = $aIntervals[ $iInterval ]
+	if $inMin then Return $i
+
+	if $i <60 then
+		return $i & "m"
+	else
+		return $i/60 & "h"
+	EndIf
+
+EndFunc	;==> GetCurInterval
+
+;===============================================================================
+; Function Name:    Hent_Button_pressed()
+;===============================================================================
+Func _MOUSEWHEEL($hWnd, $iMsg, $wParam, $lParam)
+
+	Local $iMPos = MouseGetPos()
+	Local $gci = GUIGetCursorInfo($gui)
+
+	If $gci[4] = $idInterval Then
+		;; Mouse is over control, do stuff
+		$iInterval += _WinAPI_HiWord($wParam) > 0? 1:-1
+
+		if $iInterval<0 then
+			$iInterval=0
+		elseif $iInterval=UBound($aIntervals) then
+			$iInterval-=1
+		EndIf
+
+		GUICtrlSetData( $idInterval, GetCurInterval() )
+
+	EndIf
+
+    Return $GUI_RUNDEFMSG
+
+EndFunc   ;==>_MOUSEWHEEL
+
 ;===============================================================================
 ; Function Name:    Hent_Button_pressed()
 ;===============================================================================
@@ -306,6 +396,12 @@ Func New_Button_pressed()
 	;	change time to -5 min
 	;	save all the fields
 	;	submit form
+
+	; clear from invisible objects
+	Local $nKilled = _IEQuitAll(false)
+	if $nKilled > 0 then
+		LogScreen($nKilled & " hidden instances killed" )
+	EndIf
 
 	; get Activ IE window
 	Local $oTab = _IEGetActiveTab()
@@ -358,7 +454,7 @@ Local $oAktor = _IEFormElementGetObjByName($oForm,  "aktor" )
 Local $oMsgId = _IEFormElementGetObjByName($oForm,  "msgId" )
 
 ; Returns the current Date and Time in format YYYY/MM/DD HH:MM:SS.
-Local $sFrom = _RFtimeDiff( -10, 'n')
+Local $sFrom = _RFtimeDiff( -GetCurInterval(True), 'n')
 ;Local $sTo = _RFtimeDiff(1,'h')
 
 _IEFormElementSetValue($oDatoFra, $sFrom)
@@ -496,13 +592,13 @@ _IELoadWaitTimeout( 3000 )
 DbgFileClear()
 DbgFile( $txt )
 			Local $html = _IEGetPageInNewWindow( $aTableData[$i][0] )
-			if StringLen( $html ) < 1000 then
-				DbgFile( $html)
-				$html = _IEGetPageInNewWindow( $aTableData[$i][0] )
-			EndIf
+;~ 			if StringLen( $html ) < 1000 then
+;~ 				DbgFile( $html)
+;~ 				$html = _IEGetPageInNewWindow( $aTableData[$i][0] )
+;~ 			EndIf
 
 			if @error then
-					DbgFile( $html)
+					DbgFile( $html )
 					$sParam = $html
 					;return 0 ;
 			Else
@@ -596,7 +692,7 @@ Func	LogFile( $sParam )
 		return 1
 	EndIf
 
-	Local $fileName = $folder & "\" & $folder & "_rf.txt" ; 2022-01-17\2022-01-17_rf.log
+	Local $fileName = $folder & "\" & $folder & "_rf.txt" ; 2022-01-17\2022-01-17_rf.txt
 
 	if not FileExists( $folder ) then
 		DirCreate( $folder )
