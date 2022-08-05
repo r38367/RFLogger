@@ -510,7 +510,7 @@ Func _ER_GetM94($html)
 	; _save_xml( $m1, $param, StringRegExpReplace( _ER_MsgGetTime( $html), "(\d\d\d\d)(\d\d)(\d\d).*", "$1-$2-$3" ) )
 
 	; add to text
-	$text &= " " & $param
+	$text &= $param ;$param alleredy has leading space
 	$text &= _ER_GetEgenandel( $html )
 
 
