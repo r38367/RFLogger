@@ -129,7 +129,9 @@ Update History:
 	-fix #99 - add multidosebruker i M92
 05/08/22
 	- fix #88 - add interval control
-  - fix #109 - changed saving to file: full name for xml with folder choice for M1
+	- fix #109 - changed saving to file: full name for xml with folder choice for M1
+06/08/22
+	- fix #112 - handle AcessDenied page
 #ce
 
 Local const $nVer = "56"
@@ -418,6 +420,13 @@ Func New_Button_pressed()
 	; check that is is logger
 	Local $url = _IEPropertyGet( $oTab, "locationurl")
 
+	; if Access denied page
+	if StringInStr( $url, "RFAdmin/accessDenied" ) > 0 then
+		;https://rfadmin.test1.reseptformidleren.net/RFAdmin/accessDenied.jsp
+		_IENavigate ( $oTab, StringRegExpReplace( $url, "/RFAdmin/.*", "/RFAdmin/login.rfa" ) )
+		$url = _IEPropertyGet( $oTab, "locationurl")
+	EndIf
+
 	; if login
 	if StringInStr( $url, "login.rfa" ) > 0 then
 		; this is login page
@@ -431,15 +440,13 @@ _IEFormElementSetValue($oUserId, "")
 _IEFormElementSetValue($oPass, "")
 
 _IEFormSubmit($oLoginForm)
-
 		 _IENavigate ( $oTab, StringRegExpReplace( $url, "/RFAdmin/.*", "/RFAdmin/loglist.rfa" ) )
-
+		$url = _IEPropertyGet( $oTab, "locationurl")
 	EndIf
 
 	; check that is is logger
-	Local $url = _IEPropertyGet( $oTab, "locationurl")
 	if StringInStr( $url, "loglist.rfa" ) = 0 AND StringInStr( $url, "logsearch.rfa" ) = 0 then
-		Dbg("*** Error: No message log on IE page" & @CRLF & $url )
+		LogScreen("*** Error: No message log on IE page" & @CRLF & $url )
 		return 0
 	EndIf
 	GUICtrlSetData($idLabel,"2. Got message page..." )
