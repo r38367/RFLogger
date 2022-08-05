@@ -154,9 +154,15 @@ Global $gDebugFile = "_debug.txt"
 
 ; #VARIABLES# ===================================================================================================================
 #Region Global Variables
+Global $gui
+Global $iInterval=1	; current interval, by default 5 min
+Global $aIntervals[] = [1,5,10,15,30,60,60*2,60*4,60*8] ; intervals range in minutes
+
 Global $idButtonGet
 Global $idButtonClear
 Global $idButtonNew
+Global $idInterval
+
 
 Global $idEdit
 Global $idLabel
@@ -176,10 +182,26 @@ Main()
 Func	Main()
 
 	Local $msg
+	Local $gci ; GUI cursor info
 
 	GUI_Create()
 
+	GUIRegisterMsg($WM_MOUSEWHEEL, "_MOUSEWHEEL")
+
+
 	Do
+
+		; to control when mouse is over interval control
+		If WinActive($gui) Then
+			$gci = GUIGetCursorInfo($gui)
+			If $gci[4] = $idInterval Then
+				;; Mouse is over control
+				ToolTip("Use mouse wheel to increase/decrease interval in min" )
+			Else
+				;; Mouse has left control
+				ToolTip("")
+			EndIf
+		EndIf
 
 		$msg = GUIGetMsg()
 
@@ -224,10 +246,11 @@ Local const $guiTop = -1
 ; GUI elements start
 #include <WinAPI.au3>
 Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
+#include <StaticConstants.au3>
 
 
 ; Create input
-	GUICreate( "Get all active messages - v." & $nVer & "." &  GetVersion(), $guiWidth, $guiHeight, $guiLeft, $guiTop, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
+	$gui = GUICreate( "Get all active messages - v." & $nVer & "." &  GetVersion(), $guiWidth, $guiHeight, $guiLeft, $guiTop, $WS_MINIMIZEBOX+$WS_SIZEBOX ) ; & GetVersion(), 500, 200)
 
 	;--- buttons starting from right
 	Local const $guiBtnWidth = 50
@@ -254,6 +277,13 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 	$guiBtnLeft = $guiBtnLeft - $guiMargin - $guiBtnWidth
 
 	$idButtonNew = GUICtrlCreateButton("New", $guiBtnLeft, $guiBtnTop, $guiBtnWidth, $guiBtnHeight)
+	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
+	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
+
+; ----- 4rd control from right <<<--
+	$guiBtnLeft = $guiBtnLeft - $guiMargin - $guiBtnWidth
+
+	$idInterval = GUICtrlCreateLabel( GetCurInterval(), $guiBtnLeft, $guiBtnTop, $guiBtnWidth, $guiBtnHeight, $SS_CENTER+$SS_CENTERIMAGE)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKSIZE)
 
@@ -284,6 +314,52 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 	GUISetState() ; will display an empty dialog box
 
 EndFunc
+
+
+;===============================================================================
+; Function Name:    GetCurInterval(bool $inMin)
+;
+; Return: if $inMin
+;		false - (default) text string with current interval
+;		true - number of minute in interval
+;===============================================================================
+Func GetCurInterval($inMin = False)
+	Local $i = $aIntervals[ $iInterval ]
+	if $inMin then Return $i
+
+	if $i <60 then
+		return $i & "m"
+	else
+		return $i/60 & "h"
+	EndIf
+
+EndFunc	;==> GetCurInterval
+
+;===============================================================================
+; Function Name:    Hent_Button_pressed()
+;===============================================================================
+Func _MOUSEWHEEL($hWnd, $iMsg, $wParam, $lParam)
+
+	Local $iMPos = MouseGetPos()
+	Local $gci = GUIGetCursorInfo($gui)
+
+	If $gci[4] = $idInterval Then
+		;; Mouse is over control, do stuff
+		$iInterval += _WinAPI_HiWord($wParam) > 0? 1:-1
+
+		if $iInterval<0 then
+			$iInterval=0
+		elseif $iInterval=UBound($aIntervals) then
+			$iInterval-=1
+		EndIf
+
+		GUICtrlSetData( $idInterval, GetCurInterval() )
+
+	EndIf
+
+    Return $GUI_RUNDEFMSG
+
+EndFunc   ;==>_MOUSEWHEEL
 
 ;===============================================================================
 ; Function Name:    Hent_Button_pressed()
@@ -371,7 +447,7 @@ Local $oAktor = _IEFormElementGetObjByName($oForm,  "aktor" )
 Local $oMsgId = _IEFormElementGetObjByName($oForm,  "msgId" )
 
 ; Returns the current Date and Time in format YYYY/MM/DD HH:MM:SS.
-Local $sFrom = _RFtimeDiff( -10, 'n')
+Local $sFrom = _RFtimeDiff( -GetCurInterval(True), 'n')
 ;Local $sTo = _RFtimeDiff(1,'h')
 
 _IEFormElementSetValue($oDatoFra, $sFrom)
