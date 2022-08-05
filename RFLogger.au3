@@ -123,11 +123,12 @@ Update History:
 24/06/22
 	- fix #101 - added name for handelsvarer to M10 output
 	- fix #100 - added prodGruppe for handelsvarer to M1 output
+56
 05/08/22
 	- fix #88 - add interval control
 #ce
 
-Local const $nVer = "55"
+Local const $nVer = "56"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
