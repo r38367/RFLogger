@@ -124,6 +124,9 @@ Update History:
 	- fix #101 - added name for handelsvarer to M10 output
 	- fix #100 - added prodGruppe for handelsvarer to M1 output
 56
+04/08/22
+	-fix #106 - change logfile ext from log to txt
+	-fix #99 - add multidosebruker i M92
 05/08/22
 	- fix #88 - add interval control
 #ce
@@ -396,7 +399,7 @@ Func New_Button_pressed()
 	; clear from invisible objects
 	Local $nKilled = _IEQuitAll(false)
 	if $nKilled > 0 then
-		GUICtrlSetData($idEdit, $nKilled & " hidden instances killed" )
+		LogScreen($nKilled & " hidden instances killed" )
 	EndIf
 
 	; get Activ IE window
@@ -684,7 +687,7 @@ Func	LogFile( $sParam )
 		return 1
 	EndIf
 
-	Local $fileName = $folder & "\" & $folder & "_rf.log" ; 2022-01-17\2022-01-17_rf.log
+	Local $fileName = $folder & "\" & $folder & "_rf.txt" ; 2022-01-17\2022-01-17_rf.txt
 
 	if not FileExists( $folder ) then
 		DirCreate( $folder )
