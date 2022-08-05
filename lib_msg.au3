@@ -503,7 +503,7 @@ Func _ER_GetM94($html)
 	Local $m1 = _ER_GetM1b64( $html)
 	Local $param =  _ER_GetM1( $m1 )
 	; save M1 as xml in current folder
-	_save_xml( $m1, $param, ".")
+	_save_xml( $m1, $param, "ERM1")
 
 	;(OR)
 	; save to same folder as m94
