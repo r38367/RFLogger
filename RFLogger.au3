@@ -132,6 +132,7 @@ Update History:
 	- fix #109 - changed saving to file: full name for xml with folder choice for M1
 06/08/22
 	- fix #112 - handle AcessDenied page
+	- fix #114 - change .test1. to actual env variable used in Get
 #ce
 
 Local const $nVer = "56"
@@ -176,6 +177,9 @@ Global $idInterval
 Global $idEdit
 Global $idLabel
 Global $nLine = 0
+
+Global $rf_test_env = "test1"
+
 #EndRegion Global Variables
 
 ; #CONSTANTS# ===================================================================================================================
@@ -410,7 +414,7 @@ Func New_Button_pressed()
 	if not IsObj($oTab) then
 		; start IE
 		; get to loglist!
-		_IECreate( "https://rfadmin.test1.reseptformidleren.net/RFAdmin/loglist.rfa" )
+		_IECreate( "https://rfadmin." & $rf_test_env & ".reseptformidleren.net/RFAdmin/loglist.rfa" )
 		;Dbg("*** Error: No active IE tab " & $oTab )
 		$oTab = _IEGetActiveTab()
 	EndIf
@@ -546,6 +550,8 @@ _IELoadWaitTimeout( 3000 )
 	EndIf
 ;_ArrayDisplay($aTableData)
 
+	; store environment
+	$rf_test_env = StringRegExpReplace( $url, ".*?rfadmin\.(.*?)\.reseptformidleren.net.*", "$1")
 
 	Local $txt, $sTextFromTable = ""
 	Local $nMsgCount = UBound($aTableData, $UBOUND_ROWS )-1
@@ -699,7 +705,7 @@ Func	LogFile( $sParam )
 		return 1
 	EndIf
 
-	Local $fileName = $folder & "\" & $folder & "_rf.txt" ; 2022-01-17\2022-01-17_rf.txt
+	Local $fileName = $folder & "\" & $folder & "_" & $rf_test_env & ".txt" ; 2022-01-17\2022-01-17_rf.txt
 
 	if not FileExists( $folder ) then
 		DirCreate( $folder )
