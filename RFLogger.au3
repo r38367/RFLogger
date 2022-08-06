@@ -132,6 +132,7 @@ Update History:
 	- fix #109 - changed saving to file: full name for xml with folder choice for M1
 06/08/22
 	- fix #112 - handle AcessDenied page
+	- fix #114 - change .test1. to actual env variable used in Get
 #ce
 
 Local const $nVer = "56"
@@ -550,7 +551,7 @@ _IELoadWaitTimeout( 3000 )
 ;_ArrayDisplay($aTableData)
 
 	; store environment
-	$rf_test_env = StringRegExpReplace( $url, ".*?rfadmin\.(test.*?)\.reseptformidleren.net.*", "$1")
+	$rf_test_env = StringRegExpReplace( $url, ".*?rfadmin\.(.*?)\.reseptformidleren.net.*", "$1")
 
 	Local $txt, $sTextFromTable = ""
 	Local $nMsgCount = UBound($aTableData, $UBOUND_ROWS )-1
