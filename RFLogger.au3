@@ -133,6 +133,7 @@ Update History:
 06/08/22
 	- fix #112 - handle AcessDenied page
 	- fix #114 - change .test1. to actual env variable used in Get
+	- fix #117 - make getting interruptable
 #ce
 
 Local const $nVer = "56"
