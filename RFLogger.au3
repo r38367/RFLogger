@@ -133,6 +133,7 @@ Update History:
 06/08/22
 	- fix #112 - handle AcessDenied page
 	- fix #114 - change .test1. to actual env variable used in Get
+	- fix #117 - make getting interruptable
 #ce
 
 Local const $nVer = "56"
@@ -180,6 +181,8 @@ Global $nLine = 0
 
 Global $rf_test_env = "test1"
 
+Global $_abortGet = 0 ; flag to abort execution
+
 #EndRegion Global Variables
 
 ; #CONSTANTS# ===================================================================================================================
@@ -200,6 +203,7 @@ Func	Main()
 	GUI_Create()
 
 	GUIRegisterMsg($WM_MOUSEWHEEL, "_MOUSEWHEEL")
+	GUICtrlSetOnEvent( $idButtonGet, "AbortGet" ) ; used in "GUIOnEventMode"
 
 
 	Do
@@ -583,6 +587,10 @@ _IELoadWaitTimeout( 3000 )
 ; ====== main cycle thru messages =====
 	Local $buffer = GUICtrlRead($idEdit)
 
+	Opt("GUIOnEventMode", 1)
+	$_abortGet = 0
+	GUICtrlSetData($idButtonGet, "Abort" )
+
 	$txt = ""
 	For $i = $nMsgCount to 1 step -1
 
@@ -622,6 +630,10 @@ DbgFile( $txt )
 			; add line to log file
 			LogFile( $txt & " " & $sParam & " " & $msgHerId )
 
+			if $_abortGet then
+				ExitLoop
+			EndIf
+
 			; Add line to screen
 			LogScreen( $txt & " " & $sParam & " " & $msgHerId )
 			;LogFile( $retText )
@@ -634,6 +646,8 @@ DbgFile( $txt )
 
 	Next ; $i
 
+	Opt("GUIOnEventMode", 0)
+	GUICtrlSetData($idButtonGet, "Get" )
 	GUICtrlSetData($idLabel, $nMsgCount-$i & "/" & $nMsgCount )
 
 ;GUICtrlSetData($idEdit, $txt & @CRLF, 0)
@@ -740,4 +754,9 @@ Func GetVersion()
 
 	Return $ver
 
+EndFunc
+
+
+Func	AbortGet()
+	$_abortGet = 1
 EndFunc
