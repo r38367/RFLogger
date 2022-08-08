@@ -134,9 +134,12 @@ Update History:
 	- fix #112 - handle AcessDenied page
 	- fix #114 - change .test1. to actual env variable used in Get
 	- fix #117 - make getting interruptable
+57
+08/08/22
+	- add #25 - add M95/M96
 #ce
 
-Local const $nVer = "56"
+Local const $nVer = "57"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files

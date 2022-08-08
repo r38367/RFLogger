@@ -43,11 +43,13 @@
 ;	_ER_GetAnnullering( $html)
 ;	_ER_GetReseptId( $html)
 ;	_ER_GetKansellering( $html)
-;=== M91-4
+;=== M91-6
 ;	_ER_GetM91($html)
 ;	_ER_GetM92($html)
 ;	_ER_GetM93($html)
 ;	_ER_GetM94($html)
+;	_ER_GetM95($html)
+;	_ER_GetM96($html)
 ;=== M3-M15
 ;	_ER_GetM3($html)
 ;	_ER_GetM15($html)
@@ -101,8 +103,6 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM1($html)
 		case "ERM10"
 			$ret = _ER_GetM10($html)
-		case "ERM95"
-			$ret = _ER_GetM95($html)
 		case "ERM91"
 			$ret = _ER_GetM91($html)
 		case "ERM92"
@@ -111,6 +111,10 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM93($html)
 		case "ERM94"
 			$ret = _ER_GetM94($html)
+		case "ERM95"
+			$ret = _ER_GetM95($html)
+		case "ERM96"
+			$ret = _ER_GetM96($html)
 		case "ERM3"
 			$ret = _ER_GetM3($html)
 		case "APPREC"
@@ -445,8 +449,37 @@ EndFunc
 ;================================================================================================================================
 
 Func _ER_GetM95($html)
-;<Fnr>02048735722</Fnr>
-	Return	" " & _ER_GetParam( $html, '(?s)Fnr>(.*?)<' )
+Local $text = ""
+
+	if _ER_GetParam( $html, '(?s)Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Fnr>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Fornavn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Fornavn>(.*?)<' )
+	;if _ER_GetParam( $html, '(?s)Etternavn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Etternavn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Fdato>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Fdato>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParamX( $html, '(?s)RefNr>(.*?)</RefNr' )
+	$text &= " " & _ER_GetParam( $html, '(?s)AlleResepter.*?DN="(.*?)"' )
+
+	Return	$text
+
+EndFunc
+
+;================================================================================================================================
+;	M9.6 functions
+;================================================================================================================================
+
+Func _ER_GetM96($html)
+Local $text = ""
+
+	if _ER_GetParam( $html, 'Listeelement>') then
+
+		$text &= " " & _ER_GetReseptCount( $html )
+
+	Else
+		; we did not have resepts <StatusSok V="4" DN="Ingen resept på dette søk" />
+		$text &= " " & _ER_GetParam( $html, '(?s)StatusSok.*?DN="(.*?)".*?>' )
+
+	EndIf
+
+	Return	$text
 
 EndFunc
 
