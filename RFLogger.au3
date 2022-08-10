@@ -140,9 +140,8 @@ Local const $nVer = "56"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
-#include <Date.au3>
-#include <Array.au3>
-#include <IE.au3>
+;#include <Date.au3>
+;#include <Array.au3>
 
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
@@ -151,15 +150,13 @@ Local const $nVer = "56"
 #include <GuiEdit.au3>
 #EndRegion Global Include files
 
-Global $gIEhwnd = -1
-Global $gDebugFile = "_debug.txt"
 
 ; #LIB# ===================================================================================================================
 #Region Lib files
 ;OnAutoItExitRegister("MyExitFunc")
 #include "lib_msg.au3"
-#include "lib_ie.au3"
 #include "lib_time.au3"
+#include "lib_ie.au3"
 #EndRegion LIB files
 
 
@@ -181,7 +178,9 @@ Global $nLine = 0
 
 Global $rf_test_env = "test1"
 
-Global $_abortGet = 0 ; flag to abort execution
+Global $_abortGet = 0 ; flag to abort getting messages from IE
+
+Global $gDebugFile = "_debug.txt"
 
 #EndRegion Global Variables
 
@@ -330,13 +329,13 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
     ; start GUI
 	GUISetState() ; will display an empty dialog box
 
-EndFunc
+EndFunc ;==> GUI_Create
 
 
 ;===============================================================================
 ; Function Name:    GetCurInterval(bool $inMin)
 ;
-; Return: if $inMin
+; Return: if $inMin=
 ;		false - (default) text string with current interval
 ;		true - number of minute in interval
 ;===============================================================================
@@ -353,7 +352,7 @@ Func GetCurInterval($inMin = False)
 EndFunc	;==> GetCurInterval
 
 ;===============================================================================
-; Function Name:    Hent_Button_pressed()
+; Function Name:    _MOUSEWHEEL()
 ;===============================================================================
 Func _MOUSEWHEEL($hWnd, $iMsg, $wParam, $lParam)
 
@@ -379,7 +378,7 @@ Func _MOUSEWHEEL($hWnd, $iMsg, $wParam, $lParam)
 EndFunc   ;==>_MOUSEWHEEL
 
 ;===============================================================================
-; Function Name:    Hent_Button_pressed()
+; Function Name:    Clear_Button_pressed()
 ;===============================================================================
 
 Func Clear_Button_pressed()
@@ -387,125 +386,97 @@ Func Clear_Button_pressed()
 	GUICtrlSetData($idLabel,"" )
 	GUICtrlSetData($idEdit, "" )
 
-EndFunc
+EndFunc ;==> Clear_Button_pressed
 
 ;===============================================================================
 ; Function Name:    New_Button_pressed()
 ;===============================================================================
-
+;---
+;	no_ie (open login) =>
+;	login (submit) =>
+;	index (logging) =>
+;	loglist (submit) =>
+;	logsearch (submit)
+;	denied (goto login) => call me again!
+;
 Func New_Button_pressed()
 
+	Local $_renew=0
+	Local $url
 
-	; if this was first time then
-	;	create IE
-	; if url = login
-	;	login with credentials and save them
-	;	get to loglist
-	; if url = loglist
-	;	get old window $oTab
-	;	change time to -5 min
-	;	save all the fields
-	;	submit form
+	; clear info
+	LogError("")
 
-	; clear from invisible objects
-	Local $nKilled = _IEQuitAll(false)
+	; === clear from invisible objects
+	Local $nKilled = _ie_quitAll(false)
 	if $nKilled > 0 then
 		LogScreen($nKilled & " hidden instances killed" )
 	EndIf
 
-	; get Activ IE window
-	Local $oTab = _IEGetActiveTab()
-	if not IsObj($oTab) then
-		; start IE
-		; get to loglist!
-		_IECreate( "https://rfadmin." & $rf_test_env & ".reseptformidleren.net/RFAdmin/loglist.rfa" )
-		;Dbg("*** Error: No active IE tab " & $oTab )
-		$oTab = _IEGetActiveTab()
+; === active IE
+	if not _ie_getActiveTab() then
+		; start IE and go to login!
+		_ie_new( "https://rfadmin." & $rf_test_env & ".reseptformidleren.net/RFAdmin/login.rfa" )
+		DbgFile( "new: " & _ie_getURL() )
 	EndIf
 
-	GUICtrlSetData($idLabel,"1. IE found..." )
-
-	; check that is is logger
-	Local $url = _IEPropertyGet( $oTab, "locationurl")
-
-	; if Access denied page
-	if StringInStr( $url, "RFAdmin/accessDenied" ) > 0 then
-		;https://rfadmin.test1.reseptformidleren.net/RFAdmin/accessDenied.jsp
-		_IENavigate ( $oTab, StringRegExpReplace( $url, "/RFAdmin/.*", "/RFAdmin/login.rfa" ) )
-		$url = _IEPropertyGet( $oTab, "locationurl")
-	EndIf
-
-	; if login
+	; === login page
+	$url = _ie_getURL()
 	if StringInStr( $url, "login.rfa" ) > 0 then
-		; this is login page
-		; https://rfadmin.test1.reseptformidleren.net/RFAdmin/login.rfa
-		; enter name
-Local $oLoginForm = _IEFormGetObjByName($oTab, "login")
-Local $oUserId = _IEFormElementGetObjByName($oLoginForm,  "userId" )
-Local $oPass = _IEFormElementGetObjByName($oLoginForm,  "pass" )
-
-_IEFormElementSetValue($oUserId, "")
-_IEFormElementSetValue($oPass, "")
-
-_IEFormSubmit($oLoginForm)
-		 _IENavigate ( $oTab, StringRegExpReplace( $url, "/RFAdmin/.*", "/RFAdmin/loglist.rfa" ) )
-		$url = _IEPropertyGet( $oTab, "locationurl")
+		DbgFile( "login page" )
+		$_renew = 1
+		if not _ie_submitLoginForm() then
+			return
+		endif
+		_ie_goto( StringRegExpReplace( $url, "/RFAdmin/.*", "/RFAdmin/loglist.rfa" ) )
 	EndIf
 
-	; check that is is logger
-	if StringInStr( $url, "loglist.rfa" ) = 0 AND StringInStr( $url, "logsearch.rfa" ) = 0 then
-		LogScreen("*** Error: No message log on IE page" & @CRLF & $url )
-		return 0
+	; === index page (after manual login )
+	$url = _ie_getURL()
+	if StringInStr( $url, "RFAdmin/index.rfa" ) > 0 then
+		DbgFile( "index page" )
+		_ie_goto( StringRegExpReplace( $url, "/RFAdmin/.*", "/RFAdmin/loglist.rfa" ) )
 	EndIf
-	GUICtrlSetData($idLabel,"2. Got message page..." )
 
-; we are on loglist page!
+	; === loglist/search page - main page
+	$url = _ie_getURL()
+	if  StringInStr( $url, "RFAdmin/loglist.rfa" ) >0 OR StringInStr( $url, "RFAdmin/logsearch.rfa" ) >0 then
+		DbgFile( "loglist/search page" )
+		if $_renew then
+			DbgFile( "restore search" )
+			_ie_restoreSearchFields()
+			$_renew = 0
+		else
+			DbgFile( "save search" )
+			_ie_saveSearchFields()
+		EndIf
+		_ie_submitSearchForm()
+	EndIf
 
-Local $oForm = _IEFormGetObjByName($oTab, "logfilter")
-Local $oDatoFra = _IEFormElementGetObjByName($oForm,  "datoFra" )
-Local $oDatoTil = _IEFormElementGetObjByName($oForm,  "datoTil" )
-Local $oMsgType = _IEFormElementGetObjByName($oForm,  "msgType" )
-Local $oAktor = _IEFormElementGetObjByName($oForm,  "aktor" )
-Local $oMsgId = _IEFormElementGetObjByName($oForm,  "msgId" )
+		; === access denied after timeout - exception!
+	$url = _ie_getURL()
+	if StringInStr( $url, "RFAdmin/accessDenied" ) > 0 then
+		DbgFile( "access denied page" )
+		_ie_goto( StringRegExpReplace( $url, "/RFAdmin/.*", "/RFAdmin/loglist.rfa" ) )
+		New_Button_pressed()
+	EndIf
 
-; Returns the current Date and Time in format YYYY/MM/DD HH:MM:SS.
-Local $sFrom = _RFtimeDiff( -GetCurInterval(True), 'n')
-;Local $sTo = _RFtimeDiff(1,'h')
+	if StringInStr( $url, "RFAdmin/loglist.rfa" ) >0 OR StringInStr( $url, "RFAdmin/logsearch.rfa" ) >0 then
+		; === anothe page
+		Return
+	else
+		LogError("*** Error: Not RF admin page " & @CRLF & $url )
+	EndIf
 
-_IEFormElementSetValue($oDatoFra, $sFrom)
-;_IEFormElementSetValue($oDatoTil, $sTo)
-;_IEFormElementSetValue($oMsgType, "")
-;_IEFormElementSetValue($oAktor, "")
-;_IEFormElementSetValue($oMsgId, "" ) ;f09601fe-d6c5-4c56-bc2a-b55e49834343")
-_IEFormElementCheckBoxSelect($oForm, "WS-R" )
-_IEFormElementCheckBoxSelect($oForm, "WS-U" )
+EndFunc ;==> New_Button_pressed
 
-;_IEFormSubmit($oForm, 0)
-;_IELoadWait($oTab)
-
-Local $oSubmit = _IEGetObjById($oTab, "sokeknapp")
-_IEAction($oSubmit, "click")
-_IELoadWait($oTab)
-
-
-; if we got to password page
-; get thru password page
-; get to loglist
-; refill form
-; submit
-;	Get_Button_pressed()
-
-EndFunc
 ;===============================================================================
-; Function Name:    Hent_Button_pressed()
+; Function Name:    Get_Button_pressed()
 ;===============================================================================
-
 Func	Get_Button_pressed()
 
-	Local $oTab
-
-;GUICtrlSetData($idEdit, "" )
-GUICtrlSetData($idLabel, "Get Active IE" )
+	; clear status
+	LogError("")
 
 DbgFile( "start " & _Now()  )
 
@@ -514,42 +485,29 @@ _IELoadWaitTimeout( 3000 )
 ;Get_line_from_link( "https://rfadmin.test2.reseptformidleren.net/RFAdmin/loggeview.rfa?loggeId=c7d0d0b6-4014-4ef0-be60-d9522d39045a&filename=/nfstest2/sharedFiles/log/2021/175/21/13/c7d0d0b6-4014-4ef0-be60-d9522d39045a" )
 ;return
 
-	; get Activ IE window
-	$oTab = _IEGetActiveTab()
-	if not IsObj($oTab) then
-		; start IE
-		_IECreate( "https://rfadmin.test1.reseptformidleren.net/RFAdmin/loglist.rfa" )
-		;Dbg("*** Error: No active IE tab " & $oTab )
-		return 0
+	if not _ie_getActiveTab() then
+		LogError("*** Error: No active RF Admin" & @CRLF )
+		return
 	EndIf
-	GUICtrlSetData($idLabel,"1. IE found..." )
 
-	; check that is is logger
-	Local $url = _IEPropertyGet( $oTab, "locationurl")
-	if StringInStr( $url, "loglist.rfa" ) = 0 AND StringInStr( $url, "logsearch.rfa" ) = 0 then
-		Dbg("*** Error: No message log on IE page" & @CRLF & $url )
-		return 0
+	Local $url = _ie_getURL()
+	if  StringInStr( $url, "loglist.rfa" ) = 0 AND StringInStr( $url, "logsearch.rfa" ) = 0 then
+		LogError("*** Error: No messages found on page" & @CRLF )
+		return
 	EndIf
-	GUICtrlSetData($idLabel,"2. Got message page..." )
 
-	; get all links on the page
-	Local $oTable = _IETableGetCollection($oTab,0)
-	if @error <> 0 then
-		Dbg("*** Error: No message table found on page: " & @error & @CRLF & $url )
-		return 0
-	EndIf
-	GUICtrlSetData($idLabel,"3. Got message table... " )
+	; save config in case manuel endring before get
+	_ie_saveSearchFields() ; testenv, aktor, msgtype
 
-	Local $aTableData = _IETableWriteToArray($oTable, true)
-	if @error <> 0 then
-		Dbg("*** Error: _IETableWriteToArray: " & @error & @CRLF & $url )
+	Local $aTableData = _ie_getMsgArray()
+	if not IsArray($aTableData) then
+		LogError( "No messages found" )
 		return 0
-	EndIf
-	GUICtrlSetData($idLabel, "4. Got message array..." )
+	endif
 
 	; Check that it is rigth table
 	if $aTableData[0][0] <> "Linker" then
-		Dbg("*** Error: No message table found on " & @CRLF & $url )
+		LogError("*** Error: No message table found on " & @CRLF & $url )
 		return 0
 	EndIf
 ;_ArrayDisplay($aTableData)
@@ -557,19 +515,21 @@ _IELoadWaitTimeout( 3000 )
 	; store environment
 	$rf_test_env = StringRegExpReplace( $url, ".*?rfadmin\.(.*?)\.reseptformidleren.net.*", "$1")
 
-	Local $txt, $sTextFromTable = ""
+	Local $txt ;, $sTextFromTable = ""
 	Local $nMsgCount = UBound($aTableData, $UBOUND_ROWS )-1
 
-	GUICtrlSetData($idLabel, "5. Found messages: " & $nMsgCount )
+	LogError("Found messages: " & $nMsgCount )
 
-;
-; Get links to  message
-;
-	Local $oLinks = _IELinkGetCollection($oTab)
-	if @error <> 0 then
-		Dbg( "*** Error: _IELinkGetCollection: " & @error)
+	;
+	; Get links to  message
+	;
+	Local $oLinks = _ie_getLinks()
+	if not IsObj($oLinks) then
+		LogError( "No links found" )
 		return 0
-	EndIf
+	endif
+
+
 
 ;
 ; put links into $aTable
@@ -581,8 +541,7 @@ _IELoadWaitTimeout( 3000 )
 			$i += 1
 		EndIf
 	next
-
-	GUICtrlSetData($idLabel, "6. Got links... " )
+	LogError("Got links" )
 
 ; ====== main cycle thru messages =====
 	Local $buffer = GUICtrlRead($idEdit)
@@ -612,12 +571,7 @@ _IELoadWaitTimeout( 3000 )
 			Local $sParam = ""
 DbgFileClear()
 DbgFile( $txt )
-			Local $html = _IEGetPageInNewWindow( $aTableData[$i][0] )
-;~ 			if StringLen( $html ) < 1000 then
-;~ 				DbgFile( $html)
-;~ 				$html = _IEGetPageInNewWindow( $aTableData[$i][0] )
-;~ 			EndIf
-
+			Local $html = _ie_getPageInNewWindow( $aTableData[$i][0] )
 			if @error then
 					DbgFile( $html )
 					$sParam = $html
@@ -653,15 +607,63 @@ DbgFile( $txt )
 ;GUICtrlSetData($idEdit, $txt & @CRLF, 0)
 ;GUICtrlSetData($idLabel, $nMsgCount & " messages found")
 
-EndFunc
+EndFunc ;==> Get_Button_pressed
+
+;===============================================================================
+; Function Name:    LogScreen()
+;
+; Adds a line to message log on screen
+;===============================================================================
 
 Func	LogScreen( $text )
 
 	_GUICtrlEdit_AppendText($idEdit, $text & @CRLF)
 
+EndFunc ;==> LogScreen
+
+;===============================================================================
+; Function Name:    LogFile()
+;
+; Adds a line to message log in log file
+;===============================================================================
+
+Func	LogFile( $sParam )
+
+	Local $folder = StringRegExpReplace( $sParam , "(\d+).(\d+).(\d\d\d\d) .*", "$3-$2-$1") ; 2022-01-17
+	if @extended = 0 then
+		return 1
+	EndIf
+
+	Local $fileName = $folder & "\" & $folder & "_" & $rf_test_env & ".txt" ; 2022-01-17\2022-01-17_rf.txt
+
+	if not FileExists( $folder ) then
+		DirCreate( $folder )
+	endif
+
+	FileWriteLine( $fileName , $sParam )
+
+	return 0
+
 EndFunc
 
 
+;===============================================================================
+; Function Name:    LogError()
+;
+; Print error message in label
+;===============================================================================
+
+Func	LogError( $text )
+	GUICtrlSetData($idLabel, $text & @CRLF )
+EndFunc
+
+
+;===============================================================================
+; Function Name:    _save_xml()
+;
+; Saves xml to a file in a specofoc folder.
+; if folder is not defined then folder name is a message date
+;===============================================================================
 
 Func	_save_xml( $html, $text, $folder=Default )
 
@@ -687,22 +689,23 @@ Local	$fileTime
 	FileDelete( $folder & "\" &  $fileName )
 
 	if FileWrite( $folder & "\" &  $fileName, $html ) = 0 then
-		Dbg("error write file " & $fileName)
+		LogScreen("error write file " & $fileName)
 		return 3
 	EndIf
 
 	If FileSetTime( $folder & "\" &  $fileName, $fileTime, 0) = 0 then
-		Dbg("error filesettime '" & $fileTime & "'->" & $fileName)
+		LogScreen("error filesettime '" & $fileTime & "'->" & $fileName)
 		return 4
 	EndIf
 
 	Return 0
 EndFunc
 
-
-Func	Dbg( $txt )
-	GUICtrlSetData($idEdit, $txt & @CRLF, 0)
-EndFunc
+;===============================================================================
+; Function Name:    DbgFile()
+;
+; Print debug info to debug file
+;===============================================================================
 
 func DbgFileClear()
 	;FileDelete( $gDebugFile )
@@ -712,24 +715,6 @@ Func	DbgFile( $txt )
 	FileWriteLine( $gDebugFile, $txt )
 EndFunc
 
-Func	LogFile( $sParam )
-
-	Local $folder = StringRegExpReplace( $sParam , "(\d+).(\d+).(\d\d\d\d) .*", "$3-$2-$1") ; 2022-01-17
-	if @extended = 0 then
-		return 1
-	EndIf
-
-	Local $fileName = $folder & "\" & $folder & "_" & $rf_test_env & ".txt" ; 2022-01-17\2022-01-17_rf.txt
-
-	if not FileExists( $folder ) then
-		DirCreate( $folder )
-	endif
-
-	FileWriteLine( $fileName , $sParam )
-
-	return 0
-
-EndFunc
 
 ; -----------------------------------------------------------------------------
 ; Function: GetVersion

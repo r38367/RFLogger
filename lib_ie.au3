@@ -8,25 +8,53 @@
 
 #cs ----------------------------------------------------------------------------
 Function to work with IE
-	_IEGetActibTab() - Retrieve the Window Object of the currently active IE (on top)
-	_IEGetActibWindow() -
-	_IEGetPageInNewWindow() - open page in a new hidden window and return its xml
+	_ie_getActibTab() - Retrieve the Window Object of the currently active IE (on top)
+	_ie_getActibWindow() - Retrieve active IE window
+	_ie_getPageInNewWindow() - open page in a new hidden window and return its xml
+	_ie_quitAll( $bKillAll = true ) - kill all IE instances (false - kill only invisisble)
+	_ie_new( $url ) - open new IE and goto $url
+	_ie_getURL( $oTab ) - get current $url in activ IE
+	_ie_goto( $oTab, $url ) - naavigate to $url in active IE
+	_ie_saveSearchFields($oTab) - store some search fields
+	_ie_restoreSearchFields($oTab) - restore some search fields
+	_ie_submitSearchForm($oTab) - submit search form
+	_ie_submitLoginForm() - submit login form
+	_ie_getMsgArray($oTab)- get messages from RF log to array
+	_ie_getLinks( $oTab ) - get all links on web page
 
-
-26/6/21
-21 - remove debug output to edit control
 #ce ----------------------------------------------------------------------------
+
+; #VARIABLES# ===================================================================================================================
+#Region Global Variables
+
+; saved user/pass
+Global $sUser = ""
+Global $sPass = ""
+
+; saved fields
+Global $sAktor
+Global $sMsgType
+
+; active IE tab
+Global $oTab
+
+#EndRegion Global variables
+
+
+Func _ie_isActive()
+	return IsObj($oTab)
+EndFunc
 
 ;===============================================================================
 ;
-; Function Name:    _IEGetActiveWindow()
+; Function Name:    _ie_getActiveWindow()
 ; Description:      Retrieve the Window Object of the currently active IE (on top)
 ; Parameter(s):     None
 ; Requirement(s):   AutoIt3 V3.2 or higher
 ;                   On Success  - Returns an object variable pointing to the IE Window Object
 ;                   On Failure  - Returns 0 (no active IE windows)
 ;===============================================================================
-Func _IEGetActiveWindow()
+Func _ie_getActiveWindow()
 
 	Local $aWinList
 	; get all IE windows start from top. Top window is first.
@@ -40,19 +68,19 @@ EndFunc
 
 ;===============================================================================
 ;
-; Function Name:    _IEGetActiveTab()
+; Function Name:    _ie_getActiveTab()
 ; Description:      Retrieve the IE Window Object of the currently active tab
 ; Parameter(s):     None
 ; Requirement(s):   AutoIt3 V3.2 or higher
-;                   On Success  - Returns an object variable pointing to the IE Window Object
+;                   On Success  - sets $oTab global variable pointing to the IE Window Object
 ;                   On Failure  - Returns 0 and sets @ERROR
 ;                   @ERROR      - 0 ($_IEStatus_Success) = No Error
 ;                               - 7 ($_IEStatus_NoMatch) = No Match
 ; Author(s):        Dan Pollak
 ;===============================================================================
 ;
-Func _IEGetActiveTab()
-Local $aWinList, $oTab
+Func _ie_getActiveTab()
+Local $aWinList
 	; get all IE windows start from top. Top window is first.
 	$aWinList = WinList("[REGEXPTITLE:(?i)(.*Internet Explorer.*)]")
 
@@ -91,9 +119,9 @@ Local $aWinList, $oTab
 			; if IE instance has same window handle (hwnd) then it is the right tab
 			if _IEPropertyGet( $oTab, "hwnd" ) = $aWinList[$i][1] then
 
-				$gIEhwnd = $aWinList[$i][1]
-				Return _IEAttach($aWinList[$i][1],"embedded")	; get active tab in window
-
+				;$gIEhwnd = $aWinList[$i][1]
+				$oTab = _IEAttach($aWinList[$i][1],"embedded")	; get active tab in window
+				return 1
 			EndIf
 
 			$n += 1
@@ -102,12 +130,12 @@ Local $aWinList, $oTab
 
 	Next
 
-	Return -1
+	Return 0
 
 EndFunc
 ;===============================================================================
 ;
-; Function Name:    _IEGetPageInNewWindow( $sLink )
+; Function Name:    _ie_getPageInNewWindow( $sLink )
 ; Description:      Retrieve body text from web page
 ; Parameter(s):     $sLink - link to web page
 ; Returns:
@@ -119,7 +147,7 @@ EndFunc
 ;				4 - Quit error and @extended = Quit @error
 ; =========================================================
 
-Func	_IEGetPageInNewWindow( $sLink )
+Func	_ie_getPageInNewWindow( $sLink )
 
 	DbgFile( "-->_IEGetPageInNewWindow " & $sLink )
 
@@ -166,7 +194,7 @@ EndFunc
 
 ;===============================================================================
 ;
-; Function Name:    _IEQuitAll( $bKillAll = true )
+; Function Name:    _ie_quitAll( $bKillAll = true )
 ; Description:      Quit from all IE instances av $type
 ; Parameter(s):     $type
 ;						true - kill visible also
@@ -178,21 +206,21 @@ EndFunc
 ;				2 - Quit error and @extended = Quit @error
 ; =========================================================
 
-Func	_IEQuitAll( $bKillAll = true )
+Func	_ie_quitAll( $bKillAll = true )
 
-	Local $oTab
+	Local $oTabTmp
 	Local $nTab = 0
 
 	Local $i = 1
-
+DbgFile( "kill all")
 	While 1
-	   $oTab = _IEAttach( "", "instance", $i )
+	   $oTabTmp = _IEAttach( "", "instance", $i )
 	   If @error > 0 then ;= $_IESTATUS_NoMatch Then
 		  ExitLoop
 	   EndIf
 
-		if $bKillAll or not _IEPropertyGet( $oTab, "visible" ) then
-			_IEQuit( $oTab )
+		if $bKillAll or not _IEPropertyGet( $oTabTmp, "visible" ) then
+			_IEQuit( $oTabTmp )
 			$nTab += 1
 		Else
 			$i += 1
@@ -202,4 +230,133 @@ Func	_IEQuitAll( $bKillAll = true )
 
 	return $nTab
 
+EndFunc
+
+Func _ie_new( $url )
+	$oTab = _IECreate( $url )
+	return
+EndFunc
+
+Func _ie_getURL()
+	if _ie_isActive() then
+	return _IEPropertyGet( $oTab, "locationurl")
+	Else
+	DbgFile( "getURL - no obj" )
+	EndIf
+
+EndFunc
+
+Func _ie_goto($url )
+	if _ie_isActive() then
+	_IENavigate ( $oTab, $url )
+	return @error
+	Else
+	DbgFile( "goto - no obj" )
+	EndIf
+EndFunc
+
+Func _ie_saveSearchFields()
+	Local $oForm = _IEFormGetObjByName($oTab, "logfilter")
+	Local $oMsgType = _IEFormElementGetObjByName($oForm,  "msgType" )
+	Local $oAktor = _IEFormElementGetObjByName($oForm,  "aktor" )
+
+	$sAktor = _IEFormElementGetValue($oAktor)
+	$sMsgType = _IEFormElementGetValue($oMsgType)
+
+EndFunc
+
+Func _ie_restoreSearchFields()
+	Local $oForm = _IEFormGetObjByName($oTab, "logfilter")
+	Local $oMsgType = _IEFormElementGetObjByName($oForm,  "msgType" )
+	Local $oAktor = _IEFormElementGetObjByName($oForm,  "aktor" )
+
+	_IEFormElementSetValue($oAktor, $sAktor)
+	_IEFormElementSetValue($oMsgType, $sMsgType)
+
+EndFunc
+
+Func _ie_submitSearchForm()
+	Local $oForm = _IEFormGetObjByName($oTab, "logfilter")
+	Local $oDatoFra = _IEFormElementGetObjByName($oForm,  "datoFra" )
+	;Local $oDatoTil = _IEFormElementGetObjByName($oForm,  "datoTil" )
+	;Local $oMsgType = _IEFormElementGetObjByName($oForm,  "msgType" )
+	;Local $oAktor = _IEFormElementGetObjByName($oForm,  "aktor" )
+	;Local $oMsgId = _IEFormElementGetObjByName($oForm,  "msgId" )
+
+	; Returns the current Date and Time in format YYYY/MM/DD HH:MM:SS.
+	Local $sFrom = _RFtimeDiff( -GetCurInterval(True), 'n')
+
+	_IEFormElementSetValue($oDatoFra, $sFrom)
+	_IEFormElementCheckBoxSelect($oForm, "WS-R" )
+	_IEFormElementCheckBoxSelect($oForm, "WS-U" )
+
+	Local $oSubmit = _IEGetObjById($oTab, "sokeknapp")
+	_IEAction($oSubmit, "click")
+	_IELoadWait($oTab)
+
+EndFunc
+
+;===============================================================================
+; Function Name:    _ie_submitLoginForm()
+; Return:
+;	1 - if form submitted
+;	0 - if user/pass must be submitted manuelly
+;===============================================================================
+
+Func _ie_submitLoginForm()
+
+	Local $oLoginForm = _IEFormGetObjByName($oTab, "login")
+	Local $oUserId = _IEFormElementGetObjByName($oLoginForm,  "userId" )
+	Local $oPass = _IEFormElementGetObjByName($oLoginForm,  "pass" )
+
+	_IEFormElementSetValue($oUserId, $sUser)
+	_IEFormElementSetValue($oPass, $sPass)
+	if $sUser <> "" and $sPass <> "" then
+		_IEFormSubmit($oLoginForm)
+		return 1
+	endif
+
+	Return 0
+EndFunc
+
+;===============================================================================
+; Function Name:    _ie_getMsgArray()
+;
+; Convert message table on page to array
+; Return:
+;	2D array with messages
+;	0 - no messages found
+;	1 - failed to get message table, sets @error:
+;		1 - no messages in table
+;		2 -
+;===============================================================================
+
+Func	_ie_getMsgArray()
+
+	; get all links on the page
+	Local $oTable = _IETableGetCollection($oTab,0)
+	if @error <> 0 then
+		DbgFile("*** No messages. " & @error )
+		return 0
+	EndIf
+	;GUICtrlSetData($idLabel,"3. Got message table... " )
+
+	Local $aTableData = _IETableWriteToArray($oTable, true)
+	if @error <> 0 then
+		DbgFile("*** Error: _IETableWriteToArray: " & @error)
+		return 0
+	EndIf
+	;GUICtrlSetData($idLabel, "4. Got message array..." )
+
+	return $aTableData
+
+EndFunc
+
+Func _ie_getLinks()
+	Local $oLinks = _IELinkGetCollection($oTab)
+	if @error <> 0 then
+		DbgFile( "*** Error: _IELinkGetCollection: " & @error)
+		return 0
+	EndIf
+	return $oLinks
 EndFunc
