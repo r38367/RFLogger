@@ -19,6 +19,7 @@ Function to work with IE
 	_ie_restoreSearchFields($oTab) - restore some search fields
 	_ie_submitSearchForm($oTab) - submit search form
 	_ie_submitLoginForm() - submit login form
+	_ie_readLoginForm() - read user and password from login form
 	_ie_getMsgArray($oTab)- get messages from RF log to array
 	_ie_getLinks( $oTab ) - get all links on web page
 
@@ -313,6 +314,28 @@ Func _ie_submitLoginForm()
 	_IEFormElementSetValue($oPass, $sPass)
 	if $sUser <> "" and $sPass <> "" then
 		_IEFormSubmit($oLoginForm)
+		return 1
+	endif
+
+	Return 0
+EndFunc
+
+;===============================================================================
+; Function Name:    _ie_readLoginForm()
+; Return:
+;	1 - if username og paas are read
+;	0 - if user/pass not read
+;===============================================================================
+
+Func _ie_readLoginForm()
+
+	Local $oLoginForm = _IEFormGetObjByName($oTab, "login")
+	Local $oUserId = _IEFormElementGetObjByName($oLoginForm,  "userId" )
+	Local $oPass = _IEFormElementGetObjByName($oLoginForm,  "pass" )
+
+	$sUser = _IEFormElementGetValue($oUserId)
+	$sPass = _IEFormElementGetValue($oPass)
+	if $sUser <> "" and $sPass <> "" then
 		return 1
 	endif
 

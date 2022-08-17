@@ -134,6 +134,8 @@ Update History:
 	- fix #112 - handle AcessDenied page
 	- fix #114 - change .test1. to actual env variable used in Get
 	- fix #117 - make getting interruptable
+17/08/22
+	- add #119 - separate ie-dependent functions
 #ce
 
 Local const $nVer = "56"
