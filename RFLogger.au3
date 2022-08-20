@@ -137,6 +137,7 @@ Update History:
 57
 08/08/22
 	- add #25 - add M95/M96
+	- add #103 - always on top on/off
 #ce
 
 Local const $nVer = "57"
