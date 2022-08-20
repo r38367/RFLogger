@@ -375,7 +375,7 @@ Func _MOUSEWHEEL($hWnd, $iMsg, $wParam, $lParam)
 
 	If $gci[4] = $idInterval Then
 		;; Mouse is over control, do stuff
-		$iInterval += _WinAPI_HiWord($wParam) > 0? 1:-1
+		$iInterval += _WinAPI_HiWord($wParam) > 0? -1:1
 
 		if $iInterval<0 then
 			$iInterval=0
