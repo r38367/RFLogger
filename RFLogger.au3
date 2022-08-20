@@ -180,6 +180,7 @@ Global $idInterval
 
 Global $idEdit
 Global $idLabel
+Global $cmAlwaysOnTop
 Global $nLine = 0
 
 Global $rf_test_env = "test1"
@@ -234,6 +235,9 @@ Func	Main()
 		ElseIf $msg = $idButtonNew then
 			;Gui_update_list()
 			New_Button_pressed()
+		ElseIf $msg = $cmAlwaysOnTop then
+			; Context menu - Always on top
+			SetAlwaysOnTop()
 		EndIf
 
 	Until $msg = $GUI_EVENT_CLOSE
@@ -316,6 +320,11 @@ Local const $winTitleHeight = _WinAPI_GetSystemMetrics($SM_CYCAPTION)
 	$idLabel = GUICtrlCreateLabel(	"", $guiLabelLeft, $guiLabelTop, $guiLabelWidth, $guiLabelHeight)
 	GUIctrlsetfont(-1, 9, 0, 0, "Lucida Console" )
 	GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKHEIGHT )
+
+; Label context menu
+	Local $contextmenu = GUICtrlCreateContextMenu($idLabel)
+	$cmAlwaysOnTop = GUICtrlCreateMenuItem("Always on top", $contextmenu)
+	SetAlwaysOnTop()
 
 	; ----- Edit
 	Local const $guiEditLeft = $guiMargin
@@ -762,4 +771,21 @@ EndFunc
 
 Func	AbortGet()
 	$_abortGet = 1
+EndFunc
+
+; -----------------------------------------------------------------------------
+; Function: SetAlwaysOnTop
+;
+; Toggles on/off Always on top property for GUI
+;
+; -----------------------------------------------------------------------------
+
+Func SetAlwaysOnTop()
+	If BitAnd(GUICtrlRead($cmAlwaysOnTop),$GUI_CHECKED) = $GUI_CHECKED Then
+		GUICtrlSetState($cmAlwaysOnTop,$GUI_UNCHECKED)
+		WinSetOnTop($gui, "", $WINDOWS_NOONTOP)
+	Else
+		GUICtrlSetState($cmAlwaysOnTop,$GUI_CHECKED)
+		WinSetOnTop($gui, "", $WINDOWS_ONTOP)
+	EndIf
 EndFunc
