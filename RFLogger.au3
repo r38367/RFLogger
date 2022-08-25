@@ -138,6 +138,8 @@ Update History:
 08/08/22
 	- add #25 - add M95/M96
 	- add #103 - always on top on/off
+25/08/22
+	- fix #126 - fix illegal chars ion file name
 #ce
 
 Local const $nVer = "57"
@@ -687,6 +689,10 @@ Local	$fileTime
 	if $folder=Default then
 		$folder = StringRegExpReplace( $fileTime, "(\d\d\d\d)(\d\d)(\d\d).*", "$1-$2-$3" ) ; 2022-01-17
 	EndIf
+
+	; replace illegal chars in filename
+	$text = StringReplace( $text, "/", "" )
+	$text = StringReplace( $text, "&", "+" )
 
 	; strip off birthdate from NIN
 	$text = StringRegExpReplace( $text, "\s(\d{11})\s+(\d\d\d\d).(\d\d).(\d\d)", " $1" )
