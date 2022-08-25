@@ -652,7 +652,7 @@ DbgFile( $txt )
 			;LogFile( $retText )
 
 			; strip off RefTo before save xml in a file
-			$sParam = StringRegExpReplace( $sParam, "(\S{9}\s+\S{9}) ", "" )
+			$sParam = StringRegExpReplace( $sParam, "(\S{9}\s+\S{9}) ", "", 1 )
 
 			_save_xml( $html, $sParam )
 
