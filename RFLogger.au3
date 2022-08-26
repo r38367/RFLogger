@@ -138,6 +138,8 @@ Update History:
 08/08/22
 	- add #25 - add M95/M96
 	- add #103 - always on top on/off
+25/08/22
+	- fix #127 - filename for ERM10
 #ce
 
 Local const $nVer = "57"
@@ -652,7 +654,7 @@ DbgFile( $txt )
 			;LogFile( $retText )
 
 			; strip off RefTo before save xml in a file
-			$sParam = StringRegExpReplace( $sParam, "(\S{9}\s+\S{9}) ", "" )
+			$sParam = StringRegExpReplace( $sParam, "(\S{9}\s+\S{9}) ", "", 1 )
 
 			_save_xml( $html, $sParam )
 
