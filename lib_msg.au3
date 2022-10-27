@@ -123,6 +123,9 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM911($html)
 		case "ERM912"
 			$ret = _ER_GetM912($html)
+		case "ERM912"
+			$ret = _ER_GetM253($html)
+
 
 		;case Else
 		;	$ret = $msgType & "_" & _ER_GetMsgId($html)
@@ -681,6 +684,68 @@ Func	_ER_GetReseptCount( $html )
 	Return  $ret
 
 EndFunc
+
+;================================================================================================================================
+;	M25.3 functions
+;================================================================================================================================
+Func _ER_GetM253($html)
+
+	Local $text = ""
+
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html,1)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	$text &= " " & _ER_GetReseptCountM253( $html )
+
+	Return	$text
+
+EndFunc
+
+
+;================================================================================================================================
+;	Get resept counnt in M25.3 and presents count with type OID=7408
+;	Returns:
+;		f.eks. E5-U2-P1 J8-N1
+;================================================================================================================================
+
+Func _ER_GetReseptCountM253( $html )
+
+	Local $a
+	Local $CountTypes[6]
+	Local $ret=""
+
+	; first resept type
+	Local $ReseptType = "EPU12"
+	;<Type DN="Eresept" V="E" />  Volven 7491 = Type resept https://volven.no/produkt.asp?id=469436&catID=3&subID=8
+	;<InngarMultidose DN="Nei" V="2" />  Volven 1101 = Ja, Nei InngarMultidose
+
+	; get all resepter
+	$a = StringRegExp( $html, '(Type|InngarMultidose) .*?V="(.)"', 3)
+	if @error then return ""
+
+
+	; count all types
+	for $r in $a
+		$CountTypes[ StringInStr( $ReseptType, $r) ] += 1
+	Next
+
+	for $i=1 to 3
+		if $CountTypes[$i] > 0 then $ret &= StringMid( $ReseptType, $i, 1)  & $CountTypes[$i] & "-"
+	Next
+
+	; if we got unknown type - show as X
+	if $CountTypes[0] > 0 then $ret &= "X" & $CountTypes[0]
+
+	; remove unnecessary - at the end
+	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
+
+	; Add inngarMultidose
+	$ret &= " J" & $CountTypes[4] & "-" & "N" & $CountTypes[5]
+
+	Return  $ret
+
+EndFunc
+
 
 ;================================================================================================================================
 ;	Get type of legemiddel in M1
