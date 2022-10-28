@@ -720,7 +720,7 @@ Func _ER_GetReseptCountM253( $html )
 	;<InngarMultidose DN="Nei" V="2" />  Volven 1101 = Ja, Nei InngarMultidose
 
 	; get all resepter
-	$a = StringRegExp( $html, '(Type|InngarMultidose) .*?V="(.)"', 3)
+	$a = StringRegExp( $html, '(?s)EnkeltoppforingLIB>.*?Type .*?V="(.)".*?InngarMultidose .*?V="(.)"', 3)
 	if @error then return ""
 
 
@@ -740,7 +740,13 @@ Func _ER_GetReseptCountM253( $html )
 	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
 
 	; Add inngarMultidose
-	$ret &= " J" & $CountTypes[4] & "-" & "N" & $CountTypes[5]
+	$ret &= " ("
+	if $CountTypes[4] > 0 then $ret &= $CountTypes[4]
+	if $CountTypes[5] > 0 then $ret &= "-" & $CountTypes[5]
+	$ret &= ")"
+
+	; remove unnecessary - at the end
+	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
 
 	Return  $ret
 
