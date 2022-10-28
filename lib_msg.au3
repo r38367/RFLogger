@@ -216,7 +216,7 @@ EndFunc ;-> _ER_GetFnr
       </h:Ident>
     </h:Patient>
 #ce
-Func	_ER_GetPatient($html, $type=0)
+Func	_ER_GetPatient($html, $type=1)
 
 	Local $a, $name
 	$a = StringRegExp( $html, '(?s)Patient>.*?GivenName>(.*?)<', 1)

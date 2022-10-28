@@ -141,9 +141,9 @@ Update History:
 25/08/22
 	- fix #127 - filename for ERM10
 58
-27/10/22
+28/10/22
 	- fix #129 - add M25.3
-
+	- fix #131 - print full name
 #ce
 
 Local const $nVer = "58"
