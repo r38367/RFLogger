@@ -692,7 +692,7 @@ Func _ER_GetM253($html)
 
 	Local $text = ""
 
-	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html,1)
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 
 	$text &= " " & _ER_GetReseptCountM253( $html )
