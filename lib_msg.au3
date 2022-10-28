@@ -123,7 +123,7 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM911($html)
 		case "ERM912"
 			$ret = _ER_GetM912($html)
-		case "ERM912"
+		case "ERM253"
 			$ret = _ER_GetM253($html)
 
 
