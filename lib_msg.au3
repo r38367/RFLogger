@@ -626,11 +626,11 @@ EndFunc
 Func _ER_GetM5($html)
 
 	Local $ret = ""
-	$ret &= " " & _ER_GetPatient( $html )
-	$ret &= " " & _ER_GetFnr( $html )
+	;$ret &= " " & _ER_GetPatient( $html )
+	;$ret &= " " & _ER_GetFnr( $html )
 
-	$ret &= " " & _ER_GetReseptId($html)
 	$ret &= " " & _ER_GetParam( $html, '(?s)Arsak.*?DN="(.*?)"' );
+	$ret &= " " & _ER_GetReseptId($html)
 	if _ER_GetParam( $html, '(?s)NyReseptId>(.*?)<' ) then $ret &= " " & StringLeft(_ER_GetParam( $html, '(?s)NyReseptId>(.*?)<' ),9)
 	return $ret
 EndFunc
