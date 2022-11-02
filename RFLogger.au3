@@ -149,6 +149,7 @@ Update History:
 	- fix #133 - add M5
 	- fix #134 - correct filename for messages without text
 	- fix #21 - add M27.1/2
+	- fix #20 - add ERMV
 #ce
 
 Local const $nVer = "59"
