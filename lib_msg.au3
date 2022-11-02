@@ -53,6 +53,8 @@
 ;=== M3-M15
 ;	_ER_GetM3($html)
 ;	_ER_GetM15($html)
+;=== M5
+;	_ER_GetM5($html)
 ;=== general
 ;	_ER_GetParam( $html, $regexp )
 ;
@@ -125,6 +127,8 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM912($html)
 		case "ERM253"
 			$ret = _ER_GetM253($html)
+		case "ERM5"
+			$ret = _ER_GetM5($html)
 
 
 		;case Else
@@ -614,6 +618,21 @@ EndFunc
 ;================================================================================================================================
 Func _ER_GetM3($html)
 	Return " " & _ER_GetReseptId($html)
+EndFunc
+
+;================================================================================================================================
+;	M5 functions
+;================================================================================================================================
+Func _ER_GetM5($html)
+
+	Local $ret = ""
+	$ret &= _ER_GetPatient( $html )
+	$ret &= " " & _ER_GetFnr( $html )
+
+	$ret &= " " & _ER_GetReseptId($html)
+	$ret &= " " & _ER_GetParam( $html, '(?s)Arsak.*?DN="(.*?)"' );
+	if _ER_GetParam( $html, '(?s)NyReseptId>(.*?)<' ) then $ret &= " " & StringLeft(_ER_GetParam( $html, '(?s)NyReseptId>(.*?)<' ),9)
+	return $ret
 EndFunc
 
 
