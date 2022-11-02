@@ -149,7 +149,7 @@ Update History:
 	- fix #134 - correct filename for messages without text
 #ce
 
-Local const $nVer = "58"
+Local const $nVer = "59"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
