@@ -146,6 +146,7 @@ Update History:
 	- fix #131 - print full name
 59
 02/11/22
+	- fix #133 - add M5
 	- fix #134 - correct filename for messages without text
 #ce
 
