@@ -133,6 +133,10 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM911($html)
 		case "ERM912"
 			$ret = _ER_GetM912($html)
+		case "ERM251"
+			$ret = _ER_GetM251($html)
+		case "ERM252"
+			$ret = _ER_GetM252($html)
 		case "ERM253"
 			$ret = _ER_GetM253($html)
 		case "ERM5"
@@ -748,43 +752,47 @@ Func _ER_GetM272($html)
 EndFunc
 
 ;================================================================================================================================
-;	M25.3 functions
+;	M25 functions
 ;================================================================================================================================
-Func _ER_GetM253($html)
+Func _ER_GetM251($html)
 
 	Local $text = ""
 
 	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 
-	$text &= " " & _ER_GetReseptCountM253( $html )
+	$text &= " " & _ER_GetReseptCountM252( $html )
 
 	Return	$text
 
 EndFunc
 
+Func _ER_GetM252($html)
 
-;================================================================================================================================
-;	Get resept counnt in M25.3 and presents count with type OID=7408
-;	Returns:
-;		f.eks. E5-U2-P1 J8-N1
-;================================================================================================================================
+	Local $text = ""
 
-Func _ER_GetReseptCountM253( $html )
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	$text &= " " & _ER_GetReseptCountM252( $html )
+
+	Return	$text
+
+EndFunc
+
+Func _ER_GetReseptCountM252( $html )
 
 	Local $a
 	Local $CountTypes[6]
 	Local $ret=""
 
 	; first resept type
-	Local $ReseptType = "EPU12"
+	Local $ReseptType = "EPU"
 	;<Type DN="Eresept" V="E" />  Volven 7491 = Type resept https://volven.no/produkt.asp?id=469436&catID=3&subID=8
-	;<InngarMultidose DN="Nei" V="2" />  Volven 1101 = Ja, Nei InngarMultidose
 
 	; get all resepter
-	$a = StringRegExp( $html, '(?s)EnkeltoppforingLIB>.*?Type .*?V="(.)".*?InngarMultidose .*?V="(.)"', 3)
+	$a = StringRegExp( $html, '(?s)EnkeltoppforingLIB>.*?Type .*?V="(.)"', 3)
 	if @error then return ""
-
 
 	; count all types
 	for $r in $a
@@ -801,14 +809,56 @@ Func _ER_GetReseptCountM253( $html )
 	; remove unnecessary - at the end
 	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
 
+	Return  $ret
+
+EndFunc
+
+
+Func _ER_GetM253($html)
+
+	Local $text = ""
+
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	$text &= " " & _ER_GetReseptCountM252( $html )
+	$text &= " " & _ER_GetMultidoseCountM253( $html )
+
+	Return	$text
+
+EndFunc
+
+;================================================================================================================================
+;	Get resept counnt in M25.3 which included in multidose
+;
+;		f.eks.(8-1)
+;================================================================================================================================
+
+Func _ER_GetMultidoseCountM253( $html )
+
+	Local $a
+	Local $CountTypes[3]
+	Local $ret=""
+
+	; first resept type
+	Local $ReseptType = "12"
+	;<InngarMultidose DN="Nei" V="2" />  Volven 1101 = Ja, Nei InngarMultidose
+
+	; get all resepter
+	$a = StringRegExp( $html, '(?s)EnkeltoppforingLIB>.*?InngarMultidose .*?V="(.)"', 3)
+	if @error then return ""
+
+	; count all types
+	for $r in $a
+		$CountTypes[ StringInStr( $ReseptType, $r) ] += 1
+	Next
+
 	; Add inngarMultidose
 	$ret &= " ("
-	if $CountTypes[4] > 0 then $ret &= $CountTypes[4]
-	if $CountTypes[5] > 0 then $ret &= "-" & $CountTypes[5]
+	if $CountTypes[1] > 0 then $ret &= $CountTypes[1]
+	if $CountTypes[2] > 0 then $ret &= "-" & $CountTypes[2]
+	if $CountTypes[0] > 0 then $ret &= "x" & $CountTypes[0]
 	$ret &= ")"
-
-	; remove unnecessary - at the end
-	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
 
 	Return  $ret
 
