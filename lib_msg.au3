@@ -55,6 +55,12 @@
 ;	_ER_GetM15($html)
 ;=== M5
 ;	_ER_GetM5($html)
+;=== M911-M912
+;	_ER_GetM911($html)
+;	_ER_GetM912($html)
+;=== M27
+;	_ER_GetM271($html)
+;	_ER_GetM272($html)
 ;=== general
 ;	_ER_GetParam( $html, $regexp )
 ;
@@ -129,6 +135,10 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM253($html)
 		case "ERM5"
 			$ret = _ER_GetM5($html)
+		case "ERM271"
+			$ret = _ER_GetM271($html)
+		case "ERM272"
+			$ret = _ER_GetM272($html)
 
 
 		;case Else
@@ -701,6 +711,31 @@ Func	_ER_GetReseptCount( $html )
 	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
 
 	Return  $ret
+
+EndFunc
+
+;================================================================================================================================
+;	M27 functions
+;================================================================================================================================
+Func _ER_GetM271($html)
+	Local $text = ""
+
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	$text &= " " &  _ER_GetParam( $html, '(?s)M271 .*?Status.*?DN="(.*?)"' )
+
+	Return	$text
+
+EndFunc
+
+Func _ER_GetM272($html)
+	Local $text = ""
+
+	$text &= " " &  _ER_GetParam( $html, '(?s)M272 .*?RegistrertEndring>(.*?)<' )
+;          <RegistrertEndring>true</RegistrertEndring>
+
+	Return	$text
 
 EndFunc
 
