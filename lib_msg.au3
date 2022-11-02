@@ -626,7 +626,7 @@ EndFunc
 Func _ER_GetM5($html)
 
 	Local $ret = ""
-	$ret &= _ER_GetPatient( $html )
+	$ret &= " " & _ER_GetPatient( $html )
 	$ret &= " " & _ER_GetFnr( $html )
 
 	$ret &= " " & _ER_GetReseptId($html)
