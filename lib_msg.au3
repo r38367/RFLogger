@@ -327,6 +327,10 @@ Local $text = ""
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
 	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParam( $html, '(?s)RefNr>(.*?)<' )
 
+
+;<BytteresRekvirent V="1" DN="Ja" />
+	$text &= _ER_GetParam( $html, '(?s)BytteresRekvirent.*?V="(.*?)" ') = 1? " BytteresRekvirent":""
+
 	Return	$text
 
 EndFunc
