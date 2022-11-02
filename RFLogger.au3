@@ -144,9 +144,13 @@ Update History:
 28/10/22
 	- fix #129 - add M25.3
 	- fix #131 - print full name
+59
+02/11/22
+	- fix #133 - add M5
+
 #ce
 
-Local const $nVer = "58"
+Local const $nVer = "59"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
