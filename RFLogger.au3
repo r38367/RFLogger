@@ -658,7 +658,7 @@ DbgFile( $txt )
 			;LogFile( $retText )
 
 			; strip off RefTo before save xml in a file
-			$sParam = StringRegExpReplace( $sParam, "(\S{9}\s+\S{9}) ", "", 1 )
+			$sParam = StringRegExpReplace( $sParam, "(\S{9}\s+\S{9}) ?", "", 1 )
 
 			_save_xml( $html, $sParam )
 
@@ -696,7 +696,7 @@ Local	$fileTime
 
 	; strip off birthdate from NIN
 	$text = StringRegExpReplace( $text, "\s(\d{11})\s+(\d\d\d\d).(\d\d).(\d\d)", " $1" )
-	$filename = _ER_GetMsgType( $html ) & "_" & StringReplace( StringStripWS($text, 7), " ", "_") & "_" & StringLeft( _ER_GetMsgId( $html ), 9)  & ".xml"
+	$filename = StringReplace( StringStripWS(_ER_GetMsgType( $html ) & " " & $text, 7), " ", "_") & "_" & StringLeft( _ER_GetMsgId( $html ), 9)  & ".xml"
 
 
 	if not FileExists( $folder ) then
