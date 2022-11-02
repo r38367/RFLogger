@@ -61,6 +61,8 @@
 ;=== M27
 ;	_ER_GetM271($html)
 ;	_ER_GetM272($html)
+;=== MV
+;	_ER_GetMV($html)
 ;=== general
 ;	_ER_GetParam( $html, $regexp )
 ;
@@ -139,6 +141,8 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM271($html)
 		case "ERM272"
 			$ret = _ER_GetM272($html)
+		case "ERMV"
+			$ret = _ER_GetMV($html)
 
 
 		;case Else
@@ -854,6 +858,31 @@ Func	_ER_GetTypeLegemiddel( $html )
 
 EndFunc
 
+;================================================================================================================================
+;	MV functions
+;================================================================================================================================
+Func _ER_GetMV($html)
+
+	Local $text = ""
+#cs
+<SystemInfo>
+            <SystemCode>FM</SystemCode>
+            <SystemName>Forskrivningsmodul</SystemName>
+            <Version>4.9.3.18743</Version>
+<OperationSupplierInfo>
+            <ServiceVendorName>Boots Norge</ServiceVendorName>
+#ce
+
+	; (?:) - non-inclusive group to choose one of three but not return it as a match
+	; we get all three in any order as many as number of groups
+	;
+	$text &= " " & _ER_GetParamX( $html, '(?s)SystemInfo>.*?(?:SystemCode|SystemName|Version)>(.*?)</..*?(?:SystemCode|SystemName|Version)>(.*?)</..*?(?:SystemCode|SystemName|Version)>(.*?)</' )
+	;$text &= " " & _ER_GetParamX( $html, '(?s)SystemInfo>.*?SystemName>(.*?)<' )
+	;$text &= " " & _ER_GetParamX( $html, '(?s)SystemInfo>.*?Version>(.*?)<' )
+	$text &= " (" & _ER_GetParam( $html, '(?s)OperationSupplierInfo>.*?ServiceVendorName>(.*?)<' ) & ")"
+
+	Return	$text
+EndFunc
 ;====================================
 ; generic internal function
 ;====================================
