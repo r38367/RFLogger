@@ -150,6 +150,7 @@ Update History:
 	- fix #134 - correct filename for messages without text
 	- fix #21 - add M27.1/2
 	- fix #20 - add ERMV
+	- fix #60 - Add BytteresRekvirent in M1
 #ce
 
 Local const $nVer = "59"
