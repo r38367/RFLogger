@@ -151,6 +151,7 @@ Update History:
 	- fix #21 - add M27.1/2
 	- fix #20 - add ERMV
 	- fix #60 - Add BytteresRekvirent in M1
+	- add #140 - add M25.2 & M25.1
 #ce
 
 Local const $nVer = "59"

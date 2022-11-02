@@ -133,6 +133,10 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM911($html)
 		case "ERM912"
 			$ret = _ER_GetM912($html)
+		case "ERM251"
+			$ret = _ER_GetM251($html)
+		case "ERM252"
+			$ret = _ER_GetM252($html)
 		case "ERM253"
 			$ret = _ER_GetM253($html)
 		case "ERM5"
@@ -748,8 +752,68 @@ Func _ER_GetM272($html)
 EndFunc
 
 ;================================================================================================================================
-;	M25.3 functions
+;	M25 functions
 ;================================================================================================================================
+Func _ER_GetM251($html)
+
+	Local $text = ""
+
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	$text &= " " & _ER_GetReseptCountM252( $html )
+
+	Return	$text
+
+EndFunc
+
+Func _ER_GetM252($html)
+
+	Local $text = ""
+
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	$text &= " " & _ER_GetReseptCountM252( $html )
+
+	Return	$text
+
+EndFunc
+
+Func _ER_GetReseptCountM252( $html )
+
+	Local $a
+	Local $CountTypes[6]
+	Local $ret=""
+
+	; first resept type
+	Local $ReseptType = "EPU"
+	;<Type DN="Eresept" V="E" />  Volven 7491 = Type resept https://volven.no/produkt.asp?id=469436&catID=3&subID=8
+
+	; get all resepter
+	$a = StringRegExp( $html, '(?s)EnkeltoppforingLIB>.*?Type .*?V="(.)"', 3)
+	if @error then return ""
+
+	; count all types
+	for $r in $a
+		$CountTypes[ StringInStr( $ReseptType, $r) ] += 1
+	Next
+
+	for $i=1 to 3
+		if $CountTypes[$i] > 0 then $ret &= StringMid( $ReseptType, $i, 1)  & $CountTypes[$i] & "-"
+	Next
+
+	; if we got unknown type - show as X
+	if $CountTypes[0] > 0 then $ret &= "X" & $CountTypes[0]
+
+	; remove unnecessary - at the end
+	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
+
+	Return  $ret
+
+EndFunc
+
+
 Func _ER_GetM253($html)
 
 	Local $text = ""
@@ -762,7 +826,6 @@ Func _ER_GetM253($html)
 	Return	$text
 
 EndFunc
-
 
 ;================================================================================================================================
 ;	Get resept counnt in M25.3 and presents count with type OID=7408
@@ -784,7 +847,6 @@ Func _ER_GetReseptCountM253( $html )
 	; get all resepter
 	$a = StringRegExp( $html, '(?s)EnkeltoppforingLIB>.*?Type .*?V="(.)".*?InngarMultidose .*?V="(.)"', 3)
 	if @error then return ""
-
 
 	; count all types
 	for $r in $a
