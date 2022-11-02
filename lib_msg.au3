@@ -821,31 +821,31 @@ Func _ER_GetM253($html)
 	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 
-	$text &= " " & _ER_GetReseptCountM253( $html )
+	$text &= " " & _ER_GetReseptCountM252( $html )
+	$text &= " " & _ER_GetMultidoseCountM253( $html )
 
 	Return	$text
 
 EndFunc
 
 ;================================================================================================================================
-;	Get resept counnt in M25.3 and presents count with type OID=7408
-;	Returns:
-;		f.eks. E5-U2-P1 J8-N1
+;	Get resept counnt in M25.3 which included in multidose
+;
+;		f.eks.(8-1)
 ;================================================================================================================================
 
-Func _ER_GetReseptCountM253( $html )
+Func _ER_GetMultidoseCountM253( $html )
 
 	Local $a
-	Local $CountTypes[6]
+	Local $CountTypes[3]
 	Local $ret=""
 
 	; first resept type
-	Local $ReseptType = "EPU12"
-	;<Type DN="Eresept" V="E" />  Volven 7491 = Type resept https://volven.no/produkt.asp?id=469436&catID=3&subID=8
+	Local $ReseptType = "12"
 	;<InngarMultidose DN="Nei" V="2" />  Volven 1101 = Ja, Nei InngarMultidose
 
 	; get all resepter
-	$a = StringRegExp( $html, '(?s)EnkeltoppforingLIB>.*?Type .*?V="(.)".*?InngarMultidose .*?V="(.)"', 3)
+	$a = StringRegExp( $html, '(?s)EnkeltoppforingLIB>.*?InngarMultidose .*?V="(.)"', 3)
 	if @error then return ""
 
 	; count all types
@@ -853,24 +853,12 @@ Func _ER_GetReseptCountM253( $html )
 		$CountTypes[ StringInStr( $ReseptType, $r) ] += 1
 	Next
 
-	for $i=1 to 3
-		if $CountTypes[$i] > 0 then $ret &= StringMid( $ReseptType, $i, 1)  & $CountTypes[$i] & "-"
-	Next
-
-	; if we got unknown type - show as X
-	if $CountTypes[0] > 0 then $ret &= "X" & $CountTypes[0]
-
-	; remove unnecessary - at the end
-	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
-
 	; Add inngarMultidose
 	$ret &= " ("
-	if $CountTypes[4] > 0 then $ret &= $CountTypes[4]
-	if $CountTypes[5] > 0 then $ret &= "-" & $CountTypes[5]
+	if $CountTypes[1] > 0 then $ret &= $CountTypes[1]
+	if $CountTypes[2] > 0 then $ret &= "-" & $CountTypes[2]
+	if $CountTypes[0] > 0 then $ret &= "x" & $CountTypes[0]
 	$ret &= ")"
-
-	; remove unnecessary - at the end
-	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
 
 	Return  $ret
 
