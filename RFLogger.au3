@@ -152,6 +152,7 @@ Update History:
 	- fix #20 - add ERMV
 	- fix #60 - Add BytteresRekvirent in M1
 	- add #140 - add M25.2 & M25.1
+	- add #142 - decode M25 from M912 and changed text for M912
 #ce
 
 Local const $nVer = "59"

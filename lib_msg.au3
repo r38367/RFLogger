@@ -679,12 +679,42 @@ Func _ER_GetM912($html)
 
 	Local $text = ""
 
-	if _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' )
-	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
-	if _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)asient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)asient>.*?Fnr>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " L" ;& _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' ) then $text &= "A" ;& _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' )
 	$text &= " " & _ER_GetReseptCount( $html )
 
+	; if M25 exists
+	; get all <VarerIBrukB64> and decode M25
+	if StringInStr( $html, "VarerIBrukB64" ) then
+		$text &= " " & _ER_GetM25b64( $html)
+	endif
+
 Return	$text
+
+EndFunc
+
+;
+; there can be several base64
+;
+Func	_ER_GetM25b64( $html)
+
+	Local $b64
+	Local $ret = ""
+
+	; get base64 - b64 can be more than 32K, therefor use RegExReplace, as RegExp can not handle long patterns
+	; strip all before and after base 64 and return only inside >...<
+	$b64 = StringRegExpReplace( $html, "(?s).*?VarerIBrukB64(.*VarerIBrukB64.*?>).*", "$1",1 )
+
+	Local $b64array = StringRegExp( $b64, "(?s).*?>(.*?)</.*?>", 3 )
+	if @error=0 then
+		for $m in $b64array
+			Local $xml = _Base64Decode( $m )
+			$ret &= " " & StringRight(_ER_GetMsgType( $xml ),4)& "(" & _ER_GetReseptCountM252( $xml ) & ")"
+		Next
+	endif
+
+	return $ret
 
 EndFunc
 
