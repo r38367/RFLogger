@@ -679,9 +679,9 @@ Func _ER_GetM912($html)
 
 	Local $text = ""
 
-	if _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' )
 	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
 	if _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)asient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)asient>.*?Fnr>(.*?)<' )
 	$text &= " " & _ER_GetReseptCount( $html )
 
 	; if M25 exists
