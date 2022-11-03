@@ -706,9 +706,9 @@ Func	_ER_GetM25b64( $html)
 	; strip all before and after base 64 and return only inside >...<
 	$b64 = StringRegExpReplace( $html, "(?s).*?VarerIBrukB64(.*VarerIBrukB64.*?>).*", "$1",1 )
 
-	$a64 = StringRegExp( $b64, "(?s).*?>(.*?)</.*?>", 3 )
+	Local $b64array = StringRegExp( $b64, "(?s).*?>(.*?)</.*?>", 3 )
 	if @error=0 then
-		for $m in $a64
+		for $m in $b64array
 			Local $xml = _Base64Decode( $m )
 			$ret &= " " & StringRight(_ER_GetMsgType( $xml ),4)& "(" & _ER_GetReseptCountM252( $xml ) & ")"
 		Next
