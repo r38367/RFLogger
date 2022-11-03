@@ -680,7 +680,7 @@ Func _ER_GetM912($html)
 	Local $text = ""
 
 	if _ER_GetParam( $html, '(?s)asient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)asient>.*?Fnr>(.*?)<' ) & " "
-	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " L" ;& _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= "L" ;& _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
 	if _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' ) then $text &= "A" ;& _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' )
 	$text &= " " & _ER_GetReseptCount( $html )
 
