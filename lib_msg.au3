@@ -685,11 +685,9 @@ Func _ER_GetM912($html)
 	$text &= " " & _ER_GetReseptCount( $html )
 
 	; if M25 exists
-	; decode b64 one after one
-	; get all <VarerIBrukB64> in array
-	Local $m25xml = _ER_GetM25b64( $html)
-	if StringInStr($m25xml, "ERM25") > 0 then
-	$text &= " " & _ER_GetMsgType( $m25xml )& "=" & _ER_GetReseptCountM252( $m25xml )
+	; get all <VarerIBrukB64> and decode M25
+	if StringInStr( $html, "VarerIBrukB64" ) then
+		$text &= " " & _ER_GetM25b64( $html)
 	endif
 
 Return	$text
@@ -702,13 +700,21 @@ EndFunc
 Func	_ER_GetM25b64( $html)
 
 	Local $b64
-	; get base64 - b64 can be more than 32K, therefor use RegExReplace, as RegExp can not handle long patterns
-	; strip all before Base64
-	$b64 = StringRegExpReplace( $html, "(?s).*?VarerIBrukB64(.*?)VarerIBrukB64", "$1",1 )
-	; strip all after base64 and return only inside >...<
-	$b64 = StringRegExpReplace( $b64, "(?s).*?>(.*?)</.*", "$1",3 )
+	Local $ret = ""
 
-	return _Base64Decode( $b64 )
+	; get base64 - b64 can be more than 32K, therefor use RegExReplace, as RegExp can not handle long patterns
+	; strip all before and after base 64 and return only inside >...<
+	$b64 = StringRegExpReplace( $html, "(?s).*?VarerIBrukB64(.*VarerIBrukB64.*?>).*", "$1",1 )
+
+	$a64 = StringRegExp( $b64, "(?s).*?>(.*?)</.*?>", 3 )
+	if @error=0 then
+		for $m in $a64
+			Local $xml = _Base64Decode( $m )
+			$ret &= " " & StringRight(_ER_GetMsgType( $xml ),4)& "(" & _ER_GetReseptCountM252( $xml ) & ")"
+		Next
+	endif
+
+	return $ret
 
 EndFunc
 
