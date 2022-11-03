@@ -690,29 +690,8 @@ Local	$fileTime
 		$folder = StringRegExpReplace( $fileTime, "(\d\d\d\d)(\d\d)(\d\d).*", "$1-$2-$3" ) ; 2022-01-17
 	EndIf
 
-	; replace illegal chars in filename
-	#cs
-	nbg 24:7 kaps 187,5 mg/100 mg
-'+
-Udo's choice probiotika 50+ kaps
-
-/&;-
-Astaxin m/vit C&amp;E immunforsvar kaps 60 mg/4 mg/10 mg alfa-TE
-
-,%/&;%
-Bedrocan blomst, tørret 22 %/&lt; 1 %
-
-&;/,/
-&;,%/
-Rabipur pulv+væske til inj oppl &gt; 2,5 IE/dose
-
-	#ce
-
-	$text = StringReplace( $text, "/", "-" )
-	$text = StringReplace( $text, ":", "-" )
-	$text = StringReplace( $text, "&amp;", "+" )
-	$text = StringReplace( $text, "&lt;", "" )
-	$text = StringReplace( $text, "&gt;", "" )
+	; strip off illegal chars in filename
+	$text = StringRegExpReplace( $text, "([\\<>*?/|:])", " " )
 
 	; strip off birthdate from NIN
 	$text = StringRegExpReplace( $text, "\s(\d{11})\s+(\d\d\d\d).(\d\d).(\d\d)", " $1" )
