@@ -53,6 +53,16 @@
 ;=== M3-M15
 ;	_ER_GetM3($html)
 ;	_ER_GetM15($html)
+;=== M5
+;	_ER_GetM5($html)
+;=== M911-M912
+;	_ER_GetM911($html)
+;	_ER_GetM912($html)
+;=== M27
+;	_ER_GetM271($html)
+;	_ER_GetM272($html)
+;=== MV
+;	_ER_GetMV($html)
 ;=== general
 ;	_ER_GetParam( $html, $regexp )
 ;
@@ -123,6 +133,21 @@ Func _ER_GetExtraParam( $html )
 			$ret = _ER_GetM911($html)
 		case "ERM912"
 			$ret = _ER_GetM912($html)
+		case "ERM251"
+			$ret = _ER_GetM251($html)
+		case "ERM252"
+			$ret = _ER_GetM252($html)
+		case "ERM253"
+			$ret = _ER_GetM253($html)
+		case "ERM5"
+			$ret = _ER_GetM5($html)
+		case "ERM271"
+			$ret = _ER_GetM271($html)
+		case "ERM272"
+			$ret = _ER_GetM272($html)
+		case "ERMV"
+			$ret = _ER_GetMV($html)
+
 
 		;case Else
 		;	$ret = $msgType & "_" & _ER_GetMsgId($html)
@@ -213,7 +238,7 @@ EndFunc ;-> _ER_GetFnr
       </h:Ident>
     </h:Patient>
 #ce
-Func	_ER_GetPatient($html, $type=0)
+Func	_ER_GetPatient($html, $type=1)
 
 	Local $a, $name
 	$a = StringRegExp( $html, '(?s)Patient>.*?GivenName>(.*?)<', 1)
@@ -305,6 +330,10 @@ Local $text = ""
 	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
 	if _ER_GetDateOfBirth($html) then $text &= " " & _ER_GetDateOfBirth($html)
 	if _ER_GetParam( $html, '(?s)RefNr>(.*?)<') then $text &= " RefNr_" & _ER_GetParam( $html, '(?s)RefNr>(.*?)<' )
+
+
+;<BytteresRekvirent V="1" DN="Ja" />
+	$text &= _ER_GetParam( $html, '(?s)BytteresRekvirent.*?V="(.*?)" ') = 1? " BytteresRekvirent":""
 
 	Return	$text
 
@@ -613,6 +642,21 @@ Func _ER_GetM3($html)
 	Return " " & _ER_GetReseptId($html)
 EndFunc
 
+;================================================================================================================================
+;	M5 functions
+;================================================================================================================================
+Func _ER_GetM5($html)
+
+	Local $ret = ""
+	;$ret &= " " & _ER_GetPatient( $html )
+	;$ret &= " " & _ER_GetFnr( $html )
+
+	$ret &= " " & _ER_GetParam( $html, '(?s)Arsak.*?DN="(.*?)"' );
+	$ret &= " " & _ER_GetReseptId($html)
+	if _ER_GetParam( $html, '(?s)NyReseptId>(.*?)<' ) then $ret &= " " & StringLeft(_ER_GetParam( $html, '(?s)NyReseptId>(.*?)<' ),9)
+	return $ret
+EndFunc
+
 
 ;================================================================================================================================
 ;	M9.11 functions
@@ -635,12 +679,42 @@ Func _ER_GetM912($html)
 
 	Local $text = ""
 
-	if _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidosepasient>.*?Fnr>(.*?)<' )
-	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
-	if _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)asient>.*?Fnr>(.*?)<' ) then $text &= " " & _ER_GetParam( $html, '(?s)asient>.*?Fnr>(.*?)<' ) & " "
+	if _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' ) then $text &= "L" ;& _ER_GetParam( $html, '(?s)Multidoselege.*?Navn>(.*?)<' )
+	if _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' ) then $text &= "A" ;& _ER_GetParam( $html, '(?s)Multidoseapotek.*?Navn>(.*?)<' )
 	$text &= " " & _ER_GetReseptCount( $html )
 
+	; if M25 exists
+	; get all <VarerIBrukB64> and decode M25
+	if StringInStr( $html, "VarerIBrukB64" ) then
+		$text &= " " & _ER_GetM25b64( $html)
+	endif
+
 Return	$text
+
+EndFunc
+
+;
+; there can be several base64
+;
+Func	_ER_GetM25b64( $html)
+
+	Local $b64
+	Local $ret = ""
+
+	; get base64 - b64 can be more than 32K, therefor use RegExReplace, as RegExp can not handle long patterns
+	; strip all before and after base 64 and return only inside >...<
+	$b64 = StringRegExpReplace( $html, "(?s).*?VarerIBrukB64(.*VarerIBrukB64.*?>).*", "$1",1 )
+
+	Local $b64array = StringRegExp( $b64, "(?s).*?>(.*?)</.*?>", 3 )
+	if @error=0 then
+		for $m in $b64array
+			Local $xml = _Base64Decode( $m )
+			$ret &= " " & StringRight(_ER_GetMsgType( $xml ),4)& "(" & _ER_GetReseptCountM252( $xml ) & ")"
+		Next
+	endif
+
+	return $ret
 
 EndFunc
 
@@ -681,6 +755,176 @@ Func	_ER_GetReseptCount( $html )
 	Return  $ret
 
 EndFunc
+
+;================================================================================================================================
+;	M27 functions
+;================================================================================================================================
+Func _ER_GetM271($html)
+	Local $text = ""
+
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	$text &= " " &  _ER_GetParam( $html, '(?s)M271 .*?Status.*?DN="(.*?)"' )
+
+	Return	$text
+
+EndFunc
+
+Func _ER_GetM272($html)
+	Local $text = ""
+
+	$text &= " " &  _ER_GetParam( $html, '(?s)M272 .*?RegistrertEndring>(.*?)<' )
+;          <RegistrertEndring>true</RegistrertEndring>
+
+	Return	$text
+
+EndFunc
+
+;================================================================================================================================
+;	M25 functions
+;================================================================================================================================
+Func _ER_GetM251($html)
+
+	Local $text = ""
+
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	$text &= " " & _ER_GetReseptCountM252( $html )
+
+	Return	$text
+
+EndFunc
+
+Func _ER_GetM252($html)
+
+	Local $text = ""
+
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	$text &= " " & _ER_GetReseptCountM252( $html )
+
+	Return	$text
+
+EndFunc
+
+Func _ER_GetReseptCountM252( $html )
+
+	Local $a
+	Local $CountTypes[6]
+	Local $ret=""
+
+	; first resept type
+	Local $ReseptType = "EPU"
+	;<Type DN="Eresept" V="E" />  Volven 7491 = Type resept https://volven.no/produkt.asp?id=469436&catID=3&subID=8
+
+	; get all resepter
+	$a = StringRegExp( $html, '(?s)EnkeltoppforingLIB>.*?Type .*?V="(.)"', 3)
+	if @error then return ""
+
+	; count all types
+	for $r in $a
+		$CountTypes[ StringInStr( $ReseptType, $r) ] += 1
+	Next
+
+	for $i=1 to 3
+		if $CountTypes[$i] > 0 then $ret &= StringMid( $ReseptType, $i, 1)  & $CountTypes[$i] & "-"
+	Next
+
+	; if we got unknown type - show as X
+	if $CountTypes[0] > 0 then $ret &= "X" & $CountTypes[0]
+
+	; remove unnecessary - at the end
+	if StringRight( $ret, 1) = "-" then $ret = StringTrimRight( $ret, 1)
+
+	Return  $ret
+
+EndFunc
+
+
+Func _ER_GetM253($html)
+
+	Local $text = ""
+
+	if _ER_GetPatient($html) then $text &= " " & _ER_GetPatient($html)
+	if _ER_GetFnr($html) then $text &= " " & _ER_GetFnr($html)
+
+	$text &= " " & _ER_GetReseptCountM252( $html )
+	$text &= " " & _ER_GetMultidoseCountM253( $html )
+
+	Return	$text
+
+EndFunc
+
+;====================================
+; Decode base64 in M912 and M25 messages within tags
+;	- VarerIBrukB64
+;	- ReseptDokLegemiddelB64
+;====================================
+
+Func	_decodeB64( $html)
+
+		; Get first VarerIBrukB64
+		Local $tag = "(?:VarerIBrukB64|ReseptDokLegemiddelB64)"
+		Local $cnt = 0
+while 1
+		Local $b64code = StringRegExpReplace( $html, "(?s).*?<[^/]*?"&$tag&"[^>]*?>([a-zA-Z\d/=+]+?)</.*", "$1", 1 )
+		if @error then
+			;ConsoleWrite( "#Error " & @extended & @CRLF )
+			return SetError( 1, @extended, $html)
+		Else
+			if @extended = 0 then return SetError( 0, $cnt, $html) ; no more pattern
+			$cnt += @extended
+			Local $m = _Base64Decode( $b64code )
+
+			;ConsoleWrite( $tag & " " & StringLeft( $b64code, 50) & " " & StringLeft( $m, 50) & @CRLF )
+
+			$html = StringReplace( $html, $b64code, @CRLF & $m & @CRLF)
+		EndIf
+Wend
+		;return $html
+EndFunc
+
+
+
+;================================================================================================================================
+;	Get resept counnt in M25.3 which included in multidose
+;
+;		f.eks.(8-1)
+;================================================================================================================================
+
+Func _ER_GetMultidoseCountM253( $html )
+
+	Local $a
+	Local $CountTypes[3]
+	Local $ret=""
+
+	; first resept type
+	Local $ReseptType = "12"
+	;<InngarMultidose DN="Nei" V="2" />  Volven 1101 = Ja, Nei InngarMultidose
+
+	; get all resepter
+	$a = StringRegExp( $html, '(?s)EnkeltoppforingLIB>.*?InngarMultidose .*?V="(.)"', 3)
+	if @error then return ""
+
+	; count all types
+	for $r in $a
+		$CountTypes[ StringInStr( $ReseptType, $r) ] += 1
+	Next
+
+	; Add inngarMultidose
+	$ret &= " ("
+	if $CountTypes[1] > 0 then $ret &= $CountTypes[1]
+	if $CountTypes[2] > 0 then $ret &= "-" & $CountTypes[2]
+	if $CountTypes[0] > 0 then $ret &= "x" & $CountTypes[0]
+	$ret &= ")"
+
+	Return  $ret
+
+EndFunc
+
 
 ;================================================================================================================================
 ;	Get type of legemiddel in M1
@@ -729,6 +973,31 @@ Func	_ER_GetTypeLegemiddel( $html )
 
 EndFunc
 
+;================================================================================================================================
+;	MV functions
+;================================================================================================================================
+Func _ER_GetMV($html)
+
+	Local $text = ""
+#cs
+<SystemInfo>
+            <SystemCode>FM</SystemCode>
+            <SystemName>Forskrivningsmodul</SystemName>
+            <Version>4.9.3.18743</Version>
+<OperationSupplierInfo>
+            <ServiceVendorName>Boots Norge</ServiceVendorName>
+#ce
+
+	; (?:) - non-inclusive group to choose one of three but not return it as a match
+	; we get all three in any order as many as number of groups
+	;
+	$text &= " " & _ER_GetParamX( $html, '(?s)SystemInfo>.*?(?:SystemCode|SystemName|Version)>(.*?)</..*?(?:SystemCode|SystemName|Version)>(.*?)</..*?(?:SystemCode|SystemName|Version)>(.*?)</' )
+	;$text &= " " & _ER_GetParamX( $html, '(?s)SystemInfo>.*?SystemName>(.*?)<' )
+	;$text &= " " & _ER_GetParamX( $html, '(?s)SystemInfo>.*?Version>(.*?)<' )
+	$text &= " (" & _ER_GetParam( $html, '(?s)OperationSupplierInfo>.*?ServiceVendorName>(.*?)<' ) & ")"
+
+	Return	$text
+EndFunc
 ;====================================
 ; generic internal function
 ;====================================
@@ -794,3 +1063,4 @@ Func _Base64Decode($sData)
 
     Return $sReturn
 EndFunc   ;==>_Base64Decode
+

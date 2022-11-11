@@ -139,10 +139,27 @@ Update History:
 	- add #25 - add M95/M96
 	- add #103 - always on top on/off
 25/08/22
+	- fix #127 - filename for ERM10
+58
+28/10/22
+	- fix #129 - add M25.3
+	- fix #131 - print full name
+59
+02/11/22
+	- fix #133 - add M5
+	- fix #134 - correct filename for messages without text
+	- fix #21 - add M27.1/2
+	- fix #20 - add ERMV
+	- fix #60 - Add BytteresRekvirent in M1
+	- add #140 - add M25.2 & M25.1
+	- add #142 - decode M25 from M912 and changed text for M912
+60
+11/11/22
+	- add #144 - decode base64 in M912, M25x
 	- fix #126 - fix illegal chars ion file name
 #ce
 
-Local const $nVer = "57"
+Local const $nVer = "60"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -654,7 +671,13 @@ DbgFile( $txt )
 			;LogFile( $retText )
 
 			; strip off RefTo before save xml in a file
-			$sParam = StringRegExpReplace( $sParam, "(\S{9}\s+\S{9}) ", "", 1 )
+			$sParam = StringRegExpReplace( $sParam, "(\S{9}\s+\S{9}) ?", "", 1 )
+
+			; if msgType_912 og M2 then decode Base64
+			Switch $msgType
+				Case "ERM912", "ERM251", "ERM252", "ERM253"
+				$html = _decodeB64($html)
+			EndSwitch
 
 			_save_xml( $html, $sParam )
 
@@ -695,7 +718,7 @@ Local	$fileTime
 
 	; strip off birthdate from NIN
 	$text = StringRegExpReplace( $text, "\s(\d{11})\s+(\d\d\d\d).(\d\d).(\d\d)", " $1" )
-	$filename = _ER_GetMsgType( $html ) & "_" & StringReplace( StringStripWS($text, 7), " ", "_") & "_" & StringLeft( _ER_GetMsgId( $html ), 9)  & ".xml"
+	$filename = StringReplace( StringStripWS(_ER_GetMsgType( $html ) & " " & $text, 7), " ", "_") & "_" & StringLeft( _ER_GetMsgId( $html ), 9)  & ".xml"
 
 
 	if not FileExists( $folder ) then
