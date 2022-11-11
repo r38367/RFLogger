@@ -858,6 +858,37 @@ Func _ER_GetM253($html)
 
 EndFunc
 
+;====================================
+; Decode base64 in M912 and M25 messages within tags
+;	- VarerIBrukB64
+;	- ReseptDokLegemiddelB64
+;====================================
+
+Func	_decodeB64( $html)
+
+		; Get first VarerIBrukB64
+		Local $tag = "(?:VarerIBrukB64|ReseptDokLegemiddelB64)"
+		Local $cnt = 0
+while 1
+		Local $b64code = StringRegExpReplace( $html, "(?s).*?<[^/]*?"&$tag&"[^>]*?>([a-zA-Z\d/=+]+?)</.*", "$1", 1 )
+		if @error then
+			;ConsoleWrite( "#Error " & @extended & @CRLF )
+			return SetError( 1, @extended, $html)
+		Else
+			if @extended = 0 then return SetError( 0, $cnt, $html) ; no more pattern
+			$cnt += @extended
+			Local $m = _Base64Decode( $b64code )
+
+			;ConsoleWrite( $tag & " " & StringLeft( $b64code, 50) & " " & StringLeft( $m, 50) & @CRLF )
+
+			$html = StringReplace( $html, $b64code, @CRLF & $m & @CRLF)
+		EndIf
+Wend
+		;return $html
+EndFunc
+
+
+
 ;================================================================================================================================
 ;	Get resept counnt in M25.3 which included in multidose
 ;
@@ -1032,3 +1063,4 @@ Func _Base64Decode($sData)
 
     Return $sReturn
 EndFunc   ;==>_Base64Decode
+
