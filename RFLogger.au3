@@ -153,9 +153,12 @@ Update History:
 	- fix #60 - Add BytteresRekvirent in M1
 	- add #140 - add M25.2 & M25.1
 	- add #142 - decode M25 from M912 and changed text for M912
+60
+11/11/22
+	- add #144 - decode base64 in M912, M25x
 #ce
 
-Local const $nVer = "59"
+Local const $nVer = "60"
 
 ; #INCLUDES# ===================================================================================================================
 #Region Global Include files
@@ -668,6 +671,13 @@ DbgFile( $txt )
 
 			; strip off RefTo before save xml in a file
 			$sParam = StringRegExpReplace( $sParam, "(\S{9}\s+\S{9}) ?", "", 1 )
+
+			; if msgType_912 og M2 then decode Base64
+			Switch $msgType
+				Case "ERM912", "ERM251", "ERM252", "ERM253"
+				$html = _decodeB64($html)
+			EndSwitch
+
 
 			_save_xml( $html, $sParam )
 
